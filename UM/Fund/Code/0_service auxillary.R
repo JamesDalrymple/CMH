@@ -1,4 +1,5 @@
 ### fund only auxillary ###
+pkg_loader(packages = c("data.table", "zoo", "xlsx"))
 
 # convert locus scores to numbers
 word_to_num <- function(x) {
