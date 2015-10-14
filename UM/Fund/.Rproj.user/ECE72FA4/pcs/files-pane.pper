@@ -1,0 +1,9 @@
+{
+    "path" : "~/CMH/UM/Fund",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}
