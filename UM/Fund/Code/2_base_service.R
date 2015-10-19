@@ -7,13 +7,7 @@ end_par <- gsub(x = end_date, pattern = "/", replace = "_")
 run_par <- gsub(x = run_date, pattern = "/", replace = "_")
 #### Load Data ####
 # code table #
-UMcodeDesc <- read.dtable(file.path(
-  baseWD,
-  "Dropbox/Utilization Management/UM_Desc_MDCH_2012.csv"))
-csv_files <- list.files(file.path(baseWD, dataWD),
-                        pattern = ".csv", full.names = TRUE)
-rds_files <- list.files(file.path(baseWD, dataWD),
-                       pattern = ".rds", full.names = TRUE)
+
 ### load, save, compress data ###
 # fb data
 fb_claims <- load_data(

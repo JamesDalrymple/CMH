@@ -1,3 +1,6 @@
+# filtering by fund
+all_funds <- services[, unique(fund)]
+
 #### create fund xlsx files ####
 for(i in seq_along(all_funds)) {
   keep_funds <- all_funds[i]

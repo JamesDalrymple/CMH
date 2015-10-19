@@ -1,0 +1,19 @@
+{
+    "collab_server" : "",
+    "contents" : "# funding bucket -- must download manually -- ranged point in  time data\n\n# insure -- CMH Open Ins 2046 sheet1 -- point in  time data\n# ins_detail -- CMH Open Ins 2046 sheet2 -- point in time data\n# case_load -- case load 2002 sheet2 -- point in time data\n# court -- 2061 sheet1, court order repetition & PRR -- point in time data\n# demo -- CMH demo 2105 -- point in time data\n# diagnoses -- diagnoses 2157 -- point in time data\n# locus -- locus 2227 -- ranged point in time data",
+    "created" : 1445280360858.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3556819836",
+    "id" : "A22D39DC",
+    "lastKnownWriteTime" : 1445271035,
+    "path" : "~/GitHub/CMH/UM/Fund/Code/1_fund_sql.R",
+    "project_path" : "Code/1_fund_sql.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
