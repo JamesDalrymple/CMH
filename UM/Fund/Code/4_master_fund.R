@@ -22,20 +22,20 @@ project_wd$data <- file.path(project_wd$dropbox,
 project_wd$results <- "Utilization Management/Fund Only/Results"
 rm(cmh_wd)
 # user input ------------------------------------------------------------------
-run_date <- "9/22/2015" # for folder
+user_input <- list(
+  run_date = "9/22/2015",
+  end_date = "8/31/2015" # data parameter end
+)
+ # for folder
 project_wd$data <- file.path(project_wd$data,
                              gsub(
-                               x = run_date,
+                               x = user_input$run_date,
                                pattern = "/",
                                replace = "_"
                              ))
-
-
-end_date <- "8/31/2015" # data parameter end
 # load packages, source files -------------------------------------------------
 # library(CMH) ... replacing global script at some point
 source(file.path(project_wd$dropbox, "WCCMH/R/global library.R"))
-
 source(file.path(project_wd$code, "0_service auxillary.R"))
 
 ### left off here 10/14/15... need to write SQL code to import all datasets
@@ -44,5 +44,3 @@ source(file.path(project_wd$code, "0_service auxillary.R"))
 
 source(file.path(project_wd$code, "1_base_service.R"))
 source(file.path(project_wd$code, "2_export_xlxs.R"))
-
-

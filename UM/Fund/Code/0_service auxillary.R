@@ -1,6 +1,3 @@
-
-help(`environment<-`)
-
 ### fund only auxillary ###
 pkg_loader(packages = c("data.table", "zoo", "xlsx"))
 
@@ -9,6 +6,7 @@ um_code_desc <- fread(file.path(
   project_wd$dropbox,
   "Utilization Management/UM_Desc_MDCH_2012.csv"
 ))
+
 
 file_list <- list(
   csv_files = list.files(
@@ -20,13 +18,13 @@ file_list <- list(
     pattern = ".rds",
     full.names = TRUE)
 )
-data.table(file_list)
 
-
-
-
+while ("aux" %in% search()) {
+  detach(aux)
+}
+aux <- new.env(parent=baseenv())
 # convert locus scores to numbers
-word_to_num <- function(x) {
+aux$word_to_num <- function(x) {
   switch(x,
          "Level Zero" = 1,
          "Level One" = 1,
@@ -40,7 +38,7 @@ word_to_num <- function(x) {
 # word_to_num <- Vectorize(word_to_num)
 
 # function to convert TCM to levels
-levelTCM <- function(x) {
+aux$levelTCM <- function(x) {
   result <- cut(x, breaks = c(-Inf, 1, 3, 13, Inf),
                 labels = c(0, 1, 2, 3), right=FALSE)
   result <- as.numeric(result)
@@ -106,7 +104,7 @@ levelTCM <- function(x) {
 # fundFix <- Vectorize(fundFix)
 
 # narrow down team assignment to one per person per day
-teamCMH <- c("WSH - Access/Engagement",
+aux$teamCMH <- c("WSH - Access/Engagement",
             "Community Support and Treatment Services - CSTS",
             "WSH - ACT",
             "WSH - ATO",
@@ -114,7 +112,7 @@ teamCMH <- c("WSH - Access/Engagement",
             "WSH - Children's Services - Home Based",
             "WSH - DD Adult",
             "WSH - MI - Adult")
-
+attach(aux)
 # # check if vector is empty
 # checkEmpty <- function(x) {
 #   if(class(x)=="Date") {

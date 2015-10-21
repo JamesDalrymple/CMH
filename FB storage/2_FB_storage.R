@@ -1,8 +1,8 @@
 # read in all FB files, and move them to archived folder and remove them from
 # downloads folder
 
-require(data.table)
-
+# source local helper file ----------------------------------------------------
+source(file.path("~", "Github/CMH/FB storage", "1_FB_auxillary.R"))
 # read in all FB files in the download folder ---------------------------------
 download_location <- "C:/Users/dalrymplej/Downloads"
 move_location <- "G:/CSTS Data Analyst Archives/FB_archives"
@@ -12,22 +12,6 @@ d00_list <- list.files(download_location, pattern="D00",
 
 run_date <- format(Sys.Date(), "%m_%d_%y")
 
-keep_cols <- c(
-  "CASE #",
-  "PRI PROCEDURE CODE",
-  "UNIT TYPE",
-  "FROM DATE",
-  "THRU DATE",
-  "UNITS",
-  "ALLOWED AMOUNT")
-new_cols <- c("case_no",
-              "cpt",
-              "unit_type",
-              "from_date",
-              "thru_date",
-              "units",
-              "cost")
-
 for(i in seq_along(d00_list)) {
   first_6_rows <- data.table(read.table(
     d00_list[i],
@@ -36,6 +20,14 @@ for(i in seq_along(d00_list)) {
     header = TRUE,
     stringsAsFactors = FALSE
   ))
+
+# ?fread
+# fread(input=d00_list[i], header = TRUE, skip=1)
+
+
+
+
+
 
   dt_type <- tolower(gsub(
     x = first_6_rows[Report. == "Direct/Contracted Services:",
@@ -58,4 +50,9 @@ for(i in seq_along(d00_list)) {
   setnames(new_dt, old=keep_cols, new=new_cols)
   saveRDS(object = new_dt, file = file.path(move_location, "rds",
                                             paste0(new_name, ".rds")))
+  gzip(zipfile = file.path(move_location,
+                          paste0(new_name, ".csv")),
+      )
+  ??gzip
+
 }
