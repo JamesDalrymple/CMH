@@ -1,6 +1,6 @@
 # read in all FB files, and move them to archived folder and remove them from
 # downloads folder
-scrub()
+rm(list = ls()) # scrub()
 # source local helper file ----------------------------------------------------
 source(file.path("~", "Github/CMH/FB storage", "1_FB_auxillary.R"))
 # read in all FB files in the download folder ---------------------------------

@@ -12,3 +12,5 @@ FB storage/.Rproj.user/*
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
+FB storage/.Rproj.user/ECE72FA4/persistent-state
+*.RData
