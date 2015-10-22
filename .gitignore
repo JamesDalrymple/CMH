@@ -1,51 +1,14 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
+# History files
+.Rhistory
+.Rapp.history
 
-# Folder config file
-Desktop.ini
+# Example code in package build process
+*-Ex.R
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+# RStudio files
+*.Rproj.user/
+FB storage/.Rproj.user/*
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# =========================
-# Operating System Files
-# =========================
-
-# OSX
-# =========================
-
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# James' list of files to ignore
-*.Rproj
-*.Rhistory
-FB storage/.Rproj.user/ECE72FA4/sdb/prop/8EA91D1A
-FB storage/.Rproj.user/ECE72FA4/sdb/prop/INDEX
-FB storage/.Rproj.user/ECE72FA4/sdb/s-22B4E233/C6F412BF
-FB storage/.Rproj.user/ECE72FA4/sdb/s-22B4E233/lock_file
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
