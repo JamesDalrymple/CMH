@@ -1,18 +1,22 @@
 # read in all FB files, and move them to archived folder and remove them from
 # downloads folder
-
+scrub()
 # source local helper file ----------------------------------------------------
 source(file.path("~", "Github/CMH/FB storage", "1_FB_auxillary.R"))
 # read in all FB files in the download folder ---------------------------------
 download_location <- "C:/Users/dalrymplej/Downloads"
 move_location <- "G:/CSTS Data Analyst Archives/FB_archives"
-
 d00_list <- list.files(download_location, pattern="D00",
            full.names = TRUE)
 
-run_date <- format(Sys.Date(), "%m_%d_%y")
+# fb creation date (same as download date)
 
-for(i in seq_along(d00_list)) {
+for(i in seq_along(d00_list)) { # i=1
+create_date <- format(as.Date(file.info(d00_list[i])$ctime), "%m_%d_%y")
+read.fb(d00_list[i])
+
+
+
   first_6_rows <- data.table(read.table(
     d00_list[i],
     nrows = 6,
