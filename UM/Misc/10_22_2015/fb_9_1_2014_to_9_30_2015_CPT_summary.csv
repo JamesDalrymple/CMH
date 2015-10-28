@@ -1,0 +1,119 @@
+"CPT","unit_type","total_units","UM Desc"
+"0100","Day         ",7761,"Hospitalization"
+"0114",NA,NA,"Hospitalization"
+"0124",NA,NA,"Hospitalization"
+"0154",NA,NA,"Hospitalization"
+"0901","Encounter   ",41,"Therapy | Electro Shock"
+"0912","Day         ",514,"PSTAY/DAYCARE"
+"0913",NA,NA,"Therapy | Electro Shock"
+"90785",NA,NA,"Assessment | Psychiatric Eval."
+"90791","Encounter   ",19,"Assessment | Psychiatric Eval."
+"90792","Encounter   ",469,"Assessment | Psychiatric Eval."
+"90801",NA,NA,"Assessment | Psychiatric Eval."
+"90802",NA,NA,"Assessment | Psychiatric Eval."
+"90804",NA,NA,"Therapy | Individual Adult/Child 20-30 mins"
+"90806",NA,NA,"Therapy | Individual Adult/Child 45-50 mins"
+"90808",NA,NA,"Therapy | Individual Adult/Child 75-80 mins"
+"90832","Encounter   ",475,"Therapy | Individual Adult/Child 30 mins"
+"90834","Encounter   ",1062,"Therapy | Individual Adult/Child 45 mins"
+"90837","Encounter   ",1961,"Therapy | Individual Adult/Child 60 mins"
+"90846","Encounter   ",154,"Therapy | Family w/ Consumer"
+"90847","Encounter   ",2337,"Therapy | Family w/o Consumer"
+"90849","Encounter   ",76,NA
+"90853","Encounter   ",2930,"Therapy | Adult/Child group"
+"90862",NA,NA,"Med Review"
+"92506",NA,NA,"Speech | Eval"
+"92507","Encounter   ",129,"Speech | Ongoing"
+"92523","Encounter   ",3,NA
+"96101","Hour        ",92,"Assessment | Psychological Testing"
+"96102","Hour        ",18,NA
+"96111","Hour        ",66,"Assessment | Case Mgmt Adult/Child"
+"96372","Encounter   ",8201,"Med Admin | doc onsite"
+"97001",NA,NA,"PT Eval/Re-eval"
+"97002",NA,NA,"PT Eval/Re-eval"
+"97003","Encounter   ",47,"OT Eval/Re-eval"
+"97004","Encounter   ",52,"OT Eval/Re-eval"
+"97110","15 Minutes  ",212,"OT/PT Ongoing"
+"97113",NA,NA,"OT/PT Ongoing"
+"97124","15 Minutes  ",658,"OT/PT Ongoing"
+"97530","15 Minutes  ",168,"OT/PT Ongoing"
+"97533","15 Minutes  ",51,NA
+"97535","15 Minutes  ",31,NA
+"97802","15 Minutes  ",37,"Assessment | RN/Nutrition"
+"97803","15 Minutes  ",117,"Assessment-Dietician"
+"97804","Encounter   ",32,"Health Services |  Med Nutrition"
+"99211","Encounter   ",209,"Med Review"
+"99212","Encounter   ",1444,"Med Review"
+"99213","Encounter   ",5697,"Med Review"
+"99214","Encounter   ",4252,"Med Review"
+"99215","Encounter   ",234,"Med Review"
+"99241",NA,NA,"Assessment | Physician consult."
+"E1399","Item        ",20,NA
+"G0176","Encounter   ",751,"Therapy | Child Activity 45+ mins"
+"G0177",NA,NA,"Family Ed. Groups"
+"H0002","Encounter   ",141,"Assessment | Access Brief Screening"
+"H0018","Day         ",1595,"Crisis | Residential"
+"H0025",NA,NA,"Prevention | Children"
+"H0030",NA,NA,"Crisis Intervention"
+"H0031","Encounter   ",2047,"Assessment | Access"
+"H0032","Encounter   ",1181,"Treatment Planning |IPOS"
+"H0034",NA,NA,"RN Med Training/Supports"
+"H0036","15 Minutes  ",9586,"Home Based | Children"
+"H0038","15 Minutes  ",5803,"Peer Supports"
+"H0039","15 Minutes  ",16158,"ACT | H0039"
+"H0043","Day         ",17633,"CLS | independent living"
+"H0045","Day         ",326,"Respite | Day"
+"H0046","Encounter   ",9,NA
+"H2000","Encounter   ",12,"Behavior Treatment Committee"
+"H2011","15 Minutes  ",2296,"Crisis Intervention"
+"H2014","15 Minutes  ",1251885,"Out-of-Home Non-Voc (skill building assistance)"
+"H2015","15 Minutes  ",8718590,"CLS | Community"
+"H2016","Day         ",53721,"CLS | Specialized Residential"
+"H2019","15 Minutes  ",28938,NA
+"H2020",NA,NA,"Crisis Intervention"
+"H2021","15 Minutes  ",669,"Wraparound Services"
+"H2022","Day         ",133,"Wraparound Services"
+"H2023","15 Minutes  ",231835,"Supported Employment"
+"H2030","15 Minutes  ",111305,"Clubhouse"
+"J0401","Item        ",58500,NA
+"J1631","Item        ",1653,NA
+"J2315","Item        ",2280,NA
+"J2426","Item        ",82797,"Injection"
+"J2680","Item        ",387,"Injection"
+"J2794","Item        ",36100,NA
+"M0064","Encounter   ",1,"Med Review"
+"S0280","Encounter   ",432,NA
+"S0281","Encounter   ",4692,NA
+"S5108","15 Minutes  ",2959,NA
+"S5110",NA,NA,"Fam. Skills Workshop"
+"S5111","Encounter   ",480,"Fam. Training | Home HSW/Children"
+"S5116","Encounter   ",19,NA
+"S5151",NA,NA,"Respite"
+"S5160","Encounter   ",1,NA
+"S5161","Month       ",197,NA
+"S5165","Item        ",4,"Environment Mod"
+"S5199","Item        ",9,NA
+"S8990",NA,NA,"OT/PT Ongoing"
+"S9445","Encounter   ",4,"Health Services | Ed. Ind."
+"S9446","Encounter   ",2440,"Health Services | Ed. Group"
+"S9470","Encounter   ",139,NA
+"S9482","15 Minutes  ",2556,NA
+"T1000","15 Minutes  ",8432,NA
+"T1001","Encounter   ",1918,"Assessment-RN"
+"T1002","Up to 15 min",8687,"Health | RN Services"
+"T1005","Up to 15 min",178814,"Respite | 15Min"
+"T1016","15 Minutes  ",18322,"Supports Coordination"
+"T1017","15 Minutes  ",38433,"TCM"
+"T1020","Day         ",49854,"Residential"
+"T1023","Encounter   ",1029,"Assessment | Inpatient Hosp."
+"T1999","Item        ",6,"Enhanced Pharmacy"
+"T2015","Hour        ",16798,"Out-of-Home Prevocational Service"
+"T2023","Encounter   ",366,"TCM | DD"
+"T2025","Month       ",1826,"Fiscal Services"
+"T2028","Item        ",6,NA
+"T2029","Item        ",7,"Supplies"
+"T2034",NA,NA,"Crisis Intervention"
+"T2036",NA,NA,"Therapeutic Camping: Child"
+"T2037","Encounter   ",3,"Therapeutic Camping"
+"T2038","Encounter   ",799,"Home Modification | Children/Housing Assistance"
+"T5999",NA,NA,"Goods and Services"
