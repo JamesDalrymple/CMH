@@ -5,32 +5,34 @@
 #### initializing working directory and input parameters ####
 # clear RAM
 rm(list = ls())
-# which computer results in correct base working directory
-baseWD <- switch(Sys.info()["nodename"],
-                 "JAMES-2" = "B:",
-                 "JAMES" = "B:", # laptop
-                 "JAMES-PC" = "B:", # home PC
-                 "CMHJ3DTVZ1-LT" = "C:/Users/dalrymplej",
-                 "WSHSQLGP" = "C:/Users/dalrymplej" # county PC
-)
 #### user input required ####
 input <- list(
   current_month = "August",
   current_fy = "2015",
   start_date = '3/1/2014',
-  end_date = format(x=Sys.Date(), "%m/%d/%Y")
-)
+  end_date = format(x=Sys.Date(), "%m/%d/%Y"),
+  # which computer results in correct base working directory
+  baseWD = switch(Sys.info()["nodename"],
+                  "JAMES-2" = "B:",
+                  "JAMES" = "B:", # laptop
+                  "JAMES-PC" = "B:", # home PC
+                  "CMHJ3DTVZ1-LT" = "C:/Users/dalrymplej",
+                  "WSHSQLGP" = "C:/Users/dalrymplej" # county PC
+  ))
+input['dataWD'] <- file.path(input$baseWD,
+  "Dropbox/PI Projects/Monthly Management/Data/Fiscal Year",
+  input$current_fy, input$current_month)
+input['codeWD'] <-
+  file.path(input$baseWD, "Documents/GitHub/CMH/PI/SSM/Code")
+input['resultsWD'] <- file.path(input$baseWD,
+  "Dropbox/PI Projects/Monthly Management/Results/Fiscal Year")
 #### sourcing files ####
 # read in source file - personal library
-source(file.path(baseWD,
-                 "Dropbox/WCCMH/R/begin script R code.r"))
-# setup for working directories - data and results
-dataWD <- "Dropbox/PI Projects/Monthly Management/Data/Fiscal Year"
-resultsWD <- "Dropbox/PI Projects/Monthly Management/Results/Fiscal Year"
-codeWD <- "Dropbox/PI Projects/Monthly Management/R Code/SSM"
-source(file.path(baseWD, codeWD, "L0_ssm_auxillary.r"))
-source(file.path(baseWD, codeWD, "L1_ssm_sql.r"))
-
+source(file.path(input$baseWD,
+                 "Dropbox/WCCMH/R/global library.r"))
+source(file.path(input$codeWD, "L0_ssm_auxillary.r"))
+source(file.path(input$codeWD, "L1_ssm_sql.r"))
+source(file.path(input$codeWD, "L2_ssm_data_reshape.r"))
 
 # rerun sql data and create new rds data files?
 rerun <- TRUE

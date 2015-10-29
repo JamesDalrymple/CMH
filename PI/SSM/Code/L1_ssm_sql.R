@@ -1,14 +1,29 @@
-# self sufficiency modeling
+#### L1: SQL importing, saving results in RDS in dataWD ####
 
 #### read in sql_data/csv_files ####
 sql <- new.env(parent = .GlobalEnv)
 
-
 sql$channel <- odbcConnect("wshsqlgp")
-sql$query <- "use James_CSTS"
-odbcQuery(channel=sql$channel, query=sql$query)
+sql$q_db_name <- "use James_CSTS"
+odbcQuery(channel=sql$channel, query=sql$q_db_name)
+
+sql$q_input['sql_cls'] <- sprintf(
+  "IF OBJECT_ID('tempdb..#cls') IS NOT NULL
+  DROP TABLE #cls
+  select
+  case_no, SUM(paid_units) as paid_units -- CL_PROCCD as CPT
+  into #cls
+  from encompass.dbo.tblE2_Claim_paid
+  where county = 'Washtenaw'
+  and CL_FRMDT between '%1$s' and '%2$s'
+  and CL_PROCCD in ('H0043', 'H2015', 'T2025')
+  group by case_no",
+  format(date_convert(input$end_date) - 181, "%m/%d/%Y"),
+  input$end_date
+)
+
 # base SSM table with team/supervisor/primary_staff
-sql$q_list['sql_base_SSM'] <- sprintf("
+sql$q_input['sql_base_SSM'] <- sprintf("
 IF OBJECT_ID('tempdb..#1_first_last_ssm') IS NOT NULL
 DROP TABLE #1_first_last_ssm
 select distinct
@@ -38,12 +53,13 @@ where CMH.Team in ('WSH - MI - Adult', 'WSH - ACT')
   and CMH.CMH_EFFDT <= cast('%2$s' as datetime) - 227
   and CMH.County = 'Washtenaw'
 group by CMH.case_no, CMH.Team, CMH.Supervisor, CMH.Primary_Staff",
-start_date,
-end_date
+input$start_date,
+input$end_date
 )
 
 # details of first/last SSM
-sql_details_SSM <- "IF OBJECT_ID('tempdb..#2_first_last_ssm') IS NOT NULL
+sql$q_input['sql_details_SSM'] <-
+"IF OBJECT_ID('tempdb..#2_first_last_ssm') IS NOT NULL
 DROP TABLE #2_first_last_ssm
 select distinct
   base.case_no, base.team, base.supervisor, base.primary_staff,
@@ -77,7 +93,8 @@ left join encompass.dbo.tblE2_SelfSufficiencyMatrix as SSM2
   base.last_matrix_date = SSM2.matrix_date and SSM2.provider is null
 where base.num_SSMs > 1"
 
-sql_demo <- "IF OBJECT_ID('tempdb..#demo_open_consumers') IS NOT NULL
+sql$q_input['sql_demo'] <-
+"IF OBJECT_ID('tempdb..#demo_open_consumers') IS NOT NULL
 DROP TABLE #demo_open_consumers
 select distinct
   cmh.county, cmh.case_no, cmh.cmh_effdt,
@@ -137,36 +154,45 @@ left join encompass.dbo.tblE2_Open_Consumers as adm
 where CMH.County like 'Washtenaw%'"
 
 # problem cases that I need to discuss with Laura Higle
-sql_problems_SSM <-
-"select count(case_no) as num_cases, case_no
+sql$q_input['sql_problems_SSM'] <-
+"IF OBJECT_ID('tempdb..#SSM_data_problems') IS NOT NULL
+DROP TABLE #SSM_data_problems
+select count(case_no) as num_cases, case_no
+-- into #SSM_data_problems
 from #2_first_last_ssm
 group by case_no
 having count(case_no) >1"
 
-query_list <-
-  list(
-    sql_base_SSM = sql_base_SSM,
-    sql_details_SSM = sql_details_SSM,
-    sql_demo = sql_demo,
-    sql_problems_SSM = sql_problems_SSM
-  )
-sql_output <-
-  lapply(queryList, function(x)
+sql$q_output <- list(details = "select * from #2_first_last_ssm",
+                     demo = "select * from #demo_open_consumers",
+                     cls = "select * from #cls")
+
+sql$check_output <- lapply(sql$q_input, function(x)
+    sqlQuery(
+      channel = sql$channel,
+      query = x,
+      stringsAsFactors = FALSE,
+      max = 0
+    ))
+if (!identical(unlist(sql$check_output), character())) {
+  p_stop("Please see sql$check_output, something is wrong.",
+         sql$check_output)
+}
+
+sql$sql_output <-
+  lapply(sql$q_output, function(x)
     data.table(
       sqlQuery(
-        channel = channel,
+        channel = sql$channel,
         query = x,
         stringsAsFactors = FALSE,
         max = 0
       )
     ))
 
-if(nrow(sql_output$sql_problems_SSM)>0) {
-  stop(
-    "Duplicate SSM by non-substance abuse providers, investigate why and report to Laura Higle."
-  )
-}
+# making a modification in the list prior to saving as *.rds
+with(sql$sql_output, details)[, time_diff :=
+  as.numeric(as.Date(last_matrix_date) - as.Date(first_matrix_date))]
 
-ssm_details <- data.table(sqlQuery(channel=channel, query="select * from #2_first_last_ssm", stringsAsFactors=FALSE, max=0))
-ssm_details[, time_diff := as.numeric(as.Date(last_matrix_date) - as.Date(first_matrix_date))]
-saveRDS(ssm_details, file=file.path(baseWD, dataWD, current_fy, current_month, "ssm_details.rds"))
+saveRDS(sql$sql_output,
+        file=file.path(input$dataWD, "ssm_details.rds"))
