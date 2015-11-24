@@ -1,11 +1,6 @@
-# start_date will always be one year prior to end date
-# start_date <- dateConvert(end_date) - 365
-
 modify <- new.env(parent = .GlobalEnv)
 
 #### Load Data ####
-# code table #
-
 ### load, save, compress data ###
 modify$new_fb_names <- c("case_no", "cpt", "unit_type", "from_date", "thru_date",
                   "units", "cost")
@@ -33,15 +28,15 @@ case_load <- sql$output[['case_load']]
 court <- sql$output[['court']]
 
 # current state hospital consumers
-state_hosp <- sql$output[['state_hosp']]
+modify$state_hosp <- sql$output[['state_hosp']]
 
 # demo
-demo <- sql$output[['demo']]
-setnames(demo, names(demo), tolower(names(demo)))
-demo[, primarycarephysician :=
-  gsub(x=primarycarephysician, pattern="\n ", fixed=TRUE, replace="")]
+# demo <- sql$output[['demo']]
+# setnames(demo, names(demo), tolower(names(demo)))
+# demo[, primarycarephysician :=
+#   gsub(x=primarycarephysician, pattern="\n ", fixed=TRUE, replace="")]
 # diagnoses ... download as xls file and keep first tab only
-diagnoses <- sql$output[['diagnoses']]
+# diagnoses <- sql$output[['diagnoses']]
 # locus - run in E.1, download as Excel file
 locus <- sql$output[['locus']]
 setnames(locus,
@@ -50,15 +45,15 @@ setnames(locus,
          new = c("recommend", "override", "adm_date"))
 #### manipulate data ####
 ### demographics data - contains primary care doctor ###
-demo <- unique(demo)
+# demo <- unique(demo)
 
 ### court data ###
 # remove dups if exist (probably un-needed)
 # court <- unique(court)
 
 court[, cs_order_date := as.Date(cs_order_date)]
-levels <- court[, rev(unique(ordertype))]
-court[, ordertype := factor(ordertype, levels = levels)]
+modify$levels <- court[, rev(unique(ordertype))]
+court[, ordertype := factor(ordertype, levels = modify$levels)]
 court <- court[order(case_no, ordertype)]
 court[, group := .GRP, by = list(case_no)]
 court[, index := .N, by = group]
@@ -89,8 +84,6 @@ modify$cofr_cases <-
   unique(insure[grep(x = primary_ins, pattern = "COFR"), case_no],
          insure[grep(x = secondary_ins, pattern = "COFR"), case_no],
          insure[grep(x = other_ins, pattern = "COFR"), case_no])
-# insure[case_no %in% modify$cofr_cases,
-# .SD, .SDc = c("case_no", "primary_ins")]
 
 ## Medicare HMO ##
 # set medicare="Y" if consumer has HMO Medicare
@@ -126,7 +119,6 @@ insure[fund == "spend-down" &
 
 # per Kelly B on 9/25/2015
 insure[is.na(fund) & waiver == "HAB Waiver", fund := "Medicaid"]
-# insure[, table(waiver, medicaid)] #### checking ...
 # HMP
 insure[medicaid == "HMP", fund := "HMP"]
 
@@ -170,8 +162,8 @@ for (j in date_cols)
   set(admit, j = j, value = as.Date(admit[[j]]))
 rm(date_cols, j)
 # keep only the teams in teamCMH
-admit[, team := cmh_recode(team)]
-admit[, team := cmh_teams_f(team)]
+admit[, team := cmh$cmh_recode(team)]
+admit[, team := cmh$cmh_teams_f(team)]
 admit <- admit[!is.na(team)]
 # remove duplicates
 admit <- unique(admit)
@@ -183,8 +175,8 @@ admit <-
         all.y = TRUE, by = c("case_no", "team_expdt"))
 admit <- admit[order(case_no, team_expdt)]
 
-last_team <- admit[, list(case_no = unique(case_no)), by = team]
-if (last_team[, length(case_no)] != admit[, length(unique(case_no))]) {
+modify$last_team <- admit[, list(case_no = unique(case_no)), by = team]
+if (modify$last_team[, length(case_no)] != admit[, length(unique(case_no))]) {
   stop("error in last_team, duplicates found, please fix!")
 }
 
@@ -199,7 +191,7 @@ admit <- admit[prim_provider == "Y"]
 
 ## find the lowest priority team for each consumer ##
 # keep only the team with the lowest priority
-admit <- cmh_priority_dt[admit, on = "team"]
+admit <- cmh$cmh_priority_dt[admit, on = "team"]
 
 # find lowest priority per consumer
 admit[, minPriority := min(priority), by = list(case_no)]
@@ -229,24 +221,11 @@ fb_data <- fb_data[, list(cost = sum(cost, na.rm = TRUE),
 
 ## date conversion and date filter ##
 fb_data[, from_date := as.Date(from_date)]
-fb_data <- fb_data[between(from_date, date_convert(input$start_date),
-                   date_convert(input$end_date))]
+fb_data <- fb_data[between(from_date, cmh$date_convert(input$start_date),
+                   cmh$date_convert(input$end_date))]
 ## establish fund based on file input ##
 fb_data <- mmerge(l = list(fb_data, insure, admit), all.x = TRUE, by="case_no")
 setkey(fb_data, NULL)
-# fb_data <- insure[fb_data, on = "case_no"]
-# merge(insure[, .SD,
-# .SDcols = c("case_no", "age", "primary_ins", "secondary_ins",
-#             "other_ins", "medicare", "private_insurance", "fund")],
-#                fb_data, all.y = TRUE, by = "case_no")
-# invisible(setkey(fb_data, NULL))
-# fb_data <- fb_data[!is.na(case_no)]
-
-# sql - add admission to to funding bucket
-# fb_data <- merge(fb_data, admit, all.x = TRUE, by = "case_no")
-
-## ideally, this should give us zero rows/ zero consumers
-# fb_data[is.na(medicare) & is.na(cmh_expdt) & !is.na(cmh_effdt)]
 
 # missing team to be labeled as Non-CMH
 fb_data[is.na(team), team := "Non-CMH"]
@@ -262,16 +241,20 @@ fb_data[J(c("Child", "Child HB")), program := "Y&F"]
 fb_data[J("Non-CMH"), program := "Non-CMH"]
 ## months, quarters, and years columns ##
 # create fiscal year column
-fb_data[, fy := my_fy(from_date)]
+fb_data[, fy := cmh$my_fy(from_date)]
 # create fiscal quarter column
-fb_data[, qtr := my_qtr(from_date)]
+fb_data[, qtr := cmh$my_qtr(from_date)]
 # create month column
 fb_data[, month_date := as.yearmon(from_date)]
 ## set fy/qtr to NA if date/cpt code are NA ##
 fb_data[is.na(cpt), fy := NA_character_]
 fb_data[is.na(cpt), qtr := NA_character_]
+fb_data[, unit_type := trim(unit_type)]
 
 ### code descriptions ###
+setnames(um_code_desc,
+         names(um_code_desc),
+         gsub(x = names(um_code_desc), pattern = "[.]", replace = " "))
 um_code_desc[, c("State Svc Desc") := NULL]
 # change names
 setnames(um_code_desc, old = c("UM Desc", "CPT CD"), new = c("UM_desc", "cpt"))
@@ -296,7 +279,7 @@ rm(date_cols, j)
 locus[is.na(override), disp := recommend]
 locus[!is.na(override), disp := override]
 # find recent admissions (last 6 months)
-locus[, days_cmh_open := date_convert(input$end_date) - adm_date]
+locus[, days_cmh_open := cmh$date_convert(input$end_date) - adm_date]
 locus[between(days_cmh_open,-Inf, 182), open_status := "0 to 6 months"]
 locus[between(days_cmh_open, 183, 364), open_status := "6 to 12 months"]
 locus[, adm_diff := as.numeric(adm_date - locus_date)]
@@ -309,9 +292,9 @@ locus <- locus[!is.na(open_status)]
 locus[, disp := trim(disp)]
 locus[, disp := sapply(disp, aux$word_to_num)]
 # add TCM to locus consumers ... inner join
-TCM_by_con <- fb_data[team %in% c("ACT", "MI") & cpt == "T1017",
+modify$TCM_by_con <- fb_data[team %in% c("ACT", "MI") & cpt == "T1017",
                       list(TCM = length(cpt)), by = case_no]
-locus <- merge(locus, TCM_by_con, all.x = TRUE, by = "case_no")
+locus <- merge(locus, modify$TCM_by_con, all.x = TRUE, by = "case_no")
 locus[is.na(TCM), TCM := 0]
 ### create prediction disposition ###
 # consumers open less than 6 months
@@ -328,18 +311,18 @@ locus[open_status == "6 to 12 months",
       pred_round := pmin(round(pred_model), 3)]
 locus[, replace_level := ifelse(!is.na(pred_round), pred_round, pred_level)]
 locus[, setdiff(names(locus), c("case_no", "replace_level")) := NULL]
-#### diagnoses ####
-diagnoses <- unique(diagnoses)
 
 #### aggregate data ####
 # services by consumers
 service_same_day <-
   fb_data[!(unit_type %in% c("Day", "Encounter")),
-          list(records = length(from_date)),
-          by = c("case_no", "UM_desc")]
+          list(records = length(from_date),
+               units = sum(units, na.rm = TRUE)),
+          by = c("case_no", "cpt", "UM_desc", "unit_type")]
 service_range_day <- fb_data[unit_type %in% c("Day", "Encounter"),
-                             list(records = sum(units, na.rm = TRUE)),
-                             by = c("case_no", "UM_desc")]
+                             list(records = sum(units, na.rm = TRUE),
+                                  units = sum(units, na.rm = TRUE)),
+                             by = c("case_no", "cpt", "UM_desc", "unit_type")]
 services <- rbindlist(list(service_same_day, service_range_day))
 ## create error message if duplicates exist - dont worry about missing UM Desc ##
 dup_services <- services[, list(case_no, UM_desc)]
@@ -351,167 +334,158 @@ if (length(dup_services[dup_services != "missing UM Desc"]) > 0) {
   stop("services have duplicates - investigate!")
 }
 services <-
-  services[, list(records = sum(records, na.rm = TRUE)), by = list(case_no, UM_desc)]
+  services[, list(records = sum(records, na.rm = TRUE),
+                  units = sum(units, na.rm = TRUE)),
+           by = list(case_no, cpt, UM_desc, unit_type)]
 rm(service_same_day, service_range_day, dup_services)
 
 # change names
-setnames(services, old = "UM_desc", new = "cpt")
+setnames(services, old = "UM_desc", new = "cpt_desc")
 
-# cost by consumers
-cost <- fb_data[, list(cost = sum(cost, na.rm = FALSE)),
-                by = c("case_no", "program", "team", "cmh_effdt", "cmh_expdt")]
-# number of TCM units per person
-TCMunits <-
-  fb_data[cpt == "T1017", list(TCMunits = sum(units)), by = "case_no"]
+# find typical range
+services[, c("typical_record_range", "full_record_range",
+             "sd_records", "total_records")
+         := list(aux$my_range(records, 0.25, 0.75),
+                 aux$my_range(records, 0.0, 1.0),
+                 round(sd(records), 2),
+                 sum(records, na.rm = TRUE)),
+         by=list(cpt, cpt_desc, unit_type)]
+services[, outlier := !aux$in_range(x=records, range=typical_record_range),
+         by=list(cpt, cpt_desc, unit_type)]
 
-# services reshaped from long to wide
-services <-
-  reshape(services, idvar = "case_no", timevar = "cpt", direction = "wide")
-services <- data.table(services)
-
-# removing 'records.' from column names
-setnames(
-  services,
-  old = names(services)[grep(x = names(services), pattern =
-                                  "records.")],
-  new = gsub(
-    x = names(services)[grep(x = names(services), pattern = "records.")],
-    pattern = "records.", replacement = ""
-  )
-)
-# merge services and costs
-setkey(services, case_no); setkey(cost, case_no)
-services <- merge(services, cost, all.x = TRUE, by = "case_no")
-
-# merge services and TCM units
-setkey(services, case_no); setkey(TCMunits, case_no)
-services <- merge(services, TCMunits, all.x = TRUE, by = "case_no")
-
-# add case_load dataset via data.table merge (like SQL join)
-setkey(services, case_no); setkey(case_load, case_no)
-services <- merge(services, case_load, all.x = TRUE, by = "case_no")
-
-# add demo to services
-services <- merge(services, demo, all.x = TRUE, by = "case_no")
-# add insurance layer
-services <- merge(services, insure, all.x = TRUE, by = "case_no")
-# add diagnoses layer
-services <- merge(services, diagnoses, all.x = TRUE, by = "case_no")
-
-## add court orders to services ##
-court[, case_no := as.numeric(case_no)]
-services[, case_no := as.numeric(case_no)]
-services <- merge(services, court, all.x = TRUE, by = "case_no")
-services[is.na(ordertype), ordertype := "No Court Order"]
-services[, cs_order_date := as.character(cs_order_date)]
-
-### prepare file for saving ###
-# change column order
-setcolorder(services,
-            c(
-              c(
-                "case_no", "age", "ordertype", "cs_order_date", "cmh_effdt", "cmh_expdt",
-                "fund", "medicare", "private_insurance", "primary_ins", "secondary_ins",
-                "other_ins", "diag1", "diag1_desc", "diag2", "diag2_desc",
-                "cost", "team", "program", "primary_staff",
-                "supervisor", "primary_staff_type", "primarycarephysician", "primarycareclinic",
-                "TCM", "TCMunits"
-              ),
-              sort(setdiff(
-                names(services),
-                c(
-                  "case_no", "age", "ordertype", "cs_order_date", "cmh_effdt", "cmh_expdt",
-                  "fund", "medicare", "private_insurance", "primary_ins", "secondary_ins",
-                  "other_ins",  "diag1", "diag1_desc", "diag2", "diag2_desc",
-                  "cost", "team", "program", "primary_staff",
-                  "supervisor", "primary_staff_type", "primarycarephysician", "primarycareclinic", "TCM", "TCMunits"
-                )
-              ))
-            ))
-# establish Programs using teams
-setkey(services, team)
-# Y&F
-services[J(c("Child", "Child HB")), program := "Y&F"]
-# MI Adult
-services[J(c("MI", "ACT")), program := "MI Adult"]
-# DD Adult
-services[J("DD"), program := "DD Adult"]
-# Non-CMH
-services[J("Non-CMH"), program := "Non-CMH"]
-invisible(setkey(services, NULL))
-
-# consumers on ACT team should always have team as ACT
-services[case_no %in% c(services[team == "ACT", unique(case_no)]), team := "ACT"]
-services[case_no %in% c(services[team == "ACT", unique(case_no)]), program := "MI Adult"]
-# consumers on DD team should always have team as DD
-services[case_no %in%
-  c(services[team == "DD", unique(case_no)]), team := "DD"]
-services[case_no %in%
-  c(services[team == "DD", unique(case_no)]), program := "DD"]
-
-# remove duplicates
-services[, cost :=
-  sum(cost, na.rm = FALSE), by = "case_no"] # add costs per person
-services <- unique(services)
-
-# re-order by cost - highest to lowest
-services <- services[order(-cost, program, team)]
-services[!is.na(cmh_expdt), fund := "non_CMH"]
-services[is.na(fund), fund := "non_CMH"]
-services[team=="Non-CMH", fund := "non_CMH"]
+# cost by consumers and cpt code
+modify$cost_cpt <- fb_data[, list(cost = sum(cost, na.rm = FALSE)),
+                    by = c("case_no", "cpt")]
+# join cost to services
+services[modify$cost_cpt, c("cost") := cost, on = c("case_no", "cpt") ]
+# join team
+services[admit, team := team, on = "case_no"]
 
 # remove COFRs per Kely B. 11/4/2015
 services <- services[case_no %nin% modify$cofr_cases]
 # remove state hospital consumers per Kelly B. 11/4/2015
-services <- services[case_no %nin% state_hosp[, case_no]]
+services <- services[case_no %nin% modify$state_hosp[, case_no]]
 
-### does anyone have non-ACT team with ACT services? ###
-###    services[as.vector(!is.na(services[, "ACT | H0039", with=FALSE]))][team=="MI"]
+# MI Adult Levels -------------------------------------------------------------
+# MI Adult - Level 0 - no contacts
+mi_consumers <- services[team %in% c("ACT", "MI"), unique(case_no)]
+mi_nonzeros <- services[cpt=="T1017" &
+                          team %in% c("ACT", "MI"), unique(case_no)]
+services[case_no %in%
+           setdiff(mi_consumers, mi_nonzeros), level := "L0_No_TCM"]
+rm(mi_consumers, mi_nonzeros)
+# MI Adult - Level 1 - 1-2 TCM contacts
+modify$mi_TCM <- services[team %in% c("ACT", "MI") & cpt=="T1017",
+                   list(TCM = sum(records)),
+                   by = list(case_no, team)]
+modify$mi_TCM[, level := cut(TCM, breaks = c(1, 2, 12, Inf),
+                      labels = c("L1", "L2", "L3"),
+                      include.lowest = TRUE)]
+modify$mi_TCM[, level := as.character(level)]
+services[modify$mi_TCM, level := i.level, on = "case_no"]
+# locus is adding levels to non-MI Adults
+services[locus, level := paste0("L", pmin(replace_level, 3)), on = "case_no"]
+services[team %nin% c("ACT", "MI"), level := NA]
 
-### MI Adult Services ###
-mi_services <- services[team == "MI" | team == "ACT"]
-## MI Adult --- Level 0 --- no contacts ##
-mi_services[is.na(TCM), level := "L0_No_TCM"]
-## MI Adult --- Level 1 –-- 1-2 TCM contacts ##
-mi_services[TCM %between% c(1, 2), level := "L1"]
-## MI Adult --- Level 2 –-- 3-12 TCM contacts ##
-mi_services[TCM %between% c(3, 12), level := "L2"]
-## MI Adult --- Level 3 –-- 12 and above TCM contacts ##
-mi_services[TCM %between% c(13, Inf), level := "L3"]
-mi_services <-
-  merge(mi_services, locus[, c("case_no", "replace_level"), with = FALSE],
-        all.x = TRUE, by = "case_no")
-mi_services[replace_level == 1, level := "L1"]
-mi_services[replace_level == 2, level := "L2"]
-mi_services[replace_level >= 3, level := "L3"]
-mi_services[, replace_level := NULL]
-# level 4: ACT
-mi_services[team == "ACT", level := "ACT"]
-# level 5: Residential
-mi_services[supervisor == "Hoener, Katie" |
-              primary_staff == "Hoener, Katie", level := "Residential"]
-### Y & F ###
-yf_services <- services[team %in% c("Child", "Child HB")]
+# MI Adult - Level 5 - Residential
+services[team=="ACT", level := "L4_ACT"]
+# MI Adult - Level 5 - Residential
+services[case_load, c("supervisor", "primary_staff") :=
+           list(supervisor, primary_staff),
+         on = "case_no"]
+services[supervisor == "Hoener, Katie" |
+           primary_staff == "Hoener, Katie", level := "L5_Residential"]
+# create program column
+services[is.na(team), team := "non-CMH"]
+services[, program := cmh$recode_team_prog(x=team)]
 
-#   # filter out either MI TCM or DD TCM (must be at least one of the two used)
-#   no_TCM_save <- copy(mi_services)
-#   if(length(grep(x=colnames(no_TCM_save), pattern="TCM_DD", value=TRUE))>0) {
-#     setnames(no_TCM_save, "TCM_DD", "TCM | DD")
-#     no_TCM_save = no_TCM_save[is.na(TCM) & is.na(TCM_DD)]
-#   } else {
-#     no_TCM_save = no_TCM_save[is.na(TCM)]
-#   }
-#   ## remove empty columns from no_TCM_save
-#   no_TCM_save[, names(which(mapply(checkEmpty, no_TCM_save)=="empty")) := NULL]
-#   ## remove empty columns from mi_services
-#   mi_services[, names(which(mapply(checkEmpty, mi_services)=="empty")) := NULL]
-rm(admit, case_load, cost, court, demo, diagnoses, fb_data, insure, last_team,
-   locus, state_hosp, TCM_by_con, levels, file_list)
-#### save results ####
-### create information about the file to share with end-users ###
-aboutFile <- data.table(
-  Report_Date = input$run_date,
-  Last_Updated = as.character(Sys.time()),
-  Data_Sources = c(list.files(file.path(project_wd$data),
-                  pattern = "[.]"), "sql: Encompass", "funding bucket")
-)
+# summary ---------------------------------------------------------------------
+modify$team_summary <-
+  services[, list(num_cases = length(unique(case_no))),
+           by = list(program, team)]
+modify$mi_level_summary <-
+  services[team %in% c("MI", "ACT"),
+           list(num_cases = length(unique(case_no))),
+           keyby = list(level, program, team)]
+
+svc_summary <-
+  services[, list(num_cases = length(unique(case_no)),
+                  total_cost = sum(cost, na.rm = TRUE),
+                  avg_cost = round(mean(cost, na.rm = TRUE)),
+                  sd_cost = round(sd(cost, na.rm = TRUE), 3),
+                  total_units = sum(units, na.rm = TRUE),
+                  avg_units = round(mean(units, na.rm = TRUE), 2),
+                  unit_range_full = aux$my_range(units, 0.0, 1.0),
+                  unit_range_typical = aux$my_range(units, 0.25, 0.75),
+                  sd_units = round(sd(units, na.rm = TRUE), 2)),
+           by = list(program, team, level, cpt, cpt_desc, unit_type,
+                     typical_record_range, full_record_range, sd_records)]
+
+modify$outlier_cases <-
+  services[isTRUE(outlier),
+         list(num_outlier_cases = length(unique(case_no)),
+              outlier_cost = sum(cost, na.rm = TRUE),
+              avg_outlier_cost = round(mean(cost, na.rm = TRUE), 2),
+              sd_outlier_cost = sd(cost, na.rm = TRUE),
+              sd_outlier_records = round(sd(records), 2),
+              outlier_cost_range = aux$my_money_range(cost),
+              outlier_units = sum(units, na.rm = TRUE),
+              avg_outlier_units = round(mean(units, na.rm = TRUE), 2),
+              sd_outlier_units = round(sd(units, na.rm = TRUE), 2)),
+         by = list(program, team, level, cpt, cpt_desc, unit_type,
+                   typical_record_range, full_record_range, sd_records)]
+modify$typical_cases <-
+  services[isFALSE(outlier),
+           list(num_typical_cases = length(unique(case_no)),
+                typical_cost = sum(cost, na.rm = TRUE),
+                avg_typical_cost = round(mean(cost, na.rm = TRUE), 2),
+                sd_typical_cost = sd(cost, na.rm = TRUE),
+                sd_typical_records = round(sd(records), 2),
+                typical_cost_range = aux$my_money_range(cost),
+                typical_units = sum(units, na.rm = TRUE),
+                avg_typical_units = round(mean(units, na.rm = TRUE), 2),
+                sd_typical_units = round(sd(units, na.rm = TRUE), 2)),
+           by = list(program, team, level, cpt, cpt_desc, unit_type,
+                     typical_record_range, full_record_range, sd_records)]
+svc_summary[modify$typical_cases,
+            c("cpt", "num_typical_cases", "typical_cost", "avg_typical_cost",
+              "sd_typical_cost", "sd_typical_records", "typical_cost_range",
+              "typical_units", "avg_typical_units", "sd_typical_units")
+            := list(cpt, num_typical_cases, typical_cost, avg_typical_cost,
+                    sd_typical_cost, sd_typical_records, typical_cost_range,
+                    typical_units, avg_typical_units, sd_typical_units),
+            on = c("program", "team", "level", "cpt", "cpt_desc", "unit_type",
+                    "typical_record_range", "full_record_range", "sd_records")]
+svc_summary[modify$outlier_cases,
+            c("cpt", "num_outlier_cases", "outlier_cost", "avg_outlier_cost",
+              "sd_outlier_cost", "sd_outlier_records", "outlier_cost_range",
+              "outlier_units", "avg_outlier_units", "sd_outlier_units")
+            := list(cpt, num_outlier_cases, outlier_cost, avg_outlier_cost,
+                    sd_outlier_cost, sd_outlier_records, outlier_cost_range,
+                    outlier_units, avg_outlier_units, sd_outlier_units),
+            on = c("program", "team", "level", "cpt", "cpt_desc", "unit_type",
+                   "typical_record_range", "full_record_range", "sd_records")]
+
+svc_summary[, .SD, .SDc = c("num_cases", "num_typical_cases")]
+
+# column re-ordering for human readability
+
+
+grep(x=names(svc_summary), pattern="unit", value=TRUE)
+
+setcolorder(svc_summary,
+  c("program", "team", "level", "cpt", "cpt_desc", "unit_type",
+  "num_cases", "num_typical_cases", "num_outlier_cases",
+  "total_cost", "typical_cost", "outlier_cost",
+  "avg_cost", "avg_typical_cost", "avg_outlier_cost",
+  "sd_cost", "sd_typical_cost", "sd_outlier_cost",
+  "full_record_range", "typical_record_range",
+  # "outlier_record_range" - not needed unless asked for by Kelly
+  "sd_typical_records", "sd_outlier_records", "sd_records",
+  "total_units", "avg_units", "unit_range_full", "sd_units",
+  "unit_range_typical", "typical_units", "avg_typical_units",
+  "sd_typical_units", "outlier_units", "avg_outlier_units",
+  "sd_outlier_units", "typical_cost_range", "outlier_cost_range"))
+setorder(svc_summary, program, team, cpt)
+
+rm(admit, case_load, court, fb_data, insure, locus, file_list)

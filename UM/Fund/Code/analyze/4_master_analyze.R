@@ -5,9 +5,9 @@ rm(list = ls()) # clear RAM
 # which computer results in correct base working directory
 cmh_wd <-
   data.table::data.table(expand.grid(stringsAsFactors = FALSE,
-    dir_names = c("Dropbox", "GitHub"),
-    comp_names = c("WSHSQLGP", "DESKTOP-45K7RRN", "JAMES-2"),
-    base = "filler"))
+                                     dir_names = c("Dropbox", "GitHub"),
+                                     comp_names = c("WSHSQLGP", "DESKTOP-45K7RRN", "JAMES-2"),
+                                     base = "filler"))
 data.table::setkey(cmh_wd, dir_names, comp_names)[
   J("Dropbox", "WSHSQLGP"), base := "C:/Users/dalrymplej/Dropbox"]
 data.table::setkey(cmh_wd, dir_names, comp_names)[
@@ -23,20 +23,19 @@ project_wd$results <- "Utilization Management/Fund Only/Results"
 rm(cmh_wd)
 # user input ------------------------------------------------------------------
 input <- list(
-  run_date = "9/22/2015",
+  run_date = "11/03/2015",
   end_date = "8/31/2015" # data parameter end
 )
- # for folder
+# for folder
 project_wd$data <- file.path(project_wd$data,
                              gsub(
                                x = input$run_date,
                                pattern = "/",
-                               replace = "_"
-                             ))
+                               replace = "_"))
 # load packages, source files -------------------------------------------------
 library(wccmh)
 source(file.path(project_wd$dropbox, "WCCMH/R/global library.R"))
 source(file.path(project_wd$code, "0_service auxillary.R"))
 source(file.path(project_wd$code, "1_fund_sql.R"))
-source(file.path(project_wd$code, "2_base_service.R"))
-source(file.path(project_wd$code, "3_export_xlxs.R"))
+source(file.path(project_wd$code, "analyze/2_base_analyze.R"))
+source(file.path(project_wd$code, "analyze/3_export_xlsx.R"))

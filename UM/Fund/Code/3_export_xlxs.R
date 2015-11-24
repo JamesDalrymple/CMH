@@ -59,7 +59,8 @@ for(i in seq_along(all_funds)) {
   cls_h2015_sheet <- createSheet(wb, sheetName="CLS H2015")
   # filter out cls community blanks
   cls_h2015_save <- copy(tmp_services)
-  if(length(grep(x=colnames(cls_h2015_save), pattern="CLS | Community", fixed=TRUE))==1) {
+  if(length(grep(x=names(cls_h2015_save),
+                 pattern="CLS | Community", fixed=TRUE))==1) {
     setnames(cls_h2015_save, "CLS | Community", "cls_community")
     cls_h2015_save <- cls_h2015_save[!is.na(cls_community)]
     setnames(cls_h2015_save, "cls_community", "CLS | Community")
@@ -73,7 +74,7 @@ for(i in seq_along(all_funds)) {
   cls_h2016_sheet <- createSheet(wb, sheetName="CLS H2016")
   # filter out cls h2016
   cls_h2016_save <- copy(tmp_services)
-  if(length(grep(x=colnames(cls_h2016_save),
+  if(length(grep(x=names(cls_h2016_save),
                  pattern= "CLS | Specialized Residential", fixed=TRUE))>0) {
     setnames(cls_h2016_save, "CLS | Specialized Residential", "cls_h2016")
     cls_h2016_save <- cls_h2016_save[!is.na(cls_h2016)]
@@ -89,8 +90,9 @@ for(i in seq_along(all_funds)) {
   # filter out cls t2038
   cls_t2038_save <- copy(tmp_services)
 
-  if(length(grep(x=colnames(cls_t2038_save),
-                 pattern="Home Modification | Children/Housing Assistance", fixed=TRUE))>0) {
+  if(length(grep(x=names(cls_t2038_save),
+                 pattern="Home Modification | Children/Housing Assistance",
+                 fixed=TRUE))>0) {
     setnames(cls_t2038_save, "Home Modification | Children/Housing Assistance", "cls_t2038")
     cls_t2038_save <- cls_t2038_save[!is.na(cls_t2038)]
     setnames(cls_t2038_save, "cls_t2038", "Home Modification | Children/Housing Assistance")
@@ -105,7 +107,7 @@ for(i in seq_along(all_funds)) {
   cls_h0043_sheet <- createSheet(wb, sheetName="CLS H0043")
   # filter out cls independent living
   cls_h0043_save <- copy(tmp_services)
-  if(length(grep(x=colnames(cls_h0043_save),
+  if(length(grep(x=names(cls_h0043_save),
                  pattern="CLS | independent living", fixed=TRUE))>0) {
     setnames(cls_h0043_save, "CLS | independent living", "cls_ind_living")
     cls_h0043_save <- cls_h0043_save[!is.na(cls_ind_living)]
@@ -136,18 +138,19 @@ for(i in seq_along(all_funds)) {
   ### save workbook ###
   # create result folder
   ### R 3.2.0 approach
-  if(!dir.exists(file.path(baseWD, resultsWD))) {
-    dir.create(file.path(baseWD, resultsWD))
-    paste("folder created", file.path(baseWD, resultsWD), sep="...")
+  if(!dir.exists(file.path(project_wd$results))) {
+    dir.create(file.path(project_wd$results))
+    paste("folder created", file.path(project_wd$results),
+          sep="...")
   }
 
   # file name
   export_file <- paste0(
-    fund_name(keep_funds),
-    "_service_array_", run_par, ".xlsx")
+    aux$fund_name(keep_funds),
+    "_service_array_", input$run_par, ".xlsx")
 
   gc(reset = TRUE)
-  saveWorkbook(wb=wb, file=file.path(baseWD, resultsWD,
+  saveWorkbook(wb=wb, file=file.path(project_wd$results,
                                      export_file))
   print(paste(keep_funds, "completed"))
   rm(wb)
