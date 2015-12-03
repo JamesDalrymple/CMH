@@ -272,6 +272,13 @@ fb_data[is.na(cpt), fy := NA_character_]
 fb_data[is.na(cpt), qtr := NA_character_]
 
 ### code descriptions ###
+setnames(um_code_desc,
+         names(um_code_desc),
+         gsub(
+           x = names(um_code_desc),
+           pattern = "[.]",
+           replacement = " "
+         ))
 um_code_desc[, c("State Svc Desc") := NULL]
 # change names
 setnames(um_code_desc, old = c("UM Desc", "CPT CD"), new = c("UM_desc", "cpt"))

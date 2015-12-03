@@ -5,9 +5,9 @@ rm(list = ls()) # clear RAM
 # which computer results in correct base working directory
 cmh_wd <-
   data.table::data.table(expand.grid(stringsAsFactors = FALSE,
-    dir_names = c("Dropbox", "GitHub"),
-    comp_names = c("WSHSQLGP", "DESKTOP-45K7RRN", "JAMES-2"),
-    base = "filler"))
+                                     dir_names = c("Dropbox", "GitHub"),
+                                     comp_names = c("WSHSQLGP", "DESKTOP-45K7RRN", "JAMES-2"),
+                                     base = "filler"))
 data.table::setkey(cmh_wd, dir_names, comp_names)[
   J("Dropbox", "WSHSQLGP"), base := "C:/Users/dalrymplej/Dropbox"]
 data.table::setkey(cmh_wd, dir_names, comp_names)[
@@ -15,18 +15,18 @@ data.table::setkey(cmh_wd, dir_names, comp_names)[
 project_wd <- list()
 project_wd$github <- cmh_wd[J("GitHub", "WSHSQLGP"), base]
 project_wd$dropbox <- cmh_wd[J("Dropbox", "WSHSQLGP"), base]
-project_wd$project <- "CMH/UM/Fund"
+project_wd$project <- "CMH/PI/Hospitalizations"
 project_wd$code <- file.path(project_wd$github, project_wd$project, "Code")
-project_wd$data <- file.path(project_wd$dropbox,
-                             "Utilization Management/Fund Only/Data")
-project_wd$results <- "Utilization Management/Fund Only/Results"
+project_wd$results <- file.path(project_wd$dropbox,
+                                "PI Projects/Hospitalizations/Results")
 rm(cmh_wd)
 # user input ------------------------------------------------------------------
 input <- list(
-  run_date = "12/23/2015",
-  end_date = "10/31/2015" # data parameter end
+  report_date = format(Sys.Date(), "%m_%d_%y"),
+  start_date = '10/1/2010',
+  end_date = '9/30/2015'
 )
- # for folder
+# for folder
 project_wd$data <- file.path(project_wd$data,
                              gsub(
                                x = input$run_date,
@@ -35,8 +35,7 @@ project_wd$data <- file.path(project_wd$data,
                              ))
 # load packages, source files -------------------------------------------------
 library(wccmh)
-# source(file.path(project_wd$dropbox, "WCCMH/R/global library.R"))
-source(file.path(project_wd$code, "0_service auxillary.R"))
-source(file.path(project_wd$code, "1_fund_sql.R"))
-source(file.path(project_wd$code, "2_base_service.R"))
-source(file.path(project_wd$code, "3_export_xlxs.R"))
+source(file.path(project_wd$code, "0_auxillary_hosp.R"))
+source(file.path(project_wd$code, "1_sql_hosp.R"))
+source(file.path(project_wd$code, "2_base_hosp.R"))
+source(file.path(project_wd$code, "3_export_xlsx.R"))

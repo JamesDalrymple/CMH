@@ -2,13 +2,12 @@ modify <- new.env(parent = .GlobalEnv)
 
 #### Load Data ####
 # current state hospital consumers
-modify$state_hosp <- sql$state_hosp
-
-cmh_crisis <- sql$cmh_crisis
+modify$state_hosp <- copy(sql$state_hosp)
+cmh_crisis <- copy(sql$cmh_crisis)
 
 # ------------- fixing data problem
 non_cmh_crisis <- sql$non_cmh_crisis
-# fix duplicate teams per consumer issue ... ask Snow why this happened
+# fix duplicate teams per consumer issue
 modify$non_cmh_priority_dt<-
   data.table(team = c("WSH - PATH/PORT", "WSH - OBRA", "WSH - MH Court",
                       "WSH - Sobriety Court", NA),
@@ -169,7 +168,7 @@ setnames(
   new = c("cpt", "medicaid")
 )
 
-# CRS is not a CMH team ... have Snow fix this
+# CRS is not a CMH team ... have teRi fix this. Removing this for now.
 cmh_crisis <- cmh_crisis[!team=="Crisis Residential Services"]
 cmh_crisis[, team := wccmh::cmh_recode(team)]
 cmh_crisis[, program := wccmh::recode_team_prog(team)]

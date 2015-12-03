@@ -34,9 +34,9 @@ project_wd$data <- file.path(project_wd$data,
                                replace = "_"
                              ))
 # load packages, source files -------------------------------------------------
-# library(CMH) ... replacing global script at some point
-# source(file.path(project_wd$dropbox, "WCCMH/R/global library.R"))
+library(wccmh)
 source(file.path(project_wd$code, "0_outcome auxillary.R"))
 source(file.path(project_wd$code, "1_outcome_sql.R"))
 source(file.path(project_wd$code, "2_outcome_base.R"))
-source(file.path(project_wd$code, "3_export_xlxs.R"))
+source(file.path(project_wd$code, "3_outcome_analyze.R"))
+source(file.path(project_wd$code, "4_export_xlxs.R"))

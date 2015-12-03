@@ -8,7 +8,7 @@ sql$query$state_hosp <-
 from encompass.dbo.tblE2_hosp
 where county = 'Washtenaw' and contract_paneltype = 'State Facility' and
 	(auth_exp >= '%s' or auth_exp is null)",
-          cmh$date_convert(input$end_date))
+          date_convert(input$end_date))
 # data.table(sqlQuery(channel=sql$channel, query=sql$query$state_hosp))
 
 # insure -- CMH Open Ins 2046 sheet1 -- point in  time data
@@ -26,8 +26,8 @@ max(case when INS.IC_name = 'MEDICARE' and
   then 'Y' else null end) as medicare_A_B,
 max(case when INS.IC_name = 'MEDICARE PART D'
   then 'Y' else null end) as medicare_D
-from encompass.dbo.tblE2_CMH_Open_Consumers_w_OBRA CMH
-left join encompass.dbo.tblE2_IPOS IPOS on
+from encompass.dbo.tblE2_CMH_Open_Consumers_w_OBRA as CMH
+left join encompass.dbo.tblE2_IPOS as IPOS on
   CMH.County = IPOS.County and CMH.Case_No = IPOS.Case_No
   and getdate() between IP_effdt and IP_expdt
 left join encompass.dbo.PCCClientDemographics as demo
@@ -79,8 +79,8 @@ sql$query$admit <- sprintf("select distinct
 from encompass.dbo.tblE2_CMH_Adm_Consumers_w_OBRA
 where county = 'Washtenaw' and CMH_effdt<= '%2$s'
 and (CMH_expdt is null or CMH_expdt >= '%1$s')",
-  cmh$date_convert(input$start_date),
-  cmh$date_convert(input$end_date))
+  date_convert(input$start_date),
+  date_convert(input$end_date))
 # sqlQuery(channel = sql$channel, sql$q_court)
 
 # court -- 2061 sheet1, court order repetition & PRR -- point in time data
@@ -131,16 +131,16 @@ left join encompass.dbo.PCFCode as OveriddenDisposition
   on Locus.AHF_ODISP	= OveriddenDisposition.CO_RCDID
 where doc.do_date between '%1$s' and '%2$s'
 and Doc.County = 'Washtenaw'",
-  cmh$date_convert(input$start_date),
-  cmh$date_convert(input$end_date)
+  date_convert(input$start_date),
+  date_convert(input$end_date)
 )
 
 sql$fb_full_list <- list.files(path = "G:/CSTS Data Analyst Archives/FB_archives/rds",
                       full.names = TRUE)
 sql$fb_read <- agrep(x = sql$fb_full_list,
 pattern = paste(
-  format(cmh$date_convert(input$end_date) - 365, "%m_%d_%y"),
-  format(cmh$date_convert(input$end_date), "%m_%d_%y"),
+  format(date_convert(input$end_date) - 365, "%m_%d_%y"),
+  format(date_convert(input$end_date), "%m_%d_%y"),
   sep = "_to_"
 ), value=TRUE
 )

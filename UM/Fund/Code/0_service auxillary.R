@@ -7,7 +7,7 @@ input$start_par <- gsub(x = input$start_date, pattern = "/", replace = "_")
 input$end_par <- gsub(x = input$end_date, pattern = "/", replace = "_")
 input$run_par <- gsub(x = input$run_date, pattern = "/", replace = "_")
 project_wd$results <-
-  file.path(project_wd$dropbox, project_wd$results, project_wd$sub_folder,
+  file.path(project_wd$dropbox, project_wd$results,
             input$run_par)
 aux <- new.env(parent = .GlobalEnv)
 svc_agg <- new.env(parent = .GlobalEnv)
@@ -113,7 +113,7 @@ aux$summary_services <- function(dt) {
   # add fb cost
   x[fb_cpt_mod_cost,
     cost := units * i.unit_cost,
-    on = c("cpt" = "PRI PROCEDURE CODE", "cpt_modifier" = "MOD")]
+    on = c("cpt" = "cpt", "cpt_modifier" = "mod")]
   # summarize based on unit_type
   services <- rbindlist(list(x[!(unit_type %in% c("Day", "Encounter")),
                                list(records = length(service_date),
@@ -208,34 +208,30 @@ aux$summary_services <- function(dt) {
                   sd_outlier_cost = sd(cost, na.rm = TRUE),
                   sd_outlier_records = round(sd(records), 2),
                   outlier_cost_range = aux$my_money_range(cost)),
-             by = list(program, team, level, cpt, cpt_desc, unit_type,
-                       typical_record_range, full_record_range, sd_records)]
+             by = list(program, team, level, cpt, cpt_desc, unit_type)]
   modify$typical_cases <-
-    services[isTRUE(outlier),
+    services[isFALSE(outlier),
              list(num_typical_cases = length(unique(case_no)),
                   typical_cost = sum(cost, na.rm = TRUE),
                   avg_typical_cost = round(mean(cost, na.rm = TRUE), 2),
                   sd_typical_cost = sd(cost, na.rm = TRUE),
                   sd_typical_records = round(sd(records), 2),
                   typical_cost_range = aux$my_money_range(cost)),
-             by = list(program, team, level, cpt, cpt_desc, unit_type,
-                       typical_record_range, full_record_range, sd_records)]
+             by = list(program, team, level, cpt, cpt_desc, unit_type)]
   svc_summary[modify$typical_cases,
               c("cpt", "num_typical_cases", "typical_cost", "avg_typical_cost",
                 "sd_typical_cost", "sd_typical_records", "typical_cost_range")
               := list(cpt, num_typical_cases, typical_cost, avg_typical_cost,
                       sd_typical_cost, sd_typical_records, typical_cost_range),
               on = c("program", "team", "level", "cpt", "cpt_desc",
-                     "unit_type", "typical_record_range", "full_record_range",
-                     "sd_records")]
+                     "unit_type")]
   svc_summary[modify$outlier_cases,
               c("cpt", "num_outlier_cases", "outlier_cost", "avg_outlier_cost",
                 "sd_outlier_cost", "sd_outlier_records", "outlier_cost_range")
               := list(cpt, num_outlier_cases, outlier_cost, avg_outlier_cost,
                       sd_outlier_cost, sd_outlier_records, outlier_cost_range),
               on = c("program", "team", "level", "cpt", "cpt_desc",
-                     "unit_type", "typical_record_range", "full_record_range",
-                     "sd_records")]
+                     "unit_type")]
 
   # column re-ordering for human readability
   setcolorder(svc_summary,
