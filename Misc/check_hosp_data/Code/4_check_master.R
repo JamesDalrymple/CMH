@@ -15,11 +15,12 @@ data.table::setkey(cmh_wd, dir_names, comp_names)[
 project_wd <- list()
 project_wd$github <- cmh_wd[J("GitHub", "WSHSQLGP"), base]
 project_wd$dropbox <- cmh_wd[J("Dropbox", "WSHSQLGP"), base]
-project_wd$project <- "CMH/Health Home/outcomes"
+project_wd$project <- "CMH/Misc/check_hosp_data"
 project_wd$code <- file.path(project_wd$github, project_wd$project, "Code")
 project_wd$data <- file.path(project_wd$dropbox,
-                             "CMH/Health Home/outcomes/Data")
-project_wd$results <- "CMH/Health Home/outcomes/Results"
+                             "CMH/PI Projects/Hospitalizations/Data")
+project_wd$results <- file.path(project_wd$github,
+                                "CMH/Misc/check_hosp_data/Results")
 rm(cmh_wd)
 # user input ------------------------------------------------------------------
 input <- list(
@@ -35,8 +36,7 @@ project_wd$data <- file.path(project_wd$data,
                              ))
 # load packages, source files -------------------------------------------------
 library(wccmh)
-source(file.path(project_wd$code, "0_outcome auxillary.R"))
-source(file.path(project_wd$code, "1_outcome_sql.R"))
-source(file.path(project_wd$code, "2_outcome_base.R"))
-source(file.path(project_wd$code, "3_outcome_analyze.R"))
-source(file.path(project_wd$code, "4_export_xlxs.R"))
+source(file.path(project_wd$code, "0_check auxillary.R"))
+source(file.path(project_wd$code, "1_check_load_data.R"))
+source(file.path(project_wd$code, "2_check_base.R"))
+source(file.path(project_wd$code, "3_export_xlxs.R"))
