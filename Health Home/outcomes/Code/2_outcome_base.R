@@ -1,5 +1,13 @@
-# start_date will always be one year prior to end date
-# start_date <- date_convert(end_date) - 365
+# bmi_guide <-
+#   list(underweight = "<18.5", healthy = "18.5-24.9",
+#        overweight = "25-29.9", obese = ">30")
+
+# hypertension (systolic) guide:
+# less_than_60 <-
+# list(normal = "<139/89", hypertension = ">140/90", emergency = ">180/90")
+# sixty_plus <-
+# list(normal = "<149/89", hypertension = ">150/90", emergency = ">180/90")
+# http://www.mayoclinic.org/diseases-conditions/low-blood-pressure/basics/causes/con-20032298
 
 modify <- new.env(parent = .GlobalEnv)
 saved <- new.env(parent = .GlobalEnv)
@@ -11,26 +19,31 @@ setnames(wellness, names(wellness), tolower(names(wellness)))
 
 # OUTPUT ----------------------------------------------------------------------
 output[is.na(hh_team), hh_team := "N"]
+output[is.na(samhsa_staff), samhsa_staff := "none assigned"]
+
 # exclude all children
 output[, dob  := date_convert(dob)]
 output[, vt_date := date_convert(vt_date)]
 output[, age := as.int(floor((vt_date-dob)/365.25))]
 output <- output[age >= 18] # must be 18+ on every vt_date
+output[, sixty_plus := ifelse(age >= 60, "over 60", "less than 60")]
+# only want the last age.. for now
+output[, age := max(age), by = "case_no"] # NAs should not be possible
 output[, team := cmh_recode(team)]
-bmi_dt <- copy(output[, unique(.SD),
+modify$bmi_dt <- copy(output[, unique(.SD),
   .SDcols = c("case_no", "team", "age", "hh_team", "samhsa_staff",
               "stafftype", "vt_date", "bmi", "weight", "height_feet",
               "height_inches")])
-bp_dt <-  copy(output[, unique(.SD),
+modify$bp_dt <-  copy(output[, unique(.SD),
   .SDcols = c("case_no", "team", "age", "hh_team", "samhsa_staff",
   "stafftype", "vt_date", "diastolic", "systolic")])
 
-# bmi_dt: BMI ------------------------------------------------------------------
+# modify$bmi_dt: BMI ----------------------------------------------------------
 # combine all existing heights
-bmi_dt[, height_feet := as.num(height_feet)]
-bmi_dt[, height_inches := as.num(height_inches)]
-bmi_dt[, total_inches := psum(height_feet*12, height_inches)]
-# bmi_dt: BMI: for error checking/reporting ----------------------------------
+modify$bmi_dt[, height_feet := as.num(height_feet)]
+modify$bmi_dt[, height_inches := as.num(height_inches)]
+modify$bmi_dt[, total_inches := psum(height_feet*12, height_inches)]
+# modify$bmi_dt: BMI: for error checking/reporting ----------------------------
 # If abs(mean(total_inches)-total_inches) > 1 for any consumer,
 # then that consumers record is put on the *BAD* list and removed
 # until fixed, per Brandie Hagaman on 11/30/2015.
@@ -38,14 +51,14 @@ saved$note_height_issues <-
 "If abs(mean(total_inches)-total_inches) > 1 for any consumer,
 then that consumers record is put on the *BAD* list and removed
 until fixed, per Brandie Hagaman on 11/30/2015."
-bmi_dt[, avg_inches := mean(total_inches, na.rm = TRUE),
+modify$bmi_dt[, avg_inches := mean(total_inches, na.rm = TRUE),
        by = list(case_no)]
-bmi_dt[, abs_inch_diff := abs(avg_inches - total_inches)]
-bmi_dt[, avg_inches := round(avg_inches, 1)]
+modify$bmi_dt[, abs_inch_diff := abs(avg_inches - total_inches)]
+modify$bmi_dt[, avg_inches := round(avg_inches, 1)]
 modify$cases_height_errror <-
-  bmi_dt[abs_inch_diff > 1, unique(case_no)]
+  modify$bmi_dt[abs_inch_diff > 1, unique(case_no)]
 saved$records_height_error <-
-  bmi_dt[case_no %in% modify$cases_height_errror &
+  modify$bmi_dt[case_no %in% modify$cases_height_errror &
            !is.na(height_feet),
          unique(.SD), .SDcols = c(
            "case_no",
@@ -56,123 +69,175 @@ saved$records_height_error <-
            "total_inches",
            "avg_inches"
          ), keyby = list(case_no, vt_date)]
-bmi_dt[, c("height_feet", "height_inches", "avg_inches", "abs_inch_diff")
-       := NULL]
-saved$summary_height_errors <- bmi_dt[case_no %in% modify$cases_height_errror,
+modify$bmi_dt[, c("height_feet", "height_inches",
+                  "avg_inches", "abs_inch_diff") := NULL]
+saved$summary_height_errors <- modify$bmi_dt[case_no %in%
+                                               modify$cases_height_errror,
        list(num_consumers_height_errors = length(unique(case_no))),
        by = hh_team]
-bmi_dt <- bmi_dt[case_no %nin% modify$cases_height_errror]
+modify$bmi_dt <- modify$bmi_dt[case_no %nin% modify$cases_height_errror]
 # calculate BMI manually
-bmi_dt[is.na(bmi), bmi := round(weight*703/total_inches^2, 1)]
+modify$bmi_dt[is.na(bmi), bmi := round(weight*703/total_inches^2, 1)]
 # filter out people with most recent BPS under 18.5
-bmi_dt[, max_vt_date := max(vt_date, na.rm = TRUE), by = case_no]
+modify$bmi_dt[, max_vt_date := max(vt_date, na.rm = TRUE), by = case_no]
 saved$bmi_too_low_summary <-
-  bmi_dt[bmi < 18.5 & max_vt_date == vt_date,
+  modify$bmi_dt[bmi < 18.5 & max_vt_date == vt_date,
          list(con_bmi_too_low = length(unique(case_no))), by = hh_team]
 saved$bmi_too_low_records <-
-  bmi_dt[case_no %in% bmi_dt[bmi < 18.5 & max_vt_date == vt_date,
+  modify$bmi_dt[case_no %in% modify$bmi_dt[bmi < 18.5 & max_vt_date == vt_date,
                              unique(case_no)],
          unique(.SD), .SDcols = c("case_no", "hh_team", "vt_date",
                                   "bmi", "total_inches"),
          keyby = c("team", "case_no")]
-bmi_dt[, max_vt_date := NULL]
-bmi_dt <- bmi_dt[case_no %nin% bmi_dt[bmi < 18.5 & max_vt_date == vt_date,
-                           unique(case_no)]]
+
+modify$bmi_dt <- modify$bmi_dt[case_no %nin%
+  modify$bmi_dt[bmi < 18.5 & max_vt_date == vt_date, unique(case_no)]]
 # people missing weight - 9 right now - removing
-bmi_dt[, missing_weight :=
+modify$bmi_dt[, missing_weight :=
          aux$all_na(weight), by = case_no]
-if (nrow(bmi_dt[is.na(missing_weight)]) > 0) {
+if (nrow(modify$bmi_dt[is.na(missing_weight)]) > 0) {
 saved$cases_missing_weight <-
-  bmi_dt[is.na(missing_weight)]
-bmi_dt <- bmi_dt[!is.na(missing_weight)]
-bmi_dt[, missing_weight := NULL]
+  modify$bmi_dt[is.na(missing_weight)]
+modify$bmi_dt <- modify$bmi_dt[!is.na(missing_weight)]
 }
+modify$bmi_dt[, c("missing_weight", "max_vt_date") := NULL]
 
 # possibly data entry errors
-saved$bad_weight <- bmi_dt[bmi < 18.5 & weight < 70, unique(.SD),
+saved$bad_weight <- modify$bmi_dt[bmi < 18.5 & weight < 70, unique(.SD),
   .SDc = c("case_no", "team", "hh_team", "vt_date", "bmi", "weight",
            "age", "total_inches")]
-bmi_dt <-setkey(bmi_dt, case_no, vt_date)[
+modify$bmi_dt <-setkey(modify$bmi_dt, case_no, vt_date)[
   !saved$bad_weight[, list(case_no, vt_date)]]
 
 # first and last available BMI
-bmi_dt[!is.na(bmi), min_vt_date := min(vt_date, na.rm = TRUE), by = case_no]
-bmi_dt[!is.na(bmi), max_vt_date := max(vt_date, na.rm = TRUE), by = case_no]
-bmi_dt[, bmi_date_diff :=
+modify$bmi_dt[!is.na(bmi), min_vt_date :=
+min(vt_date, na.rm = TRUE), by = case_no]
+modify$bmi_dt[!is.na(bmi), max_vt_date :=
+  max(vt_date, na.rm = TRUE), by = case_no]
+modify$bmi_dt[, bmi_date_diff :=
   as.numeric(as.Date(max_vt_date)- as.Date(min_vt_date))]
 # greater than or equal 30 day requirement, per Brandie H 11/23/2015
-saved$bmi_not_30_days <- bmi_dt[bmi_date_diff < 30]
-bmi_dt <- bmi_dt[bmi_date_diff >= 30]
+saved$bmi_not_30_days <- modify$bmi_dt[bmi_date_diff < 30]
+modify$bmi_dt <- modify$bmi_dt[bmi_date_diff >= 30]
 
 # we can go further back to get more heights
 saved$note_height_idea1 <-
   "we can go back further than one year to get more heights"
 
-bmi_dt <- unique(bmi_dt)
-bmi_dt[, num_bmi := length(unique(vt_date)) , by = case_no]
+modify$bmi_dt <- unique(modify$bmi_dt)
+modify$bmi_dt[, num_bmi := length(unique(vt_date)) , by = case_no]
 
+modify$output$bmi <- mmerge( l = list(
+  modify$bmi_dt[min_vt_date==vt_date, list(case_no, first_bmi = bmi)],
+  modify$bmi_dt[max_vt_date==vt_date, list(case_no, last_bmi = bmi)],
+  modify$bmi_dt[, unique(.SD),
+    .SDcols = c("case_no", "team", "age", "hh_team", "samhsa_staff",
+                "stafftype")]), all = TRUE, by = "case_no")
 
-######## LEFT OFF HERE 11/30/2015
+# pre-analysis summmary to determine the appropriateness of using data --------
 
-
-# # create bmi output ---
-# bmi_output <-
-#   copy(output[!is.na(bmi) & bmi_date_diff >= 30, .SD,
-#          .SDc = c("case_no", "hh_team", "bmi", "vt_date")])
-
-# bmi_output <- unique(bmi_output)
-# bmi_output[, num_bmi := length(unique(vt_date)) , by = case_no]
-# bmi_output <-
-#   unique(bmi_output[, .SD, .SDc = c("case_no", "hh_team", "num_bmi")])
-
-# create weight output ---
-weight_output <-
-  copy(bmi_dt[!is.na(weight), .SD,
+modify$pre$weight_output <-
+  copy(modify$bmi_dt[!is.na(weight), unique(.SD),
          .SDc = c("case_no", "hh_team", "weight", "vt_date")])
-weight_output <- unique(weight_output)
-weight_output[, num_weight := length(unique(vt_date)),
+modify$pre$weight_output[, num_weight := length(unique(vt_date)),
               by = list(case_no)]
-weight_output <-
-  unique(weight_output[, .SD, .SDc = c("case_no", "hh_team", "num_weight")])
-
+modify$pre$weight_output  <-
+  modify$pre$weight_output[, unique(.SD),
+                           .SDc = c("case_no", "hh_team", "num_weight")]
 # BMI - consumers by category hh_team
-bmi1 <- output[, list(total_consumers = length(unique(case_no))),
+modify$pre$bmi1 <-
+  output[, list(total_consumers = length(unique(case_no))),
        by = hh_team]
 # BMI at least one
-bmi2 <- bmi_dt[num_bmi >= 1,
+modify$pre$bmi2 <-
+  modify$bmi_dt[num_bmi >= 1,
            list(at_least_1_BMI = length(unique(case_no))), by = hh_team]
 # BMI at least 2
-bmi3 <- bmi_dt[num_bmi >= 2,
-           list(at_least_2_BMI = length(unique(case_no))), by = hh_team]
+modify$pre$bmi3 <-
+  modify$bmi_dt[num_bmi >= 2,
+               list(at_least_2_BMI = length(unique(case_no))), by = hh_team]
 # at least 2 weights
-bmi4 <- weight_output[num_weight >= 2,
-              list(at_least_2_weights = length(unique(case_no))),
-              by = hh_team]
-t(mmerge(bmi1, bmi2, bmi3, bmi4, by = "hh_team"))
+modify$pre$bmi4 <-
+  modify$pre$weight_output[num_weight >= 2,
+               list(at_least_2_weights = length(unique(case_no))),
+               by = hh_team]
 
 # Overall health --------------------------------------------------------------
-wellness[overall_health_rating=="No Response",
+modify$wellness <- copy(wellness)
+modify$wellness[overall_health_rating=="No Response",
          overall_health_rating := NA]
-wellness[!is.na(overall_health_rating),
+modify$wellness[!is.na(overall_health_rating),
          max_wn_date := max(wellnessnote_date, na.rm = TRUE), by = case_no]
-wellness[!is.na(overall_health_rating),
+modify$wellness[!is.na(overall_health_rating),
          min_wn_date := min(wellnessnote_date, na.rm = TRUE), by = case_no]
-w1 <- wellness[, list(total_consumers = length(unique(case_no))),
-               by = hh_team]
+modify$pre$w1 <-
+  modify$wellness[, list(total_consumers = length(unique(case_no))),
+                  by = hh_team]
 # wellness[max_wn_date!=min_wn_date, length(unique(case_no)), by = hh_team]
-wellness[!is.na(overall_health_rating), num_wn :=
-  length(unique(wellnessnote_date)), by = case_no]
-wellness[is.na(num_wn), num_wn := 0]
-w2 <- wellness[num_wn==0, list(missing_wn = length(unique(case_no))),
-                   by = hh_team]
-w3 <- wellness[num_wn >= 1, list(at_least_1_wn = length(unique(case_no))),
-               by = hh_team]
-w4 <- wellness[num_wn >= 2, list(at_least_2_wn = length(unique(case_no))),
-               by = hh_team]
-t(mmerge(w1, w2, w3, w4, by = "hh_team"))
-# wellness[is.na(max_wn_date) &
-#          is.na(min_wn_date), length(unique(case_no)), by = hh_team]
+modify$wellness[!is.na(overall_health_rating), num_wn :=
+                  length(unique(wellnessnote_date)), by = case_no]
+modify$wellness[is.na(num_wn), num_wn := 0]
+modify$pre$w2 <-
+  modify$wellness[num_wn == 0, list(missing_wn = length(unique(case_no))),
+                  by = hh_team]
+modify$pre$w3 <-
+  modify$wellness[num_wn >= 1, list(at_least_1_wn = length(unique(case_no))),
+                  by = hh_team]
+modify$pre$w4 <-
+  modify$wellness[num_wn >= 2, list(at_least_2_wn = length(unique(case_no))),
+                  by = hh_team]
 
+# blood pressure --------------------------------------------------------------
+modify$bp_dt <-
+  output[, unique(.SD),
+   .SDcols = c("case_no", "hh_team", "vt_date", "diastolic", "systolic",
+               "sixty_plus", "samhsa_staff", "stafftype")]
+
+# we want blood pressure with both the upper and lower numbers
+modify$bp_dt <- modify$bp_dt[!is.na(diastolic) & !is.na(systolic)]
+modify$bp_dt[, max_vt_date := max(vt_date, na.rm = TRUE), by = case_no]
+modify$bp_dt[, min_vt_date := min(vt_date, na.rm = TRUE), by = case_no]
+# fix records with multiple blood pressures in one day
+modify$bp_dt[, diastolic := as.num(diastolic)]
+modify$bp_dt[, systolic := as.num(systolic)]
+modify$bp_dt[min_vt_date == vt_date, diastolic :=
+                   round(mean(diastolic)), by = case_no]
+modify$bp_dt[max_vt_date == vt_date, diastolic :=
+                   round(mean(diastolic)), by = case_no]
+modify$bp_dt[min_vt_date == vt_date, systolic :=
+                   round(mean(systolic)), by = case_no]
+modify$bp_dt[max_vt_date == vt_date, systolic :=
+                   round(mean(systolic)), by = case_no]
+
+modify$output$bp <- mmerge(l = list(
+  unique(modify$bp_dt[min_vt_date == vt_date,
+                   list(case_no, first_diastolic = diastolic,
+                        first_systolic = systolic)]),
+  unique(modify$bp_dt[max_vt_date == vt_date,
+                  list(case_no, last_diastolic = diastolic,
+                       last_systolic = systolic)]),
+  modify$bp_dt[, unique(.SD),
+                .SDcols = c("case_no", "sixty_plus", "hh_team", "samhsa_staff",
+                            "stafftype")]),
+  all = TRUE, by = "case_no")
+modify$output$bp <- unique(modify$output$bp)
+modify$bp_dt[, systolic_cat :=
+               cut(
+                 systolic,
+                 breaks = c(0, 140, 180, Inf),
+                 right = FALSE,
+                 labels = c("normal", "hypertension", "emergency")
+               )]
+modify$bp_dt[(systolic < 90 | diastolic < 60) &
+               systolic_cat != "normal",
+             systolic_cat := paste(systolic_cat, "hypotension", sep = " | ")]
+modify$bp_dt[(systolic < 90 | diastolic < 60) &  systolic_cat == "normal",
+             systolic_cat := "hypotension"]
+
+# t(mmerge(modify$pre$w1, modify$pre$w2, modify$pre$w3, modify$pre$w4,
+#          by = "hh_team"))
+# t(mmerge(modify$pre$bmi1, modify$pre$bmi2, modify$pre$bmi3, modify$pre$bmi4,
+#        by = "hh_team"))
 
 ### create information about the file to share with end-users ###
 about_file <- data.table(data_source = "E2 report 2281: E2_HH_vs_non_HH_Vital",
