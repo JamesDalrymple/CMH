@@ -19,7 +19,8 @@ project_wd$project <- "CMH/Health Home/outcomes"
 project_wd$code <- file.path(project_wd$github, project_wd$project, "Code")
 project_wd$data <- file.path(project_wd$dropbox,
                              "CMH/Health Home/outcomes/Data")
-project_wd$results <- "CMH/Health Home/outcomes/Results"
+project_wd$results <- file.path(project_wd$dropbox,
+                                "Health Home Dashboard/Outcomes/Results")
 rm(cmh_wd)
 # user input ------------------------------------------------------------------
 input <- list(
