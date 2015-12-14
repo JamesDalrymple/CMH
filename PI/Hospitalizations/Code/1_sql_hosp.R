@@ -51,7 +51,7 @@ sql$fn_served <- function(start_date, end_date) {
     left join E2_Fn_Active_Clients_Between2 ('Washtenaw', '%1$s', '%2$s') CMH on CMH.clientID = Claim.CLTID and CMH.county = Claim.county
     where Claim.serviceType = 'MH' and  Claim2.case_no is null
     union
-    select
+    select distinct
     Claim.case_no, CMH.team, cast('%1$s' as date) as span_start, cast('%2$s' as date) as span_end
     from encompass..tblE2_SAL_claims_for4 Claim
     join encompass..PCCClient C on C.CL_RCDID = Claim.CLTID

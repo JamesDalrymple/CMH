@@ -4,8 +4,11 @@ sql$channel <- odbcConnect("WSHSQLGP")
 
 # current state hospital consumers
 sql$query$outcome <-
-"select distinct HH.*, V.VT_DATE, V.BMI, Diastolic,
-  Systolic, weight, height_Feet, height_Inches
+"select distinct
+  HH.case_no, hh.dob, hh.team, hh.cmh_effdt, hh.hh_team, hh.hh_adm_date,
+  hh.samhsa_staff, hh.stafftype,
+  V.VT_DATE as vt_date, V.BMI as bmi, V.diastolic,
+  V.systolic, V.weight, V.height_feet, V.height_inches
 from encompass.dbo.E2_Fn_CMH_Open_w_HH_Team_or_not() HH
 left join encompass.dbo.tblE2_Vitals V on HH.Case_No = V.Case_No
   and ( V.VT_DATE >= HH_adm_date or  (HH_team is null and

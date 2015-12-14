@@ -27,8 +27,7 @@ output[, dob  := date_convert(dob)]
 output[, vt_date := date_convert(vt_date)]
 output[, age := as.int(floor((vt_date-dob)/365.25))]
 output <- output[age >= 18] # must be 18+ on every vt_date
-output[, sixty_plus := ifelse(age >= 60, "over 60", "less than 60")]
-# # only want the last age.. for now
+# # only want the last age... for now
 # output[, age := max(age), by = "case_no"] # NAs should not be possible
 output[, team := cmh_recode(team)]
 modify$bmi_dt <- copy(output[, unique(.SD),
@@ -188,45 +187,37 @@ modify$pre$w4 <-
 modify$bp_dt <-
   output[, unique(.SD),
    .SDcols = c("case_no", "hh_team", "vt_date", "diastolic", "systolic", "age",
-               "sixty_plus", "samhsa_staff", "stafftype")]
+               "samhsa_staff", "stafftype")]
+# systolic needs to be higher than diastolic
+modify$bp_dt <- modify$bp_dt[systolic >= diastolic]
 
 # we want blood pressure with both the upper and lower numbers
 modify$bp_dt <- modify$bp_dt[!is.na(diastolic) & !is.na(systolic)]
 modify$bp_dt[, max_vt_date := max(vt_date, na.rm = TRUE), by = case_no]
-modify$bp_dt[, min_vt_date := min(vt_date, na.rm = TRUE), by = case_no]
+         modify$bp_dt[, min_vt_date := min(vt_date, na.rm = TRUE), by = case_no]
 # fix records with multiple blood pressures in one day
 modify$bp_dt[, diastolic := as.num(diastolic)]
 modify$bp_dt[, systolic := as.num(systolic)]
-modify$bp_dt[min_vt_date == vt_date, diastolic :=
-                   round(mean(diastolic)), by = case_no]
-modify$bp_dt[max_vt_date == vt_date, diastolic :=
-                   round(mean(diastolic)), by = case_no]
-modify$bp_dt[min_vt_date == vt_date, systolic :=
-                   round(mean(systolic)), by = case_no]
-modify$bp_dt[max_vt_date == vt_date, systolic :=
-                   round(mean(systolic)), by = case_no]
-# detailed categories
-modify$bp_dt[, sys_detail_cat := aux$systolic_cat(age, systolic)]
-modify$bp_dt[, dia_detail_cat := aux$systolic_cat(age, diastolic)]
-# distance from age-based average bp values
-modify$bp_dt[, dia_dist := aux$diastolic_distance(age, diastolic)]
-modify$bp_dt[, sys_dist := aux$diastolic_distance(age, systolic)]
+modify$bp_dt[, c("diastolic", "systolic") :=
+  list(round(mean(diastolic)), round(mean(systolic))),
+  by = list(case_no, vt_date)]
+modify$bp_dt <- unique(modify$bp_dt)
+
+# jama and dw categories
+modify$bp_dt[, c("sys_jama", "dia_jama", "sys_dw", "dia_dw") :=
+  list(aux$sys_jama(age, systolic),
+       aux$dia_jama(age, diastolic),
+       aux$sys_dw(age, systolic),
+       aux$dia_dw(age, diastolic))]
+
 # combining first/last bp dates to one row = one consumer
 modify$output$bp <- mmerge(l = list(
   unique(modify$bp_dt[min_vt_date == vt_date,
-                   list(case_no, first_systolic = systolic,
-                        first_sys_detail_cat = sys_detail_cat,
-                        first_diastolic = diastolic,
-                        first_dia_detail_cat = dia_detail_cat,
-                        first_sys_dist = sys_dist,
-                        first_dia_dist = dia_dist)]),
+                   list(case_no, sys_jama1 = sys_jama, dia_jama1 = dia_jama,
+                        sys_dw1 = sys_dw, dia_dw1 = dia_dw)]),
   unique(modify$bp_dt[max_vt_date == vt_date,
-                      list(case_no, last_systolic = systolic,
-                           last_sys_detail_cat = sys_detail_cat,
-                           last_diastolic = diastolic,
-                           last_dia_detail_cat = dia_detail_cat,
-                           last_sys_dist = sys_dist,
-                           last_dia_dist = dia_dist)]),
+                      list(case_no, sys_jama2 = sys_jama, dia_jama2 = dia_jama,
+                           sys_dw2 = sys_dw, dia_dw2 = dia_dw)]),
   modify$bp_dt[, unique(.SD),
                 .SDcols = c("case_no", "hh_team", "samhsa_staff",
                             "stafftype")]),
@@ -234,150 +225,12 @@ modify$output$bp <- mmerge(l = list(
 modify$output$bp <- unique(modify$output$bp)
 
 # improvement -----------------------------------------------------------------
-# improvement based on detail categorization
-modify$output$bp[, detail_sys_status :=
-  aux$detail_cat_eval(first_sys_detail_cat, last_sys_detail_cat)]
-modify$output$bp[, detail_dia_status :=
-  aux$detail_cat_eval(first_dia_detail_cat, last_dia_detail_cat)]
-# improvement based on distance
-modify$output$bp[, sys_dist_status :=
-                   aux$dist_eval(first_sys_dist, last_sys_dist)]
-modify$output$bp[, dia_dist_status :=
-                   aux$dist_eval(first_dia_dist, last_dia_dist)]
-# # look for lower bp unless it is too low
-# # I just cant see this working accurately... James Dalrymple, 12/9/2015
-# modify$output$bp[as.numeric(first_sys_detail_cat) %in% c(1:3) &
-#   last_systolic-first_systolic > 0, status_numeric := "improved"]
-# modify$output$bp[last_systolic-first_systolic == 0,
-#                  status_numeric := "maintained"]
-# modify$output$bp[as.numeric(first_sys_detail_cat) %in% c(1:3) &
-#   last_systolic-first_systolic < 0, status_numeric := "decreased"]
-# modify$output$bp[as.numeric(first_sys_detail_cat) %nin% c(1:3) &
-#   last_systolic-first_systolic < 0, status_numeric := "decreased"]
-
-
-
-
-
-# modify$bp_dt[sixty_plus == "less than 60", systolic_cat :=
-#                cut(
-#                  systolic,
-#                  breaks = c(0, 50, 90, 140, 180, Inf),
-#                  right = FALSE,
-#                  labels = c("emergency:low", "hypotension", "normal",
-#                             "hypertension", "emergency:high"))]
-# modify$bp_dt[sixty_plus == "over 60", systolic_cat :=
-#                cut(
-#                  systolic,
-#                  breaks = c(0, 50, 90, 150, 180, Inf),
-#                  right = FALSE,
-#                  labels = c("emergency:low", "hypotension", "normal",
-#                             "hypertension", "emergency:high"))]
-# modify$bp_dt[, diastolic_cat :=
-#                cut(
-#                  diastolic,
-#                  breaks = c(0, 33, 60, 90, 110, Inf),
-#                  right = FALSE,
-#                  labels = c("emergency:low", "hypotension", "normal",
-#                             "hypertension", "emergency:high"))]
-
-# modify$bp_dt[systolic < 90 & systolic_cat == "normal"]
-
-# modify$bp_dt[(systolic < 90 | diastolic < 60) &  systolic_cat == "normal",
-#              systolic_cat := "hypotension"]
-
-
-
-# modify$bp_max <-
-#   modify$bp_dt[vt_date == max_vt_date, unique(.SD),
-#   .SDc = c("case_no", "hh_team", "diastolic", "systolic", "systolic_cat",
-#            "sixty_plus", "samhsa_staff", "stafftype")]
-# modify$bp_min <-
-#   modify$bp_dt[vt_date == min_vt_date, unique(.SD),
-#   .SDc = c("case_no", "hh_team", "diastolic", "systolic", "systolic_cat",
-#            "sixty_plus", "samhsa_staff", "stafftype")]
-# modify$bp_change <- c("diastolic", "systolic", "systolic_cat", "sixty_plus")
-# setnames(modify$bp_min,
-#          old = modify$bp_change,
-#          new = paste("first", modify$bp_change, sep = "_"))
-# setnames(modify$bp_max,
-#          old = modify$bp_change,
-#          new = paste("last", modify$bp_change, sep = "_"))
-# modify$output$bp <- merge(modify$bp_min,
-#       modify$bp_max,
-#       all = TRUE,
-#       by = c("case_no", "hh_team", "samhsa_staff", "stafftype")
-# )
-
-# systolic >= 90
-# modify$output$bp[last_systolic >= 90 &
-#                  last_systolic - first_systolic < 0,
-#                  systolic_cond := "improved"]
-# modify$output$bp[last_systolic >= 90 &
-#                    last_systolic - first_systolic == 0,
-#                  systolic_cond := "maintained"]
-# modify$output$bp[last_systolic >= 90 &
-#                    last_systolic - first_systolic > 0,
-#                  systolic_cond := "decreased"]
-# # systolic < 90
-# modify$output$bp[first_systolic < 90 &
-#                  last_systolic < 140 & last_sixty_plus == "less than 60" &
-#                    last_systolic - first_systolic > 0,
-#                  systolic_cond := "improved"]
-# modify$output$bp[first_systolic < 90 &
-#                    last_systolic < 150 & last_sixty_plus == "over 60" &
-#                    last_systolic - first_systolic > 0,
-#                  systolic_cond := "improved"]
-# modify$output$bp[first_systolic < 90 &
-#                    last_systolic < 140 & last_sixty_plus == "less than 60" &
-#                    last_systolic - first_systolic == 0,
-#                  systolic_cond := "maintained"]
-# modify$output$bp[first_systolic < 90 &
-#                    last_systolic < 150 & last_sixty_plus == "over 60" &
-#                    last_systolic - first_systolic == 0,
-#                  systolic_cond := "maintained"]
-# modify$output$bp[first_systolic < 90 &
-#                    last_systolic < 140 & last_sixty_plus == "less than 60" &
-#                    last_systolic - first_systolic < 0,
-#                  systolic_cond := "decreased"]
-# modify$output$bp[first_systolic < 90 &
-#                    last_systolic < 150 & last_sixty_plus == "over 60" &
-#                    last_systolic - first_systolic < 0,
-#                  systolic_cond := "decreased"]
-# # unusual cases
-# modify$output$bp[first_systolic < 90 & last_systolic > 140 &
-#                  last_sixty_plus == "less than 60",
-#                  systolic_cond := "decreased"]
-# modify$output$bp[first_systolic < 90 & last_systolic > 150 &
-#                    last_sixty_plus == "over 60",
-#                  systolic_cond := "decreased"]
-#
-# modify$output$bp[last_systolic < 90 &
-#                  first_systolic >= 90 & first_systolic < 140 &
-#                  first_sixty_plus == "less than 60" &
-#                  last_systolic - first_systolic < 0,
-#                  systolic_cond := "decreased"]
-# modify$output$bp[last_systolic < 90 &
-#                    first_systolic >= 90 & first_systolic < 150 &
-#                    first_sixty_plus == "over 60" &
-#                    last_systolic - first_systolic < 0,
-#                  systolic_cond := "decreased"]
-# modify$output$bp[last_systolic < 90 &
-#                  first_systolic >= 140 &
-#                  last_sixty_plus == "less than 60",
-#                  systolic_cond := "improved"]
-# modify$output$bp[last_systolic < 90 &
-#                    first_systolic >= 180,
-#                  systolic_cond := "improved"]
-#
-# modify$output$bp[]
-#
-# modify$output$bp[is.na(systolic_cond)]
-
-# t(mmerge(modify$pre$w1, modify$pre$w2, modify$pre$w3, modify$pre$w4,
-#          by = "hh_team"))
-# t(mmerge(modify$pre$bmi1, modify$pre$bmi2, modify$pre$bmi3, modify$pre$bmi4,
-#        by = "hh_team"))
+modify$output$bp[, c("dw_sys_status", "dw_dia_status",
+                     "jama_sys_status", "jama_dia_status") :=
+                   list(aux$dw_eval(sys_dw1, sys_dw2),
+                        aux$dw_eval(dia_dw1, dia_dw2),
+                        aux$jama_eval(sys_jama1, sys_jama2),
+                        aux$jama_eval(dia_jama1, dia_jama2))]
 
 ### create information about the file to share with end-users ###
 about_file <- data.table(data_source = "E2 report 2281: E2_HH_vs_non_HH_Vital",
