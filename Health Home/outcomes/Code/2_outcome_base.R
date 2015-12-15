@@ -1,15 +1,3 @@
-# bmi_guide <-
-#   list(underweight = "<18.5", healthy = "18.5-24.9",
-#        overweight = "25-29.9", obese = ">30")
-
-# hypertension (systolic) guide:
-# less_than_60 <-
-# list(normal = "<139/89", hypertension = ">140/90", emergency = ">180/90")
-# sixty_plus <-
-# list(normal = "<149/89", hypertension = ">150/90", emergency = ">180/90")
-# http://www.mayoclinic.org/diseases-conditions/low-blood-pressure/basics/causes/con-20032298
-# http://www.disabled-world.com/artman/publish/bloodpressurechart.shtml
-
 modify <- new.env(parent = .GlobalEnv)
 saved <- new.env(parent = .GlobalEnv)
 
@@ -203,21 +191,18 @@ modify$bp_dt[, c("diastolic", "systolic") :=
   by = list(case_no, vt_date)]
 modify$bp_dt <- unique(modify$bp_dt)
 
-# jama and dw categories
-modify$bp_dt[, c("sys_jama", "dia_jama", "sys_dw", "dia_dw") :=
+# jama categories
+modify$bp_dt[, c("sys_jama", "dia_jama") :=
   list(aux$sys_jama(age, systolic),
-       aux$dia_jama(age, diastolic),
-       aux$sys_dw(age, systolic),
-       aux$dia_dw(age, diastolic))]
+       aux$dia_jama(age, diastolic))]
 
 # combining first/last bp dates to one row = one consumer
 modify$output$bp <- mmerge(l = list(
   unique(modify$bp_dt[min_vt_date == vt_date,
-                   list(case_no, sys_jama1 = sys_jama, dia_jama1 = dia_jama,
-                        sys_dw1 = sys_dw, dia_dw1 = dia_dw)]),
+                   list(case_no, sys_jama1 = sys_jama, dia_jama1 = dia_jama)]),
   unique(modify$bp_dt[max_vt_date == vt_date,
-                      list(case_no, sys_jama2 = sys_jama, dia_jama2 = dia_jama,
-                           sys_dw2 = sys_dw, dia_dw2 = dia_dw)]),
+                      list(case_no, sys_jama2 = sys_jama,
+                           dia_jama2 = dia_jama)]),
   modify$bp_dt[, unique(.SD),
                 .SDcols = c("case_no", "hh_team", "samhsa_staff",
                             "stafftype")]),
@@ -225,11 +210,8 @@ modify$output$bp <- mmerge(l = list(
 modify$output$bp <- unique(modify$output$bp)
 
 # improvement -----------------------------------------------------------------
-modify$output$bp[, c("dw_sys_status", "dw_dia_status",
-                     "jama_sys_status", "jama_dia_status") :=
-                   list(aux$dw_eval(sys_dw1, sys_dw2),
-                        aux$dw_eval(dia_dw1, dia_dw2),
-                        aux$jama_eval(sys_jama1, sys_jama2),
+modify$output$bp[, c("jama_sys_status", "jama_dia_status") :=
+                   list(aux$jama_eval(sys_jama1, sys_jama2),
                         aux$jama_eval(dia_jama1, dia_jama2))]
 
 ### create information about the file to share with end-users ###

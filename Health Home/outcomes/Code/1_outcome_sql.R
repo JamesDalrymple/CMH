@@ -1,8 +1,18 @@
-# funding bucket -- must download manually -- ranged point in  time data
-sql <- new.env(parent=.GlobalEnv)
+# consumer pool requirements:
+# 1. be 18+ years old on vital date/wellness_note_date
+# 2. be 18+ years for at least a year so that we have the potential to have
+# a before and after for (a) BMI, (b) wellness overallhealth, (c) blood press.
+# 3. be on  Access, MI, DD, ACT team for at least 1 year so that we have
+# potential for a before and after (see #2 for why)
+# 4. current closed consumers count if they were with us for at least a year
+# and fit requirements 1-3.
+# 5. team is last given CMH  team. perhaps if this is difficult, use admission
+# records with priority data.table.
+# note: check PHR for blood pressure too? ask Snow
+
+sql <- new.env(parent = .GlobalEnv)
 sql$channel <- odbcConnect("WSHSQLGP")
 
-# current state hospital consumers
 sql$query$outcome <-
 "select distinct
   HH.case_no, hh.dob, hh.team, hh.cmh_effdt, hh.hh_team, hh.hh_adm_date,
