@@ -1,7 +1,8 @@
 ## to do:: remove state hospital consumers from all spreadsheets
 library(wccmh)
-# initializing working directory and input parameters ------------------------ #
-scrub() # clear RAM and hidden environments
+scrub()
+# initializing working directory and input parameters -------------------------
+rm(list = ls()) # clear RAM
 # which computer results in correct base working directory
 cmh_wd <-
   data.table::data.table(expand.grid(stringsAsFactors = FALSE,
@@ -16,27 +17,21 @@ project_wd <- list()
 project_wd$github <- cmh_wd[J("GitHub", "WSHSQLGP"), base]
 project_wd$dropbox <- cmh_wd[J("Dropbox", "WSHSQLGP"), base]
 project_wd$project <- "CMH/PI/Hospitalizations"
-project_wd$code <- file.path(project_wd$github, project_wd$project, "Code")
+
+project_wd$code <- file.path(project_wd$github, project_wd$project,
+                             "Code/prescreens and hosp")
 project_wd$results <- file.path(project_wd$dropbox,
-                                "PI Projects/Hospitalizations/Results")
-project_wd$data <- file.path(project_wd$github, project_wd$project,
-                                "Data")
+  "PI Projects/Hospitalizations/Results/12_01_15")
 rm(cmh_wd)
 # user input ------------------------------------------------------------------
 input <- list(
-  report_date = "12_17_15",
-  # report_date = format(Sys.Date(), "%m_%d_%y"),
-  start_date = '10/1/2010',
+  report_date = "12_01_15",
+  start_date = '10/1/2014',
   end_date = '9/30/2015')
-# for folder
-project_wd$data <- file.path(project_wd$data,
-                             gsub(
-                               x = input$run_date,
-                               pattern = "/",
-                               replace = "_"
-                             ))
+
 # load packages, source files -------------------------------------------------
-source(file.path(project_wd$code, "0_auxillary_hosp.R"))
-source(file.path(project_wd$code, "1_sql_hosp.R"))
-source(file.path(project_wd$code, "2_base_hosp.R"))
+source(file.path(project_wd$code, "0_aux_compare.R"))
+source(file.path(project_wd$code, "1_sql_compare.R"))
+source(file.path(project_wd$code, "2_modify_compare.R"))
 source(file.path(project_wd$code, "3_export_xlsx.R"))
+
