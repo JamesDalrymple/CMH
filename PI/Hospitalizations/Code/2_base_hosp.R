@@ -6,6 +6,10 @@ hosp <- copy(sql$output$hosp)
 adm <- copy(sql$output$adm)
 served <- copy(sql$output$served)
 
+saveRDS(hosp, file.path(project_wd$data, "hosp.RDS"))
+saveRDS(adm, file.path(project_wd$data, "adm.RDS"))
+saveRDS(served, file.path(project_wd$data, "served.RDS"))
+
 # served[, service_date := as.Date(service_date)]
 # served[, fy := my_fy(service_date)]
 # served[, length(unique(case_no)), by = "fy"]
@@ -41,7 +45,8 @@ modify$adm_full <- adm[sql$hosp_dates, on = "j_key", allow.cartesian = TRUE]
 adm[, j_key := NULL]
 modify$adm_full[, j_key := NULL]
 # making computations easier :)
-modify$adm_full[is.na(team_exp), team_exp := pmin(team_exp, span_end, na.rm = TRUE)]
+modify$adm_full[is.na(team_exp), team_exp :=
+  pmin(team_exp, span_end, na.rm = TRUE)]
 # filter out dates that shouldnt be there
 modify$adm_full <-
   modify$adm_full[team_eff <= span_end & team_exp >= span_start]
@@ -70,17 +75,19 @@ modify$hosp_full <-
 # add cmh_team at service date based on priority
 served <- merge(served, adm, all.x = TRUE,
                  by = "case_no", allow.cartesian = TRUE)
-served[is.na(team_exp), team_exp := date_convert(input$end_date)]
-served[is.na(cmh_status), cmh_status := "non_cmh"]
-served[is.na(team), team := "non_cmh"]
-# served <- served[!is.na(team_eff)]
-served <- served[between(service_date, team_eff, team_exp)]
+setkey(served, NULL)
+served[is.na(team_exp) & !is.na(team_eff),
+  team_exp := date_convert(input$end_date)]
+served[is.na(cmh_status), cmh_status := "non-CMH"]
+served[is.na(team), team := "non-CMH"]
+served[!between(service_date, team_eff, team_exp),
+  c("team_eff", "team_exp", "cmh_status") := list(NA, NA, "non-CMH")]
+served <- unique(served)
 served[, group := .GRP, by = list(case_no, service_date)]
 served[cmh_priority_dt, priority := i.priority, on = "team"]
 served[, min_priority := min(priority), by = group]
 served <- served[priority == min_priority]
 served[, c("priority", "min_priority") := NULL]
-setkey(served, NULL)
 served <-
   served[, unique(.SD),
           .SDcols = c("case_no", "service_date", "team", "cmh_status")]

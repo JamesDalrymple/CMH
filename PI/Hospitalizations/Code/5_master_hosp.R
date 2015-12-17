@@ -30,11 +30,7 @@ input <- list(
   end_date = '9/30/2015')
 # for folder
 project_wd$data <- file.path(project_wd$data,
-                             gsub(
-                               x = input$run_date,
-                               pattern = "/",
-                               replace = "_"
-                             ))
+  gsub(x = input$report_date, pattern = "/", replace = "_"))
 # load packages, source files -------------------------------------------------
 source(file.path(project_wd$code, "0_auxillary_hosp.R"))
 source(file.path(project_wd$code, "1_sql_hosp.R"))

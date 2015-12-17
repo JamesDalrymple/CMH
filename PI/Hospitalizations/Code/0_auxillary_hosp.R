@@ -27,6 +27,10 @@ aux$fy_combn
 
 
 project_wd$results <- file.path(project_wd$results, input$report_date)
+if (!dir.exists(project_wd$data)) {
+  dir.create(project_wd$data, recursive = TRUE)
+}
+
 
 # cmh vs non-cmh classification
 aux$is_cmh <- function(x) {
