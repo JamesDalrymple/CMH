@@ -144,6 +144,13 @@ pattern = paste(
   sep = "_to_"
 ), value=TRUE
 )
+
+sql$fb_read <-
+  grep(x = sql$fb_read,
+       pattern = gsub(x=input$run_par, pattern = "20", replace = ""),
+       value = TRUE)
+
+
 if (length(sql$fb_read) != 2) p_stop("you are not reading in 2 funding bucket
                               files, please look at sql$fb_read", sql$fb_read)
 
