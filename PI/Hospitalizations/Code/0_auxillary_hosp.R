@@ -1,5 +1,5 @@
 ### fund only auxillary ###
-pkg_loader(packages = c("gdata", "data.table", "zoo", "xlsx", "RODBC"))
+pkg_loader(packages = c("gdata", "data.table", "zoo", "xlsx", "RODBC", "sqldf"))
 
 aux <- new.env(parent = .GlobalEnv)
 
@@ -36,10 +36,10 @@ if (!dir.exists(project_wd$data)) {
 aux$is_cmh <- function(x) {
   recode_string(x,
                 recode_key = list(
-                  cmh = c("MI", "DD", "Child", "Child HB",
+                  CMH = c("MI", "DD", "Child", "Child HB",
                           "ACT", "UM"),
-                  access = "Access",
-                  non_cmh = c(NA, "unknown", "non-CMH", "OBRA", "PORT")
+                  Access = "Access",
+                  `non-CMH` = c(NA, "unknown", "non-CMH", "OBRA", "PORT")
                 ))
 }
 

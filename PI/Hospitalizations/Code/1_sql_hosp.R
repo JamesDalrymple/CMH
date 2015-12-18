@@ -1,16 +1,17 @@
 sql <- list(
   channel = odbcConnect("WSHSQLGP"),
-  hosp_dates = aux$fy_combn(start_date = input$start_date,
+  span_dates = aux$fy_combn(start_date = input$start_date,
                             end_date = input$end_date),
   query = list(hosp = "",
                adm = "",
                served = ""))
 
+# not bring hosp.team_at_admit since it brings an arbitrary team via alphabetical order instead of an intelligent prioritized team
 sql$query$hosp <-
   sprintf(
     "select distinct
 	    hosp.case_no, hosp.auth_eff, hosp.auth_exp, hosp.hosp_disc,
-      hosp.team_at_admit, hosp.auth_days
+      hosp.auth_days
     from encompass.dbo.tblE2_Hosp as hosp
     where hosp.county = 'Washtenaw' and hosp.cpt_code not like '09%%'
       and hosp.auth_eff between '%1$s' and '%2$s'

@@ -35,4 +35,5 @@ project_wd$data <- file.path(project_wd$data,
 source(file.path(project_wd$code, "0_auxillary_hosp.R"))
 source(file.path(project_wd$code, "1_sql_hosp.R"))
 source(file.path(project_wd$code, "2_base_hosp.R"))
-source(file.path(project_wd$code, "3_export_xlsx.R"))
+source(file.path(project_wd$code, "3_analyze_hosp.R"))
+source(file.path(project_wd$code, "4_export_xlsx.R"))

@@ -17,145 +17,105 @@ saveRDS(served, file.path(project_wd$data, "served.RDS"))
 # set date columns to date class
 date_cols <- c("auth_eff", "auth_exp", "hosp_disc")
 for (j in date_cols)
-  set(hosp,
-      j = j,
-      value = date_convert(hosp[[j]]))
+  set(hosp, j = j, value = date_convert(hosp[[j]]))
 date_cols <- c("team_eff", "team_exp")
 for (j in date_cols)
-  set(adm,
-      j = j,
-      value = date_convert(adm[[j]]))
-date_cols <- c("span_start", "span_end ")
+  set(adm, j = j, value = date_convert(adm[[j]]))
 rm(j, date_cols)
 served[, service_date := as.Date(service_date)]
 adm[, team := cmh_recode(team)]
 adm[, cmh_status := aux$is_cmh(team)]
 
-# data checking
-# hosp[, fy := my_fy(auth_eff)]
-# hosp[, list(num_cases = length(unique(case_no)),
-#             num_hosp_adms = length(case_no)),
-#      keyby = list(team_at_admit, fy)][fy==2015][, sum(num_hosp_adms)]
-
-# admissions by team ----------------------------------------------------------
-# data.table doesnt make full cartesian products too easy... but here is 1 way
-adm[, j_key := 1]
-sql$hosp_dates[, j_key := 1]
-modify$adm_full <- adm[sql$hosp_dates, on = "j_key", allow.cartesian = TRUE]
-adm[, j_key := NULL]
-modify$adm_full[, j_key := NULL]
-# making computations easier :)
-modify$adm_full[is.na(team_exp), team_exp :=
-  pmin(team_exp, span_end, na.rm = TRUE)]
-# filter out dates that shouldnt be there
-modify$adm_full <-
-  modify$adm_full[team_eff <= span_end & team_exp >= span_start]
+# admissions by team and cmh_status--------------------------------------------
+# foverlaps is the BEST possible way to do this.. this is what is was made for.
+adm[is.na(team_exp), team_exp := date_convert(input$end_date)+1]
+setkey(sql$span_dates, span_start, span_end)
+setkey(adm, team_eff, team_exp)
+modify$adm$span <-
+  foverlaps(x = sql$span_dates,
+          y = adm,
+          by.x = c("span_start", "span_end"),
+          by.y = c("team_eff", "team_exp"),
+          nomatch = 0)
+setkey(modify$adm$span, NULL)
+# the basis for all summaries
+modify$adm$case_detail <-
+  modify$adm$span[, unique(.SD),
+  .SDcols = c("case_no", "team", "cmh_status", "span_label", "span_type")]
 # admission: team summary by fiscal year and fiscal quarter
 modify$team_adm_summary <-
-  modify$adm_full[, list(adm_caseload = length(unique(case_no))),
-                  by = list(team, span_label, span_type)]
+  modify$adm$case_detail[, list(adm_caseload = length(unique(case_no))),
+                         by = list(team, span_label, span_type)]
 # admission: cmh summary by fiscal year and fiscal quarter---------------------
 modify$cmh_adm_summary <-
-  modify$adm_full[, list(adm_caseload = length(unique(case_no))),
-                  by = list(cmh_status, span_label, span_type)]
+  modify$adm$case_detail[, list(adm_caseload = length(unique(case_no))),
+                         by = list(cmh_status, span_label, span_type)]
 # hospitalizations by team ----------------------------------------------------
 # fix bad discharge days (around 20)
 hosp[is.na(hosp_disc), hosp_disc := auth_exp+1]
-hosp[, team_at_admit := cmh_recode(team_at_admit)]
-hosp[, cmh_status_at_admit := aux$is_cmh(team_at_admit)]
+
+# hosp[, idx := .bincode(date, c(modify$adm$full[, team_eff], Inf), right = FALSE)]
+# hosp[, idx := .bincode(auth_eff,
+#   c(modify$adm$full[, span_start],
+#     modify$adm$full[, span_end]), right = FALSE)]
+# data2[, idx := .I]
+# merge(data1, data2, by = 'idx', all.x = TRUE)[, idx := NULL]
+
+tmp_adm <- modify$adm$span
+hosp <-
+  sqldf("select distinct
+    adm.team, hosp.case_no, hosp.auth_eff, hosp.auth_exp, hosp.hosp_disc,
+    hosp.auth_days
+    from hosp
+    left join tmp_adm as adm on hosp.case_no = adm.case_no and
+      hosp.auth_eff between adm.team_eff and adm.team_exp")
+rm(tmp_adm)
+hosp <- data.table(hosp)
+hosp[, team := cmh_recode(team)]
+hosp[, cmh_status := aux$is_cmh(team)]
+hosp[, hosp_id := .GRP, by = list(case_no, auth_eff)]
+hosp[cmh_priority_dt, priority := i.priority, on = "team"]
+hosp[, min_priority := min(priority), by = hosp_id]
+hosp <- hosp[min_priority == priority]
+hosp[, c("min_priority", "priority") := NULL]
+hosp[, c("auth_exp", "auth_days", "hosp_disc") :=
+       list(max(auth_exp), max(auth_days), max(hosp_disc)), by = hosp_id]
+hosp <- unique(hosp)
+
 # cartesian join to make all summaries at once
 hosp[, j_key := 1]
-modify$hosp_full <- hosp[sql$hosp_dates, on = "j_key", allow.cartesian = TRUE]
+sql$span_dates[, j_key := 1]
+modify$hosp_full <-
+  hosp[sql$span_dates, on = "j_key", allow.cartesian = TRUE]
 modify$hosp_full[, j_key := NULL]
-sql$hosp_dates[, j_key := NULL]
+sql$span_dates[, j_key := NULL]
 # filter out dates that shouldnt be there
 modify$hosp_full <-
   modify$hosp_full[between(auth_eff, span_start, span_end)]
 # served ----------------------------------------------------------------------
 # add cmh_team at service date based on priority
-served <- merge(served, adm, all.x = TRUE,
-                 by = "case_no", allow.cartesian = TRUE)
-setkey(served, NULL)
-served[is.na(team_exp) & !is.na(team_eff),
-  team_exp := date_convert(input$end_date)]
-served[is.na(cmh_status), cmh_status := "non-CMH"]
-served[is.na(team), team := "non-CMH"]
-served[!between(service_date, team_eff, team_exp),
-  c("team_eff", "team_exp", "cmh_status") := list(NA, NA, "non-CMH")]
-served <- unique(served)
-served[, group := .GRP, by = list(case_no, service_date)]
-served[cmh_priority_dt, priority := i.priority, on = "team"]
-served[, min_priority := min(priority), by = group]
-served <- served[priority == min_priority]
-served[, c("priority", "min_priority") := NULL]
-served <-
-  served[, unique(.SD),
-          .SDcols = c("case_no", "service_date", "team", "cmh_status")]
-served[, fy := my_fy(service_date)]
-served[, qtr := my_qtr(service_date)]
-# fiscal year: team
-modify$svc$fy_team <- served[, list(con_served = length(unique(case_no)),
-  span_type = "fy"), keyby = list(fy, team)]
-setnames(modify$svc$fy_team, "fy", "span_label")
-# fiscal quarter: team
-modify$svc$qtr_team <- served[, list(con_served = length(unique(case_no)),
-  span_type = "qtr"), keyby = list(qtr, team)]
-setnames(modify$svc$qtr_team, "qtr", "span_label")
-# combined team
-modify$svc$comb_team <-
-  rbindlist(list(modify$svc$fy_team, modify$svc$qtr_team), use.names = TRUE)
-# fiscal year: cmh_status
-modify$svc$fy_cmh <- served[, list(con_served = length(unique(case_no)),
-  span_type = "fy"), keyby = list(fy, cmh_status)]
-setnames(modify$svc$fy_cmh, "fy", "span_label")
-# fiscal quarter: cmh_status
-modify$svc$qtr_cmh <- served[, list(con_served = length(unique(case_no)),
-  span_type = "qtr"), keyby = list(qtr, cmh_status)]
-setnames(modify$svc$qtr_cmh, "qtr", "span_label")
-# combined cmh_status
-modify$svc$comb_cmh <-
-  rbindlist(list(modify$svc$qtr_cmh, modify$svc$fy_cmh))
-# hospital: team summary by quarter and fiscal year ---------------------------
-team_hosp_summary <-
-  modify$hosp_full[, list(people_hospitalized = length(unique(case_no)),
-                 total_auth_days = sum(auth_days, na.rm = TRUE),
-                 num_hosp_adm = length(case_no)),
-          by = list(team_at_admit, span_type, span_label)]
-team_hosp_summary[, multiple_adms := num_hosp_adm-people_hospitalized]
-# hospitalizations by cmh vs non-cmh ------------------------------------------
-cmh_hosp_summary <-
-  modify$hosp_full[, list(people_hospitalized = length(unique(case_no)),
-                   total_auth_days = sum(auth_days, na.rm = TRUE),
-                   num_hosp_adm = length(case_no)),
-            by = list(cmh_status_at_admit, span_type, span_label)]
-cmh_hosp_summary[, multiple_adms := num_hosp_adm-people_hospitalized]
-# combine results -------------------------------------------------------------
-# cmh vs non-cmh results ---
-cmh_hosp_summary[modify$cmh_adm_summary,
-                 adm_caseload := i.adm_caseload,
-                 on = c(cmh_status_at_admit = "cmh_status",
-                        span_label = "span_label",
-                        span_type = "span_type")]
-cmh_hosp_summary[modify$svc$comb_cmh,
-                 con_served := i.con_served,
-                 on = c(cmh_status_at_admit = "cmh_status",
-                        span_label = "span_label",
-                        span_type = "span_type")]
-cmh_hosp_summary[, pct_served_hosp :=
-                   round(people_hospitalized/con_served*100, 1)]
-# team results ---
-team_hosp_summary[modify$team_adm_summary,
-                 adm_caseload := i.adm_caseload,
-                 on = c(team_at_admit = "team",
-                        span_label = "span_label",
-                        span_type = "span_type")]
-team_hosp_summary[modify$svc$comb_team,
-                  con_served := i.con_served,
-                  on = c(team_at_admit = "team",
-                         span_label = "span_label",
-                         span_type = "span_type")]
-team_hosp_summary[, pct_served_hosp :=
-                   round(people_hospitalized/con_served*100, 1)]
+
+modify$svc$qtr <- served[, list(span_type = "qtr",
+                                span_label = my_qtr(service_date),
+                                served = 1), by = case_no]
+modify$svc$qtr <- unique(modify$svc$qtr)
+
+modify$svc$fy <- served[, list(span_type = "fy",
+                               span_label = my_fy(service_date),
+                               served = 1), by = case_no]
+modify$svc$fy <- unique(modify$svc$fy)
+# combine fy and qtr service data
+modify$svc$all <-
+  rbindlist(list(modify$svc$qtr, modify$svc$fy), use.names = TRUE)
+# full outer join admissions and services
+modify$adm_svc <-
+  merge(modify$adm$case_detail, modify$svc$all, all = TRUE,
+      by = c("case_no", "span_type", "span_label"))
+
+modify$adm_svc[is.na(cmh_status), cmh_status := "non-CMH"]
+modify$adm_svc[is.na(team), team := "non-CMH"]
+modify$adm_svc[is.na(served), served := 0]
+
 # ACCESS details --------------------------------------------------------------
 # long-term Access (more than 30 days)
 modify$adm2 <- copy(sql$output$adm)
