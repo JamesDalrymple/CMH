@@ -23,8 +23,6 @@ aux$fy_combn <- function(start_date, end_date) {
   dt_combn <- rbindlist(list(dt_qtrs, dt_fys), use.names = TRUE)
   return(dt_combn)
 }
-aux$fy_combn
-
 
 project_wd$results <- file.path(project_wd$results, input$report_date)
 if (!dir.exists(project_wd$data)) {
@@ -72,4 +70,4 @@ aux$cmh_recode <-
     recode_key$unknown <- unknown
     recode_string(x = x, recode_key = recode_key)
   }
-aux$cmh_recode(x = c("PORT", "Access"))
+# aux$cmh_recode(x = c("PORT", "Access"))
