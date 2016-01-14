@@ -1,0 +1,955 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.31)  5 JAN 2016 22:52
+entering extended mode
+**knitr_pi_v2.tex
+(knitr_pi_v2.tex
+LaTeX2e <2015/01/01> patch level 2
+Babel <3.9m> and hyphenation patterns for 69 languages loaded.
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\article.cls"
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\size10.clo"
+File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
+Package: graphics 2014/10/28 v1.0p Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 94.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\color.sty"
+Package: color 2014/10/28 v1.1a Standard LaTeX Color (DPC)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 142.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\framed\framed.sty"
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip43
+\fb@frw=\dimen105
+\fb@frh=\dimen106
+\FrameRule=\dimen107
+\FrameSep=\dimen108
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\alltt.sty"
+Package: alltt 1997/06/16 v2.0g defines alltt environment
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\fontenc.sty"
+Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\t1enc.def"
+File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
+LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\geometry\geometry.sty"
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty"
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty"
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count88
+\Gm@cntv=\count89
+\c@Gm@tempcnt=\count90
+\Gm@bindingoffset=\dimen109
+\Gm@wd@mp=\dimen110
+\Gm@odd@mp=\dimen111
+\Gm@even@mp=\dimen112
+\Gm@layoutwidth=\dimen113
+\Gm@layoutheight=\dimen114
+\Gm@layouthoffset=\dimen115
+\Gm@layoutvoffset=\dimen116
+\Gm@dimlist=\toks15
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\geometry\geometry.cfg"))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\fancyhdr\fancyhdr.sty"
+\fancy@headwidth=\skip44
+\f@ncyO@elh=\skip45
+\f@ncyO@erh=\skip46
+\f@ncyO@olh=\skip47
+\f@ncyO@orh=\skip48
+\f@ncyO@elf=\skip49
+\f@ncyO@erf=\skip50
+\f@ncyO@olf=\skip51
+\f@ncyO@orf=\skip52
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\longtable.sty"
+Package: longtable 2014/10/28 v4.11 Multi-page Table package (DPC)
+\LTleft=\skip53
+\LTright=\skip54
+\LTpre=\skip55
+\LTpost=\skip56
+\LTchunksize=\count91
+\LTcapwidth=\dimen117
+\LT@head=\box26
+\LT@firsthead=\box27
+\LT@foot=\box28
+\LT@lastfoot=\box29
+\LT@cols=\count92
+\LT@rows=\count93
+\c@LT@tables=\count94
+\c@LT@chunks=\count95
+\LT@p@ftn=\toks16
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\tabularx.sty"
+Package: tabularx 2014/10/28 v2.10 `tabularx' package (DPC)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\array.sty"
+Package: array 2014/10/28 v2.4c Tabular extension package (FMi)
+\col@sep=\dimen118
+\extrarowheight=\dimen119
+\NC@list=\toks17
+\extratabsurround=\skip57
+\backup@length=\skip58
+)
+\TX@col@width=\dimen120
+\TX@old@table=\dimen121
+\TX@old@col=\dimen122
+\TX@target=\dimen123
+\TX@delta=\dimen124
+\TX@cols=\count96
+\TX@ftn=\toks18
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption.sty"
+Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption3.sty"
+Package: caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 57.
+\captionmargin=\dimen125
+\captionmargin@=\dimen126
+\captionwidth=\dimen127
+\caption@tempdima=\dimen128
+\caption@indent=\dimen129
+\caption@parindent=\dimen130
+\caption@hangindent=\dimen131
+)
+\c@ContinuedFloat=\count97
+Package caption Info: longtable package is loaded.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\ltcaption.sty"
+Package: ltcaption 2013/02/03 v1.3-62 longtable captions (AR)
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\titlesec\titlesec.sty"
+Package: titlesec 2011/12/15 v2.10.0 Sectioning titles
+\ttl@box=\box30
+\beforetitleunit=\skip59
+\aftertitleunit=\skip60
+\ttl@plus=\dimen132
+\ttl@minus=\dimen133
+\ttl@toksa=\toks19
+\titlewidth=\dimen134
+\titlewidthlast=\dimen135
+\titlewidthfirst=\dimen136
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\booktabs\booktabs.sty"
+Package: booktabs 2005/04/14 v1.61803 publication quality tables
+\heavyrulewidth=\dimen137
+\lightrulewidth=\dimen138
+\cmidrulewidth=\dimen139
+\belowrulesep=\dimen140
+\belowbottomsep=\dimen141
+\aboverulesep=\dimen142
+\abovetopsep=\dimen143
+\cmidrulesep=\dimen144
+\cmidrulekern=\dimen145
+\defaultaddspace=\dimen146
+\@cmidla=\count98
+\@cmidlb=\count99
+\@aboverulesep=\dimen147
+\@belowrulesep=\dimen148
+\@thisruleclass=\count100
+\@lastruleclass=\count101
+\@thisrulewidth=\dimen149
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\colortbl\colortbl.sty"
+Package: colortbl 2012/02/13 v1.0a Color table columns (DPC)
+\everycr=\toks20
+\minrowclearance=\skip61
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty"
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+LaTeX Info: Redefining \color on input line 702.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\lastpage\lastpage.sty"
+Package: lastpage 2015/03/29 v1.2m Refers to last page's name (HMM; JPG)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\upquote\upquote.sty"
+Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
+tim
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\textcomp.sty"
+Package: textcomp 2005/09/27 v1.99g Standard LaTeX package
+Package textcomp Info: Sub-encoding information:
+(textcomp)               5 = only ISO-Adobe without \textcurrency
+(textcomp)               4 = 5 + \texteuro
+(textcomp)               3 = 4 + \textohm
+(textcomp)               2 = 3 + \textestimated + \textcurrency
+(textcomp)               1 = TS1 - \textcircled - \t
+(textcomp)               0 = TS1 (full)
+(textcomp)             Font families with sub-encoding setting implement
+(textcomp)             only a restricted character set as indicated.
+(textcomp)             Family '?' is the default used for unknown fonts.
+(textcomp)             See the documentation for details.
+Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 79.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ts1enc.def"
+File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
+)
+LaTeX Info: Redefining \oldstylenums on input line 334.
+Package textcomp Info: Setting cmr sub-encoding to TS1/0 on input line 349.
+Package textcomp Info: Setting cmss sub-encoding to TS1/0 on input line 350.
+Package textcomp Info: Setting cmtt sub-encoding to TS1/0 on input line 351.
+Package textcomp Info: Setting cmvtt sub-encoding to TS1/0 on input line 352.
+Package textcomp Info: Setting cmbr sub-encoding to TS1/0 on input line 353.
+Package textcomp Info: Setting cmtl sub-encoding to TS1/0 on input line 354.
+Package textcomp Info: Setting ccr sub-encoding to TS1/0 on input line 355.
+Package textcomp Info: Setting ptm sub-encoding to TS1/4 on input line 356.
+Package textcomp Info: Setting pcr sub-encoding to TS1/4 on input line 357.
+Package textcomp Info: Setting phv sub-encoding to TS1/4 on input line 358.
+Package textcomp Info: Setting ppl sub-encoding to TS1/3 on input line 359.
+Package textcomp Info: Setting pag sub-encoding to TS1/4 on input line 360.
+Package textcomp Info: Setting pbk sub-encoding to TS1/4 on input line 361.
+Package textcomp Info: Setting pnc sub-encoding to TS1/4 on input line 362.
+Package textcomp Info: Setting pzc sub-encoding to TS1/4 on input line 363.
+Package textcomp Info: Setting bch sub-encoding to TS1/4 on input line 364.
+Package textcomp Info: Setting put sub-encoding to TS1/5 on input line 365.
+Package textcomp Info: Setting uag sub-encoding to TS1/5 on input line 366.
+Package textcomp Info: Setting ugq sub-encoding to TS1/5 on input line 367.
+Package textcomp Info: Setting ul8 sub-encoding to TS1/4 on input line 368.
+Package textcomp Info: Setting ul9 sub-encoding to TS1/4 on input line 369.
+Package textcomp Info: Setting augie sub-encoding to TS1/5 on input line 370.
+Package textcomp Info: Setting dayrom sub-encoding to TS1/3 on input line 371.
+Package textcomp Info: Setting dayroms sub-encoding to TS1/3 on input line 372.
+
+Package textcomp Info: Setting pxr sub-encoding to TS1/0 on input line 373.
+Package textcomp Info: Setting pxss sub-encoding to TS1/0 on input line 374.
+Package textcomp Info: Setting pxtt sub-encoding to TS1/0 on input line 375.
+Package textcomp Info: Setting txr sub-encoding to TS1/0 on input line 376.
+Package textcomp Info: Setting txss sub-encoding to TS1/0 on input line 377.
+Package textcomp Info: Setting txtt sub-encoding to TS1/0 on input line 378.
+Package textcomp Info: Setting lmr sub-encoding to TS1/0 on input line 379.
+Package textcomp Info: Setting lmdh sub-encoding to TS1/0 on input line 380.
+Package textcomp Info: Setting lmss sub-encoding to TS1/0 on input line 381.
+Package textcomp Info: Setting lmssq sub-encoding to TS1/0 on input line 382.
+Package textcomp Info: Setting lmvtt sub-encoding to TS1/0 on input line 383.
+Package textcomp Info: Setting lmtt sub-encoding to TS1/0 on input line 384.
+Package textcomp Info: Setting qhv sub-encoding to TS1/0 on input line 385.
+Package textcomp Info: Setting qag sub-encoding to TS1/0 on input line 386.
+Package textcomp Info: Setting qbk sub-encoding to TS1/0 on input line 387.
+Package textcomp Info: Setting qcr sub-encoding to TS1/0 on input line 388.
+Package textcomp Info: Setting qcs sub-encoding to TS1/0 on input line 389.
+Package textcomp Info: Setting qpl sub-encoding to TS1/0 on input line 390.
+Package textcomp Info: Setting qtm sub-encoding to TS1/0 on input line 391.
+Package textcomp Info: Setting qzc sub-encoding to TS1/0 on input line 392.
+Package textcomp Info: Setting qhvc sub-encoding to TS1/0 on input line 393.
+Package textcomp Info: Setting futs sub-encoding to TS1/4 on input line 394.
+Package textcomp Info: Setting futx sub-encoding to TS1/4 on input line 395.
+Package textcomp Info: Setting futj sub-encoding to TS1/4 on input line 396.
+Package textcomp Info: Setting hlh sub-encoding to TS1/3 on input line 397.
+Package textcomp Info: Setting hls sub-encoding to TS1/3 on input line 398.
+Package textcomp Info: Setting hlst sub-encoding to TS1/3 on input line 399.
+Package textcomp Info: Setting hlct sub-encoding to TS1/5 on input line 400.
+Package textcomp Info: Setting hlx sub-encoding to TS1/5 on input line 401.
+Package textcomp Info: Setting hlce sub-encoding to TS1/5 on input line 402.
+Package textcomp Info: Setting hlcn sub-encoding to TS1/5 on input line 403.
+Package textcomp Info: Setting hlcw sub-encoding to TS1/5 on input line 404.
+Package textcomp Info: Setting hlcf sub-encoding to TS1/5 on input line 405.
+Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 406.
+Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 407.
+Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 408.
+Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
+))
+(December_2016.aux
+
+LaTeX Warning: Label `' multiply defined.
+
+
+LaTeX Warning: Label `' multiply defined.
+
+)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 112.
+LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 112.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 112.
+
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ts1cmr.fd"
+File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    ... okay on input line 112.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count102
+\scratchdimen=\dimen150
+\scratchbox=\box31
+\nofMPsegments=\count103
+\nofMParguments=\count104
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count105
+\MPscratchDim=\dimen151
+\MPnumerator=\count106
+\makeMPintoPDFobject=\count107
+\everyMPtoPDFconversion=\toks22
+)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(56.9055pt, 500.484pt, 56.9055pt)
+* v-part:(T,H,B)=(28.45274pt, 652.70622pt, 113.81102pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=500.484pt
+* \textheight=652.70622pt
+* \oddsidemargin=-15.36449pt
+* \evensidemargin=-15.36449pt
+* \topmargin=-25.0pt
+* \headheight=12.0pt
+* \headsep=0.0pt
+* \topskip=0.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+Package lastpage Info: Please have a look at the pageslts package at
+(lastpage)             https://www.ctan.org/pkg/pageslts
+(lastpage)             ! on input line 112.
+
+Package xcolor Warning: Incompatible color definition on input line 126.
+
+<figure/ACT_hist-1.pdf, id=1, 523.9575pt x 162.6075pt>
+File: figure/ACT_hist-1.pdf Graphic file (type pdf)
+
+<use figure/ACT_hist-1.pdf>
+Package pdftex.def Info: figure/ACT_hist-1.pdf used on input line 127.
+(pdftex.def)             Requested size: 500.484pt x 155.32729pt.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 143.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 143.
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+[]|\T1/cmr/bx/n/10 current
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
+[]|\T1/cmr/bx/n/10 expired
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 131--145
+[]$[]$ 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--158
+[]|\T1/cmr/bx/n/10 Full
+ []
+
+
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 158--158
+[]|\T1/cmr/bx/n/10 Interim
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--158
+[]|\T1/cmr/bx/n/10 Preliminary
+ []
+
+
+Underfull \hbox (badness 1796) in paragraph at lines 158--158
+[]|\T1/cmr/bx/n/10 Single Ser-vice
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--158
+[]|\T1/cmr/bx/n/10 Grand
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 146--160
+[]$[]$ 
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 161--176
+[]$[]$ 
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 180.
+
+<figure/ACT_p_unsign-1.pdf, id=2, 397.485pt x 162.6075pt>
+File: figure/ACT_p_unsign-1.pdf Graphic file (type pdf)
+
+<use figure/ACT_p_unsign-1.pdf>
+Package pdftex.def Info: figure/ACT_p_unsign-1.pdf used on input line 181.
+(pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
+
+
+Package xcolor Warning: Incompatible color definition on input line 212.
+
+<figure/child_hist-1.pdf, id=3, 542.025pt x 162.6075pt>
+File: figure/child_hist-1.pdf Graphic file (type pdf)
+
+<use figure/child_hist-1.pdf>
+Package pdftex.def Info: figure/child_hist-1.pdf used on input line 213.
+(pdftex.def)             Requested size: 500.484pt x 150.15154pt.
+ [1{C:/Users/dalrymplej/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
+
+ <./figure/ACT_hist-1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 230--230
+[]|\T1/cmr/bx/n/10 current
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 230--230
+[]|\T1/cmr/bx/n/10 expired
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 218--232
+[]$[]$ 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 245--245
+[]|\T1/cmr/bx/n/10 Full
+ []
+
+
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 245--245
+[]|\T1/cmr/bx/n/10 Interim
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 245--245
+[]|\T1/cmr/bx/n/10 Preliminary
+ []
+
+
+Underfull \hbox (badness 1796) in paragraph at lines 245--245
+[]|\T1/cmr/bx/n/10 Single Ser-vice
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 245--245
+[]|\T1/cmr/bx/n/10 Grand
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 233--247
+[]$[]$ 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 275--275
+[]|\T1/cmr/bx/n/10 Brookens-Harvey,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 275--275
+[]|\T1/cmr/m/n/10 Angeski-Barron,
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 248--277
+[]$[]$ 
+ []
+
+[2 <./figure/ACT_p_unsign-1.pdf> <./figure/child_hist-1.pdf>]
+
+Package xcolor Warning: Incompatible color definition on input line 281.
+
+<figure/child_p_unsign-1.pdf, id=31, 397.485pt x 162.6075pt>
+File: figure/child_p_unsign-1.pdf Graphic file (type pdf)
+
+<use figure/child_p_unsign-1.pdf>
+Package pdftex.def Info: figure/child_p_unsign-1.pdf used on input line 282.
+(pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
+ [3 <./figure/child_p_unsign-1.pdf>]
+
+Package xcolor Warning: Incompatible color definition on input line 313.
+
+<figure/hb_hist-1.pdf, id=40, 542.025pt x 162.6075pt>
+File: figure/hb_hist-1.pdf Graphic file (type pdf)
+
+<use figure/hb_hist-1.pdf>
+Package pdftex.def Info: figure/hb_hist-1.pdf used on input line 314.
+(pdftex.def)             Requested size: 500.484pt x 150.15154pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 330--330
+[]|\T1/cmr/bx/n/10 current
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 330--330
+[]|\T1/cmr/bx/n/10 expired
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 318--332
+[]$[]$ 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 345--345
+[]|\T1/cmr/bx/n/10 Full
+ []
+
+
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 345--345
+[]|\T1/cmr/bx/n/10 Interim
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 345--345
+[]|\T1/cmr/bx/n/10 Preliminary
+ []
+
+
+Underfull \hbox (badness 1796) in paragraph at lines 345--345
+[]|\T1/cmr/bx/n/10 Single Ser-vice
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 345--345
+[]|\T1/cmr/bx/n/10 Grand
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 333--347
+[]$[]$ 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 359--359
+[]|\T1/cmr/bx/n/10 Brookens-
+ []
+
+
+Underfull \hbox (badness 7851) in paragraph at lines 359--359
+\T1/cmr/bx/n/10 Harvey, Bar-
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 348--361
+[]$[]$ 
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 365.
+
+<figure/hb_p_unsign-1.pdf, id=41, 397.485pt x 162.6075pt>
+File: figure/hb_p_unsign-1.pdf Graphic file (type pdf)
+
+<use figure/hb_p_unsign-1.pdf>
+Package pdftex.def Info: figure/hb_p_unsign-1.pdf used on input line 366.
+(pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
+ [4 <./figure/hb_hist-1.pdf> <./figure/hb_p_unsign-1.pdf>]
+
+Package xcolor Warning: Incompatible color definition on input line 390.
+
+<figure/dd_hist-1.pdf, id=55, 542.025pt x 162.6075pt>
+File: figure/dd_hist-1.pdf Graphic file (type pdf)
+
+<use figure/dd_hist-1.pdf>
+Package pdftex.def Info: figure/dd_hist-1.pdf used on input line 391.
+(pdftex.def)             Requested size: 500.484pt x 150.15154pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 407--407
+[]|\T1/cmr/bx/n/10 current
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 407--407
+[]|\T1/cmr/bx/n/10 expired
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 395--409
+[]$[]$ 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 422--422
+[]|\T1/cmr/bx/n/10 Full
+ []
+
+
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 422--422
+[]|\T1/cmr/bx/n/10 Interim
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 422--422
+[]|\T1/cmr/bx/n/10 Preliminary
+ []
+
+
+Underfull \hbox (badness 1796) in paragraph at lines 422--422
+[]|\T1/cmr/bx/n/10 Single Ser-vice
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 422--422
+[]|\T1/cmr/bx/n/10 Grand
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 410--424
+[]$[]$ 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 451--451
+[]|\T1/cmr/bx/n/10 Diephuis,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 451--451
+[]|\T1/cmr/bx/n/10 Dronamraju,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 451--451
+[]|\T1/cmr/bx/n/10 Mohring,
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 425--453
+[]$[]$ 
+ []
+
+
+Package xcolor Warning: Incompatible color definition on input line 457.
+
+<figure/dd_p_unsign-1.pdf, id=56, 397.485pt x 162.6075pt>
+File: figure/dd_p_unsign-1.pdf Graphic file (type pdf)
+
+<use figure/dd_p_unsign-1.pdf>
+Package pdftex.def Info: figure/dd_p_unsign-1.pdf used on input line 458.
+(pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
+ [5 <./figure/dd_hist-1.pdf>]
+
+Package xcolor Warning: Incompatible color definition on input line 489.
+
+<figure/mi_hist-1.pdf, id=65, 542.025pt x 162.6075pt>
+File: figure/mi_hist-1.pdf Graphic file (type pdf)
+
+<use figure/mi_hist-1.pdf>
+Package pdftex.def Info: figure/mi_hist-1.pdf used on input line 490.
+(pdftex.def)             Requested size: 500.484pt x 150.15154pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 507--507
+[]|\T1/cmr/bx/n/10 current
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 507--507
+[]|\T1/cmr/bx/n/10 expired
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 495--509
+[]$[]$ 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 522--522
+[]|\T1/cmr/bx/n/10 Full
+ []
+
+
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 522--522
+[]|\T1/cmr/bx/n/10 Interim
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 522--522
+[]|\T1/cmr/bx/n/10 Preliminary
+ []
+
+
+Underfull \hbox (badness 1796) in paragraph at lines 522--522
+[]|\T1/cmr/bx/n/10 Single Ser-vice
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 522--522
+[]|\T1/cmr/bx/n/10 Grand
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 510--524
+[]$[]$ 
+ []
+
+[6 <./figure/dd_p_unsign-1.pdf> <./figure/mi_hist-1.pdf>]
+
+Package xcolor Warning: Incompatible color definition on input line 568.
+
+<figure/mi_p_unsign-1.pdf, id=79, 397.485pt x 162.6075pt>
+File: figure/mi_p_unsign-1.pdf Graphic file (type pdf)
+
+<use figure/mi_p_unsign-1.pdf>
+Package pdftex.def Info: figure/mi_p_unsign-1.pdf used on input line 569.
+(pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
+ [7 <./figure/mi_p_unsign-1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 595--599
+
+ []
+
+[8] [9] [10] [11]
+Underfull \hbox (badness 10000) in paragraph at lines 801--805
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 806--806
+[]|\T1/cmr/bx/n/9 case
+ []
+
+
+Underfull \hbox (badness 4316) in paragraph at lines 806--806
+[]|\T1/cmr/bx/n/9 not seen
+ []
+
+
+Underfull \hbox (badness 4316) in paragraph at lines 806--806
+[]|\T1/cmr/bx/n/9 not seen
+ []
+
+
+Underfull \hbox (badness 4316) in paragraph at lines 806--806
+[]|\T1/cmr/bx/n/9 not seen
+ []
+
+
+Underfull \hbox (badness 4316) in paragraph at lines 806--806
+[]|\T1/cmr/bx/n/9 not seen
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 806--806
+\T1/cmr/bx/n/9 in 180
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 806--806
+[]|\T1/cmr/bx/n/9 case
+ []
+
+
+Underfull \hbox (badness 4316) in paragraph at lines 806--806
+[]|\T1/cmr/bx/n/9 not seen
+ []
+
+
+Underfull \hbox (badness 4316) in paragraph at lines 806--806
+[]|\T1/cmr/bx/n/9 not seen
+ []
+
+
+Underfull \hbox (badness 4316) in paragraph at lines 806--806
+[]|\T1/cmr/bx/n/9 not seen
+ []
+
+
+Underfull \hbox (badness 4316) in paragraph at lines 806--806
+[]|\T1/cmr/bx/n/9 not seen
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 806--806
+\T1/cmr/bx/n/9 in 180
+ []
+
+
+Overfull \hbox (2.37384pt too wide) in paragraph at lines 847--847
+\T1/cmr/bx/n/9 Home 
+ []
+
+
+Overfull \hbox (2.71692pt too wide) in paragraph at lines 847--847
+\T1/cmr/bx/n/9 Based|  
+ []
+
+
+Overfull \hbox (1.6413pt too wide) in paragraph at lines 855--855
+\T1/cmr/bx/n/9 Adult|  
+ []
+
+
+Overfull \hbox (1.6413pt too wide) in paragraph at lines 879--879
+\T1/cmr/bx/n/9 Adult|  
+ []
+
+[12]
+Overfull \hbox (4.73987pt too wide) in paragraph at lines 926--926
+[]|\T1/cmr/bx/n/9 Grand 
+ []
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.926 ...  & \textbf{ 3409 } &  & {\textbf{1612} &
+                                                   {\textbf{937} & {\textbf{...
+I've put in what seems to be necessary to fix
+the current column of the current alignment.
+Try to go on, since this might almost work.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.926 ...9 } &  & {\textbf{1612} & {\textbf{937} &
+                                                   {\textbf{505} & {\textbf{...
+I've put in what seems to be necessary to fix
+the current column of the current alignment.
+Try to go on, since this might almost work.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.926 ...f{1612} & {\textbf{937} & {\textbf{505} &
+                                                   {\textbf{106} \\
+I've put in what seems to be necessary to fix
+the current column of the current alignment.
+Try to go on, since this might almost work.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.927    \end
+             {longtable}
+I've put in what seems to be necessary to fix
+the current column of the current alignment.
+Try to go on, since this might almost work.
+
+[13] [14]
+
+Package xcolor Warning: Incompatible color definition on input line 934.
+
+<figure/ssm-1.pdf, id=113, 397.485pt x 271.0125pt>
+File: figure/ssm-1.pdf Graphic file (type pdf)
+ <use figure/ssm-1.pdf>
+Package pdftex.def Info: figure/ssm-1.pdf used on input line 935.
+(pdftex.def)             Requested size: 397.48402pt x 271.0201pt.
+
+
+AED: lastpage setting LastPage
+[15 <./figure/ssm-1.pdf>] (December_2016.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 4694 strings out of 493673
+ 67658 string characters out of 3141515
+ 218148 words of memory out of 3000000
+ 7985 multiletter control sequences out of 15000+200000
+ 9768 words of font info for 22 fonts, out of 3000000 for 9000
+ 1025 hyphenation exceptions out of 8191
+ 36i,12n,43p,815b,365s stack positions out of 5000i,500n,10000p,200000b,50000s
+ <C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dp
+i600\ecbx0900.pk> <C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour
+\jknappen\ec\dpi600\ecrm0900.pk> <C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\
+fonts\pk\ljfour\jknappen\ec\dpi600\ecti1000.pk> <C:\Users\dalrymplej\AppData\Lo
+cal\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1000.pk> <C:\Users\dalrym
+plej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1440.pk> <
+C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600
+\ecsl1000.pk> <C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jkn
+appen\ec\dpi600\ecrm1000.pk>
+Output written on December_2016.pdf (15 pages, 203522 bytes).
+PDF statistics:
+ 496 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
+

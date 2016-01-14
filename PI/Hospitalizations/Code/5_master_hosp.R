@@ -26,7 +26,7 @@ rm(cmh_wd)
 input <- list(
   report_date = "12_17_15",
   # report_date = format(Sys.Date(), "%m_%d_%y"),
-  start_date = '10/1/2010',
+  start_date = '10/1/2009',
   end_date = '9/30/2015')
 # for folder
 project_wd$data <- file.path(project_wd$data,
