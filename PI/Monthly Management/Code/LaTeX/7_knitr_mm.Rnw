@@ -1,4 +1,3 @@
-
 \documentclass{article}
 \usepackage[T1]{fontenc}
  \usepackage[hmargin={2cm, 2cm}, vmargin={1cm, 4cm}]{geometry}
@@ -8,9 +7,9 @@
 
 \usepackage{lastpage}
 
-\heavyrulewidth = 2pt
+\heavyrulewidth = 2pt % %& -job-name=knitr_ouput
 
-% left align all longtable's --- %& -job-name=April_2015
+% left align all longtable's ---
 \setlength{\LTleft}{0pt}
 
 % set up title options: LARGE, Large, large, normalsize
@@ -63,35 +62,24 @@
 \pagestyle{fancy}
 
 <<initialize, cache=FALSE, results="hide", echo=FALSE, warnings=FALSE, message=FALSE, tidy=TRUE>>=
-      # which computer results in correct base working directory
-      baseWD <- switch(Sys.info()["nodename"],
-               "JAMES" = "B:", # laptop
-               "JAMES-PC" = "B:", # home PC
-               "CMHJ3DTVZ1-LT" = "C:/Users/dalrymplej" # county PC
-               )
-      source(file.path(baseWD, "Dropbox/PI Projects/Monthly Management/R Code", "monthly pi_v2.r"))
+  options(repos = c(CRAN="http://cran.mtu.edu/"))
+  code_dir <- substr(getwd(), 1, regexpr("/[^/]*$", text = getwd())[1]-1)
+  print(code_dir); flush.console()
+  suppressWarnings(source(file.path(code_dir, "6_source_mm.R")))
+  # source(input$code_wd, "6_source_mm.R")
 @
 
-\lhead{Monthly Management Report - \Sexpr{currentMonth} }
-\cfoot{CSTS \Sexpr{currentMonth} Monthly PI Report - \textit{Powered by R and LaTeX} - Page \thepage\ of \pageref{LastPage}}
-
-
-% num_months
-% 12 months = 7.25
-% 2 months = 2
-
-%ipos_width <- data.table(months = c(2, 12),
-%                        width = c(2, 7.25))
-%lm(width ~ months, data=ipos_width)
-
+\lhead{Monthly Management Report - \Sexpr{input$current_month}}
+\cfoot{CSTS \Sexpr{input$current_month} Monthly PI Report - \textit{Powered by R and LaTeX} - Page \thepage\ of \pageref{LastPage}}
 
 %%%%%%%%%%%%% ACT %%%%%%%%%%%%%%%%%
 \section{ACT}
 \subsection{IPOS}
-
-% ACT Graph 1.1.1 - Current IPOS (Report 2003 ran 12/1/14)\\
+print(code_dir)
+flush.console()
+% ACT Graph 1.1.1\\
 <<ACT_hist, echo=FALSE, fig.height=2.25, fig.width=7.25>>=
-hist_ipos[[1]]
+hist_ipos$ACT
 @
 
 <<ACT_t2, echo=FALSE, results='asis'>>=
@@ -102,11 +90,12 @@ hist_ipos[[1]]
                            "p{0.08 \\textwidth}",
                            "p{0.14 \\textwidth}",
                            "p{0.08 \\textwidth}"))
-  shade(group=3, dt_xtable=act_t2, n_rows=nrow(tmpDT), table_title="ACT: IPOS Table 1.1.1")
+  aux$shade(group=3, dt_xtable=act_t2, n_rows=nrow(tmpDT),
+            table_title="ACT: IPOS Table 1.1.1")
 @
 
 <<ACT_t1, echo=FALSE, results='asis'>>=
-  tmpDT <- copy(full_ipos_t1[team==team_list[1]])[, team := NULL]
+  tmpDT <- copy(full_ipos_t1[team=="ACT"])[, team := NULL]
   act_t1 = xtable(tmpDT,
                   align= c("p{0.13\\textwidth}",
                            "p{0.1\\textwidth}|",
@@ -116,56 +105,58 @@ hist_ipos[[1]]
                            "p{0.14\\textwidth}",
                            "p{0.15\\textwidth}",
                            "|p{0.08\\textwidth}"))
-  shade(group=3, dt_xtable=act_t1, n_rows=nrow(tmpDT), table_title="ACT: IPOS Table 1.1.2")
+  aux$shade(group=3, dt_xtable=act_t1, n_rows=nrow(tmpDT), table_title="ACT: IPOS Table 1.1.2")
 @
 
 <<ACT_t3, echo=FALSE, results='asis'>>=
-    tmpDT <- copy(full_ipos_t3[team==team_list[1]])[, c("team", "supervisor") := NULL]
+    tmpDT <- copy(full_ipos_t3[team=="ACT"])[, c("team", "supervisor") := NULL]
     # tmpDT[primary_staff!="", supText := "test"]
-    setnames(tmpDT, old=c("supText", "primary_staff"), new=c("supervisor", "primary staff"))
+    setnames(tmpDT, old=c("supText", "primary_staff"),
+             new=c("supervisor", "primary staff"))
     act_t3 = xtable(tmpDT,
                     align= c("p{0.01\\textwidth}",
                              "p{0.15\\textwidth}|",
                              "p{0.15\\textwidth}",
                              "p{0.25\\textwidth}")
                     )
-  shade(group=3, dt_xtable=act_t3, n_rows=nrow(tmpDT), sanitize_text=TRUE, table_title="ACT: IPOS Table 1.1.3")
+  aux$shade(group=3, dt_xtable=act_t3, n_rows=nrow(tmpDT),
+        sanitize_text=TRUE, table_title="ACT: IPOS Table 1.1.3")
 @
 
 \begin{absolutelynopagebreak}
 \subsection{Unsigned/Draft Documents}
 <<ACT_p_unsign, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_unsign[[1]]
+p_unsign$ACT
 @
 \end{absolutelynopagebreak}
 
-\begin{absolutelynopagebreak}
-\subsection{Demographic Errors}
-<<ACT_p_demo, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_demo[[1]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Demographic Errors}
+%' <<ACT_p_demo, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_demo$ACT
+%' @
+%' \end{absolutelynopagebreak}
 
-\begin{absolutelynopagebreak}
-\subsection{Health Errors}
-<<ACT_p_health, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_health[[1]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Health Errors}
+%' <<ACT_p_health, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_health$ACT
+%' @
+%' \end{absolutelynopagebreak}
 
-\begin{absolutelynopagebreak}
-\subsection{Minimum Wage Errors}
-<<ACT_p_wage, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_wage[[1]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Minimum Wage Errors}
+%' <<ACT_p_wage, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_wage$ACT
+%' @
+%' \end{absolutelynopagebreak}
 
 %%%%%%%%% CHILDREN'S SERVICES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \begin{absolutelynopagebreak}
 \section{Children's Services}
 \subsection{IPOS}
 <<child_hist, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=7.5>>=
-hist_ipos[[2]]
+hist_ipos$Child
 @
 % \end{absolutelynopagebreak}
 
@@ -178,11 +169,12 @@ hist_ipos[[2]]
                            "p{0.14 \\textwidth}",
                            "p{0.08 \\textwidth}")
                   )
-  shade(group=3, dt_xtable=child_t2, n_rows=nrow(tmpDT), table_title="Children's Services: IPOS Table 2.1.1")
+  aux$shade(group=3, dt_xtable=child_t2, n_rows=nrow(tmpDT),
+        table_title = "Children's Services: IPOS Table 2.1.1")
 @
 
 <<child_t1, echo=FALSE, results='asis'>>=
-  tmpDT <- copy(full_ipos_t1[team==team_list[2]])[, team := NULL]
+  tmpDT <- copy(full_ipos_t1[team=="Child"])[, team := NULL]
   child_t1 = xtable(tmpDT,
                   align= c("p{0.13\\textwidth}",
                            "p{0.1\\textwidth}|",
@@ -192,11 +184,11 @@ hist_ipos[[2]]
                            "p{0.14\\textwidth}",
                            "p{0.15\\textwidth}",
                            "|p{0.08\\textwidth}"))
-  shade(group=3, dt_xtable=child_t1, n_rows=nrow(tmpDT), table_title="Children's Services: IPOS Table 2.1.2")
+  aux$shade(group=3, dt_xtable=child_t1, n_rows=nrow(tmpDT), table_title="Children's Services: IPOS Table 2.1.2")
 @
 
 <<child_t3, echo=FALSE, results='asis'>>=
-    tmpDT <- copy(full_ipos_t3[team==team_list[2]])[, c("team", "supervisor") := NULL]
+    tmpDT <- copy(full_ipos_t3[team=="Child"])[, c("team", "supervisor") := NULL]
     setnames(tmpDT, old=c("supText", "primary_staff"), new=c("supervisor", "primary staff"))
     child_t3 = xtable(tmpDT,
                     align= c("p{0.10\\textwidth}",
@@ -204,43 +196,43 @@ hist_ipos[[2]]
                              "p{0.20\\textwidth}",
                              "p{0.25\\textwidth}")
                     )
-  shade(group=3, dt_xtable=child_t3, n_rows=nrow(tmpDT), sanitize_text=TRUE, table_title="Children's Services: IPOS Table 2.1.3")
+  aux$shade(group=3, dt_xtable=child_t3, n_rows=nrow(tmpDT), sanitize_text=TRUE, table_title="Children's Services: IPOS Table 2.1.3")
 @
 
 \begin{absolutelynopagebreak}
 \subsection{Unsigned/Draft Documents}
 <<child_p_unsign, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_unsign[[2]]
+p_unsign$Child
 @
 \end{absolutelynopagebreak}
 
-\begin{absolutelynopagebreak}
-\subsection{Demographic Errors}
-<<child_p_demo, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_demo[[2]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Demographic Errors}
+%' <<child_p_demo, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_demo$Child
+%' @
+%' \end{absolutelynopagebreak}
 
-\begin{absolutelynopagebreak}
-\subsection{Health Errors}
-<<child_p_health, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_health[[2]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Health Errors}
+%' <<child_p_health, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_health$Child
+%' @
+%' \end{absolutelynopagebreak}
 
-\begin{absolutelynopagebreak}
-\subsection{Minimum Wage Errors}
-<<child_p_wage, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_wage[[2]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Minimum Wage Errors}
+%' <<child_p_wage, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_wage$Child
+%' @
+%' \end{absolutelynopagebreak}
 
 %%%%%%%%%% Children's Services Home Based %%%%%%%%%%%%%%%%%%%
 \pagebreak
 \section{Children's Services Home Based}
 \subsection{IPOS}
 <<hb_hist, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=7.5>>=
-hist_ipos[[3]]
+hist_ipos$`Child HB`
 @
 
 <<hb_t2, echo=FALSE, results='asis'>>=
@@ -252,12 +244,12 @@ hist_ipos[[3]]
                            "p{0.14 \\textwidth}",
                            "p{0.08 \\textwidth}")
                   )
-  shade(group=3, dt_xtable=hb_t2, n_rows=nrow(tmpDT), table_title="Children's Services Home Based: IPOS Table 3.1.1")
+  aux$shade(group=3, dt_xtable=hb_t2, n_rows=nrow(tmpDT), table_title="Children's Services Home Based: IPOS Table 3.1.1")
 @
 
 <<hb_t1, echo=FALSE, results='asis'>>=
-  tmpDT <- copy(full_ipos_t1[team==team_list[3]])[, team := NULL]
-  hb_t1 = xtable(tmpDT,
+  tmpDT <- copy(full_ipos_t1[team=="Child HB"])[, team := NULL]
+  hb_t1 <- xtable(tmpDT,
                   align= c("p{0.13\\textwidth}",
                            "p{0.1\\textwidth}|",
                            "p{0.07\\textwidth}",
@@ -266,11 +258,12 @@ hist_ipos[[3]]
                            "p{0.14\\textwidth}",
                            "p{0.15\\textwidth}",
                            "|p{0.08\\textwidth}"))
-  shade(group=3, dt_xtable=hb_t1, n_rows=nrow(tmpDT), table_title="Children's Services Home Based: IPOS Table 3.1.2")
+  aux$shade(group=3, dt_xtable=hb_t1, n_rows=nrow(tmpDT),
+            table_title="Children's Services Home Based: IPOS Table 3.1.2")
 @
 
 <<hb_t3, echo=FALSE, results='asis'>>=
-    tmpDT <- copy(full_ipos_t3[team==team_list[3]])[, c("team", "supervisor") := NULL]
+    tmpDT <- copy(full_ipos_t3[team=="Child HB"])[, c("team", "supervisor") := NULL]
     setnames(tmpDT, old=c("supText", "primary_staff"), new=c("supervisor", "primary staff"))
     hb_t3 = xtable(tmpDT,
                     align= c("p{0.01\\textwidth}",
@@ -278,36 +271,37 @@ hist_ipos[[3]]
                              "p{0.15\\textwidth}",
                              "p{0.25\\textwidth}")
                     )
-  shade(group=3, dt_xtable=hb_t3, n_rows=nrow(tmpDT), sanitize_text=TRUE, table_title="Children's Services Home Based: IPOS Table 3.1.3")
+  aux$shade(group=3, dt_xtable=hb_t3, n_rows=nrow(tmpDT), sanitize_text=TRUE,
+            table_title="Children's Services Home Based: IPOS Table 3.1.3")
 @
 
 \begin{absolutelynopagebreak}
 \subsection{Unsigned/Draft Documents}
 <<hb_p_unsign, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_unsign[[3]]
+p_unsign$`Child HB`
 @
 \end{absolutelynopagebreak}
 
-\begin{absolutelynopagebreak}
-\subsection{Demographic Errors}
-<<hb_p_demo, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_demo[[3]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Demographic Errors}
+%' <<hb_p_demo, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_demo$`Child HB`
+%' @
+%' \end{absolutelynopagebreak}
 
-\begin{absolutelynopagebreak}
-\subsection{Health Errors}
-<<hb_p_health, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_health[[3]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Health Errors}
+%' <<hb_p_health, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_health`Child HB`
+%' @
+%' \end{absolutelynopagebreak}
 
 %%%%%%%%%% DD Adult %%%%%%%%%%%%%%%%%%%%%%
 \pagebreak
 \section{DD Adult}
 \subsection{IPOS}
 <<dd_hist, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=7.5>>=
-hist_ipos[[4]]
+hist_ipos$DD
 @
 
 <<dd_t2, echo=FALSE, results='asis'>>=
@@ -319,7 +313,7 @@ hist_ipos[[4]]
                            "p{0.14 \\textwidth}",
                            "p{0.08 \\textwidth}")
                   )
-  shade(group=3, dt_xtable=dd_t2, n_rows=nrow(tmpDT), table_title="DD Adult: IPOS Table 4.1.1")
+  aux$shade(group=3, dt_xtable=dd_t2, n_rows=nrow(tmpDT), table_title="DD Adult: IPOS Table 4.1.1")
 @
 
 <<dd_t1, echo=FALSE, results='asis'>>=
@@ -333,7 +327,7 @@ hist_ipos[[4]]
                            "p{0.14\\textwidth}",
                            "p{0.15\\textwidth}",
                            "|p{0.08\\textwidth}"))
-  shade(group=3, dt_xtable=dd_t1, n_rows=nrow(tmpDT), table_title="DD Adult: IPOS Table 4.1.2")
+  aux$shade(group=3, dt_xtable=dd_t1, n_rows=nrow(tmpDT), table_title="DD Adult: IPOS Table 4.1.2")
 @
 
 <<dd_t3, echo=FALSE, results='asis'>>=
@@ -345,48 +339,48 @@ hist_ipos[[4]]
                              "p{0.25\\textwidth}",
                              "p{0.25\\textwidth}")
                     )
-  shade(group=3, dt_xtable=dd_t3, n_rows=nrow(tmpDT), sanitize_text=TRUE, table_title="DD Adult: IPOS Table 4.1.3")
+  aux$shade(group=3, dt_xtable=dd_t3, n_rows=nrow(tmpDT), sanitize_text=TRUE, table_title="DD Adult: IPOS Table 4.1.3")
 @
 
 \begin{absolutelynopagebreak}
 \subsection{Unsigned/Draft Documents}
 <<dd_p_unsign, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_unsign[[4]]
+p_unsign$DD
 @
 \end{absolutelynopagebreak}
 
-\begin{absolutelynopagebreak}
-\subsection{Demographic Errors}
-<<dd_p_demo, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_demo[[4]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Demographic Errors}
+%' <<dd_p_demo, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_demo$DD
+%' @
+%' \end{absolutelynopagebreak}
 
-\begin{absolutelynopagebreak}
-\subsection{Health Errors}
-<<dd_p_health, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_health[[4]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Health Errors}
+%' <<dd_p_health, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_health$DD
+%' @
+%' \end{absolutelynopagebreak}
 
-% \begin{absolutelynopagebreak}
-\subsection{Minimum Wage Errors}
-<<dd_p_wage, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_wage[[4]]
-@
-% \end{absolutelynopagebreak}
+%' % \begin{absolutelynopagebreak}
+%' \subsection{Minimum Wage Errors}
+%' <<dd_p_wage, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_wage$DD
+%' @
+%' % \end{absolutelynopagebreak}
 
 %%%%%%%%%% MI Adult %%%%%%%%%%%%%%%%%%%%%
 % \begin{absolutelynopagebreak}
 \section{MI Adult}
 \subsection{IPOS}
 <<mi_hist, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=7.5>>=
-hist_ipos[[5]]
+hist_ipos$MI
 @
 % \end{absolutelynopagebreak}
 
 <<mi_t2, echo=FALSE, results='asis'>>=
-  tmpDT <- copy(full_ipos_t2[team==team_list[5]])[, team := NULL]
+  tmpDT <- copy(full_ipos_t2[team=="MI"])[, team := NULL]
   mi_t2 = xtable(tmpDT,
                   align= c("p{0.10 \\textwidth}",
                            "p{0.10 \\textwidth}|",
@@ -394,11 +388,11 @@ hist_ipos[[5]]
                            "p{0.14 \\textwidth}",
                            "p{0.08 \\textwidth}")
                   )
-  shade(group=3, dt_xtable=mi_t2, n_rows=nrow(tmpDT), table_title="MI Adult: IPOS Table 5.1.1")
+  aux$shade(group=3, dt_xtable=mi_t2, n_rows=nrow(tmpDT), table_title="MI Adult: IPOS Table 5.1.1")
 @
 
 <<mi_t1, echo=FALSE, results='asis'>>=
-  tmpDT <- copy(full_ipos_t1[team==team_list[5]])[, team := NULL]
+  tmpDT <- copy(full_ipos_t1[team=="MI"])[, team := NULL]
   mi_t1 = xtable(tmpDT,
                   align= c("p{0.13\\textwidth}",
                            "p{0.1\\textwidth}|",
@@ -408,22 +402,23 @@ hist_ipos[[5]]
                            "p{0.14\\textwidth}",
                            "p{0.15\\textwidth}",
                            "|p{0.08\\textwidth}"))
-  shade(group=3, dt_xtable=mi_t1, n_rows=nrow(tmpDT), table_title="MI Adult: IPOS Table 5.1.2")
+  aux$shade(group=3, dt_xtable=mi_t1, n_rows=nrow(tmpDT),
+            table_title="MI Adult: IPOS Table 5.1.2")
 @
 
 <<mi_t3, echo=FALSE, results='asis'>>=
-    tmpDT <- copy(full_ipos_t3[team==team_list[5]])[, c("team", "supervisor") := NULL]
+    tmpDT <- copy(full_ipos_t3[team=="MI"])[, c("team", "supervisor") := NULL]
     setnames(tmpDT, old=c("supText", "primary_staff"), new=c("supervisor", "primary staff"))
     mi_t3 = xtable(tmpDT,
                     align= c("p{0.01\\textwidth}",
                              "p{0.14\\textwidth}|",
                              "p{0.30\\textwidth}",
-                             "p{0.25\\textwidth}")
-                    )
-    # shade(group=3, dt_xtable=mi_t3, n_rows=nrow(tmpDT), table_title="MI Adult: IPOS Table 5.1.3", sanitize_text=TRUE)
-    long_table(data_table=tmpDT, display="s", group=3,
-             table_caption="MI Adult: IPOS Table 5.1.3", sanitize_text=TRUE,
-             table_label=NULL,
+                             "p{0.25\\textwidth}"))
+    # aux$shade(group=3, dt_xtable=mi_t3, n_rows=nrow(tmpDT),
+    # table_title="MI Adult: IPOS Table 5.1.3", sanitize_text=TRUE)
+    aux$long_table(data_table = tmpDT, display_type = "s", group = 3,
+             table_caption = "MI Adult: IPOS Table 5.1.3", digits_n = 0,
+             sanitize_text = TRUE, table_label = NULL,
                align = c("p{0.01\\textwidth}",
                              "p{0.14\\textwidth}|",
                              "p{0.30\\textwidth}",
@@ -433,63 +428,64 @@ hist_ipos[[5]]
 \begin{absolutelynopagebreak}
 \subsection{Unsigned/Draft Documents}
 <<mi_p_unsign, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_unsign[[5]]
+p_unsign$MI
 @
 \end{absolutelynopagebreak}
 
-\begin{absolutelynopagebreak}
-\subsection{Demographic Errors}
-<<mi_p_demo, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_demo[[5]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Demographic Errors}
+%' <<mi_p_demo, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_demo$MI
+%' @
+%' \end{absolutelynopagebreak}
 
-\subsection{Health Errors}
-<<mi_p_health, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_health[[5]]
-@
+%' \subsection{Health Errors}
+%' <<mi_p_health, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_health$MI
+%' @
 
-\begin{absolutelynopagebreak}
-\subsection{Minimum Wage Errors}
-<<mi_p_wage, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
-p_wage[[5]]
-@
-\end{absolutelynopagebreak}
+%' \begin{absolutelynopagebreak}
+%' \subsection{Minimum Wage Errors}
+%' <<mi_p_wage, fig.show="hold", message=FALSE, echo=FALSE, fig.height=2.25, fig.width=5.5>>=
+%' p_wage$MI
+%' @
+%' \end{absolutelynopagebreak}
 
+\pagebreak
 \section{Unsigned and Draft Documents}
-Unsigned/Draft Documents by Supervisor/Enterer - Report 2004: ran \Sexpr{gsub(x=runDate, pattern="_", replace="-")} \newline
 \small{
 <<unsign_t1, echo=FALSE, results='asis', fig.align='left'>>=
   # table 1
     tmpDT <- unsign_table
-    setnames(tmpDT, old=c("entered_by", "unsigned_draft_docs"), new=c("entered by", "unsigned/draft docs"))
-    long_table(data_table=tmpDT, display="s",
-             table_caption="Table 6.1",
-             table_label=NULL,
-               align= c("p{0.01\\textwidth}",
-                        "p{0.25\\textwidth}",
-                        "|p{0.27\\textwidth}",
-                        "p{0.22\\textwidth}"))
+    setnames(tmpDT, old = c("unsigned_draft_docs"), new = c("unsigned/draft docs"))
+    aux$long_table(data_table=tmpDT, display_type="s",
+            table_caption="Table 6.1",
+            table_label=NULL,
+              align= c("p{0.01\\textwidth}",
+                       "p{0.25\\textwidth}",
+                       "|p{0.27\\textwidth}",
+                       "p{0.22\\textwidth}"))
 @
 }
 
+\pagebreak
+
 \section{Caseload and Not Seen 30/60/90/180 days}
-Caseload and Not Seen 30/60/90/180 days (Report 2044: ran \Sexpr{gsub(x=runDate, pattern="_", replace="-")})(No services at all) \newline
+Caseload and Not Seen 30/60/90/180 days (No services at all) \newline
 \small{
 <<cl_t1, echo=FALSE, results='asis'>>=
-    tmpDT <- svc_table
-    setnames(tmpDT, old=c("primary_staff", "caseLoad", "notSeen30days", "notSeen60days", "notSeen90days", 'notSeen180days'),
-             new=c("primary staff", "case load", "not seen in 30 days", "not seen in 60 days", "not seen in 90 days", "not seen in 180 days"))
-
+  tmpDT <- copy(svc_table)
+  setnames(tmpDT, names(tmpDT),
+           gsub(x = names(tmpDT), pattern = ">", replacement = "$>$"))
+  setnames(tmpDT, names(tmpDT), gsub(x = names(tmpDT), pattern = "_", replace = " "))
   # add horizontal lines as desired to the table
-  hline_rows <- svc_table[, which(team!="")]
+  hline_rows <- tmpDT[, which(team!="")]
   hline_rows <- c(hline_rows[-1], hline_rows[length(hline_rows)])-1
-
-    long_table(data_table=tmpDT, display="s",
-             table_caption="Table 7.1",
-             table_label=NULL,
-             hline.after = hline_rows,
-               align= c("p{0.01\\textwidth}",
+  aux$long_table(data_table=tmpDT, display_type="s",
+                 table_caption="Table 6.1",
+                 table_label=NULL,
+                 hline.after = hline_rows,
+                 align= c("p{0.01\\textwidth}",
                         "p{0.05\\textwidth}",
                         "p{0.22\\textwidth}",
                         "p{0.05\\textwidth}",
@@ -498,14 +494,17 @@ Caseload and Not Seen 30/60/90/180 days (Report 2044: ran \Sexpr{gsub(x=runDate,
                         "p{0.09\\textwidth}",
                         "p{0.09\\textwidth}",
                         "p{0.09\\textwidth}"))
-
 @
 }
 
 \pagebreak
 \section{Self-Sufficiency Matrix for MI Adult Program}
-<<ssm, fig.show="hold", message=FALSE, echo=FALSE, fig.height=3.75, fig.width=5.5>>=
-p_ssm
+<<ssm_ts, fig.show="hold", message=FALSE, echo=FALSE, fig.height=3.75, fig.width=5.5>>=
+print(p_ssm_ts)
 @
 
+%' \pagebreak
+%' <<ssm_tsa, fig.show="hold", message=FALSE, echo=FALSE, fig.height=5, fig.width=8>>=
+%' print(p_ssm_tsa)
+%' @
 \end{document}

@@ -1,3 +1,4 @@
+options(repos=c(CRAN="http://cran.mtu.edu/"))
 pkg_loader(c("xtable", "knitr", "data.table", "ggplot2", "zoo", "xlsx",
              "RODBC"))
 
@@ -103,7 +104,6 @@ aux$replacer <- function(x, old, new) {
 # example:
 # x = c(rep('x',3),rep('y',3), NA, rep('z',3), NA)
 # replacer(x, old=c("x","y","z"), new=as.character(1:3))
-
 
 # function to create boxplot with jittered outliers with optional log and facet features #
 aux$bp_jitter = function(dataset, xVar, yVar, group=NULL, jitter.x=0.2,
@@ -214,41 +214,61 @@ aux$bold_cols <- function(x) {
   paste('\\textbf{', x, '}', sep ='')
 }
 
-# is.even
+# is_even
 aux$is_even <- function(x) x %% 2 == 0
 
 # modify xtable for shading in groups
-aux$shade <- function(group=3, dt_xtable, n_rows, sanitize_text=FALSE, tabular.environment='tabular',
-                  table_title, scalebox=0.8, ...) {
+aux$shade <- function(group = 3, dt_xtable, n_rows, sanitize_text = NULL,
+                      tabular.environment = NULL, table_title,
+                      scalebox = NULL, ...) {
+  if (is.null(sanitize_text) | missing(sanitize_text)) {
+    sanitize_text <- FALSE
+  }
+  if (is.null(tabular.environment) | missing(tabular.environment)) {
+    tabular.environment <- 'tabular'
+  }
+  if (is.null(scalebox) | missing(scalebox)) {
+    scalebox <- 0.8
+  }
+  stopifnot(class(sanitize_text) == "logical",
+            class(tabular.environment) == "character",
+            class(as.num(group)) == "numeric",
+            class(scalebox) == "numeric")
   hlines <- c(-1, 0, nrow(dt_xtable))
   n_rows <- seq(nrow(dt_xtable))
 
   # if only a few rows, dont bother shading anything
-  if(max(n_rows) >= group) {
+  if(max(n_rows) > group) {
     mult_length <- length(n_rows)/group
-    change_rows <- as.numeric(n_rows[is.even(c(unlist(lapply(seq(floor(mult_length)), rep, group)),
-                                               rep(x=ceiling(mult_length),
-                                                   times = round((mult_length-floor(mult_length))*group) )))])-1
-
+    change_rows <- as.numeric(
+      n_rows[aux$is_even(c(unlist(lapply(seq(floor(mult_length)), rep, group)),
+      rep(x = ceiling(mult_length),
+          times = round((mult_length-floor(mult_length))*group))))])-1
     col <- rep("\\rowcolor[gray]{0.90}", length(change_rows))
     # change this to a function probably to use "..." --- sanitize.text.function = identity
     if(sanitize_text==FALSE) {
-      result <- print.xtable(dt_xtable, include.rownames = FALSE, floating = FALSE,
-                             sanitize.colnames.function = bold_cols, print.results = FALSE,
-                             booktabs = TRUE, hline.after = hlines, tabular.environment = tabular.environment,
-                             add.to.row = list(pos = as.list(change_rows), command = col), scalebox=scalebox)
+      result <-
+        print.xtable(dt_xtable, include.rownames = FALSE, floating = FALSE,
+         sanitize.colnames.function = aux$bold_cols, print.results = FALSE,
+         booktabs = TRUE, hline.after = hlines,
+         tabular.environment = tabular.environment,
+         add.to.row = list(pos = as.list(change_rows), command = col),
+         scalebox=scalebox)
     } else {
-      result <- print.xtable(dt_xtable, include.rownames = FALSE, floating = FALSE,
-                             sanitize.colnames.function = bold_cols, print.results = FALSE,
-                             booktabs = TRUE, hline.after = hlines, tabular.environment = tabular.environment,
-                             add.to.row = list(pos = as.list(change_rows), command = col),
-                             sanitize.text.function = identity, scalebox=scalebox)
+      result <-
+        print.xtable(dt_xtable, include.rownames = FALSE, floating = FALSE,
+         sanitize.colnames.function = aux$bold_cols, print.results = FALSE,
+         booktabs = TRUE, hline.after = hlines,
+         tabular.environment = tabular.environment,
+         add.to.row = list(pos = as.list(change_rows), command = col),
+         sanitize.text.function = identity, scalebox=scalebox)
     }
   } else {
-    result <- print.xtable(dt_xtable, include.rownames = FALSE, floating = FALSE,
-                           sanitize.colnames.function = bold_cols, print.results = FALSE,
-                           booktabs = TRUE, hline.after = hlines, tabular.environment = tabular.environment,
-                           sanitize.text.function = identity, scalebox=scalebox)
+    result <-
+      print.xtable(dt_xtable, include.rownames = FALSE, floating = FALSE,
+        sanitize.colnames.function = aux$bold_cols, print.results = FALSE,
+        booktabs = TRUE, hline.after = hlines, tabular.environment = tabular.environment,
+        sanitize.text.function = identity, scalebox=scalebox)
   }
   return(cat("\\begin{minipage}{\\linewidth} {",
              table_title, "\\newline }", result,
@@ -257,16 +277,29 @@ aux$shade <- function(group=3, dt_xtable, n_rows, sanitize_text=FALSE, tabular.e
 
 
 # see: http://tex.stackexchange.com/questions/41067/caption-for-longtable-in-sweave
-aux$long_table <- function(data_table, digits = 0, display = "s", align,
-                       table_caption, table_label, group = 3,
+aux$long_table <- function(data_table, digits_n = NULL, display_type = NULL, align,
+                       table_caption, table_label, group = NULL,
                        hline.after = NULL, ...) {
+  if (is.null(digits_n) | missing(digits_n)) {
+    digits_n <- 0
+  }
+  if (is.null(display_type) | missing(display_type)) {
+    display_type <- "s"
+  }
+  if (is.null(group) | missing(group)) {
+    group <- 3
+  }
+  stopifnot(class(as.num(digits_n)) == "numeric",
+            class(display_type) == "character",
+            class(as.num(group)) == "numeric")
   # create xtable
-  x_long_table <- xtable(data_table, table_label, caption=NULL, align=align)
+  x_long_table <- xtable(x = data_table, caption=NULL, label = table_label,
+                         align = align, digits = digits_n)
   # add brackets to column names
-  names(x_long_table) <- paste0("\\textbf{", colnames(x_long_table), "}")
-  # the first one is for the row.names (+1 to colnames)
-  digits(x_long_table) <- rep(digits, length(colnames(x_long_table))+1)
-  display(x_long_table) <- rep(display, length(colnames(x_long_table))+1)
+  names(x_long_table) <- paste0("\\textbf{", names(x_long_table), "}")
+  # the first one is for the row.names (+1 to names)
+  digits(x_long_table) <- rep(digits_n, length(names(x_long_table))+1)
+  display(x_long_table) <- rep(display_type, length(names(x_long_table))+1)
 
   # create header
   longtable_header <-
@@ -304,9 +337,10 @@ aux$long_table <- function(data_table, digits = 0, display = "s", align,
   n_rows <- nrow(x_long_table)
   n_rows <- seq(n_rows)
   mult_length <- length(n_rows)/group
-  change_rows <- as.numeric(n_rows[is.even(c(unlist(lapply(seq(floor(mult_length)), rep, group)),
-                                             rep(x=ceiling(mult_length),
-                                                 times = round((mult_length-floor(mult_length))*group) )))])-1
+  change_rows <- as.numeric(n_rows[aux$is_even(c(unlist(lapply(
+    seq(floor(mult_length)), rep, group)),
+    rep(x=ceiling(mult_length),
+        times = round((mult_length-floor(mult_length))*group) )))])-1
   # this avoids a cell that is totally black filled
   if(!is.null(hline.after)) {
     change_rows <- setdiff(change_rows, hline.after)
@@ -328,7 +362,8 @@ aux$long_table <- function(data_table, digits = 0, display = "s", align,
                          sanitize.text.function = identity,
                          math.style.negative = FALSE,
                          print.results = FALSE)
-  result <- gsub(result, pattern="\\begin{longtable}{", replace="\\begin{longtable} { >{\\raggedright}", fixed=TRUE)
+  result <- gsub(result, pattern="\\begin{longtable}{",
+                 replace="\\begin{longtable} { >{\\raggedright}", fixed=TRUE)
   result <- gsub(result, pattern="%\\hline\n", replace="", fixed=TRUE)
   # result2 <- paste("\\scalebox{.8}{", result, "}") # does not work
   return(cat(result))

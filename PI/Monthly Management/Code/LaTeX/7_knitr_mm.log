@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.31)  5 JAN 2016 22:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.31)  19 JAN 2016 13:36
 entering extended mode
-**knitr_pi_v2.tex
-(knitr_pi_v2.tex
+**7_knitr_mm.tex
+(7_knitr_mm.tex
 LaTeX2e <2015/01/01> patch level 2
 Babel <3.9m> and hyphenation patterns for 69 languages loaded.
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\article.cls"
@@ -319,7 +319,7 @@ Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 407.
 Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 408.
 Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
 ))
-(December_2016.aux
+(7_knitr_mm.aux
 
 LaTeX Warning: Label `' multiply defined.
 
@@ -327,25 +327,25 @@ LaTeX Warning: Label `' multiply defined.
 LaTeX Warning: Label `' multiply defined.
 
 )
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 112.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 112.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 111.
+LaTeX Font Info:    ... okay on input line 111.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 111.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 111.
 
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ts1cmr.fd"
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 112.
+LaTeX Font Info:    ... okay on input line 111.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -399,7 +399,19 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             https://www.ctan.org/pkg/pageslts
-(lastpage)             ! on input line 112.
+(lastpage)             ! on input line 111.
+! Missing $ inserted.
+<inserted text> 
+                $
+l.122 print(code_
+                 dir)
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 122.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 122.
 
 Package xcolor Warning: Incompatible color definition on input line 126.
 
@@ -409,10 +421,52 @@ File: figure/ACT_hist-1.pdf Graphic file (type pdf)
 <use figure/ACT_hist-1.pdf>
 Package pdftex.def Info: figure/ACT_hist-1.pdf used on input line 127.
 (pdftex.def)             Requested size: 500.484pt x 155.32729pt.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 143.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 143.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.128 
+      
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.128 
+      
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Overfull \hbox (130.23384pt too wide) in paragraph at lines 122--128
+\T1/cmr/m/n/10 print(code$[]\OML/cmm/m/it/10 ir\OT1/cmr/m/n/10 )\OML/cmm/m/it/1
+0 flush:console\OT1/cmr/m/n/10 ()[][][]$ 
+ []
+
+
+! LaTeX Error: \begin{document} ended by \end{knitrout}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.129 \end{knitrout}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.129 \end{knitrout}
+                    
+Things are pretty mixed up, but I think the worst is over.
+
 
 Underfull \hbox (badness 10000) in paragraph at lines 143--143
 []|\T1/cmr/bx/n/10 current
@@ -530,358 +584,278 @@ Overfull \hbox (15.0pt too wide) in paragraph at lines 233--247
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 275--275
+Underfull \hbox (badness 10000) in paragraph at lines 271--271
 []|\T1/cmr/bx/n/10 Brookens-Harvey,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 275--275
-[]|\T1/cmr/m/n/10 Angeski-Barron,
- []
-
-
-Overfull \hbox (15.0pt too wide) in paragraph at lines 248--277
+Overfull \hbox (15.0pt too wide) in paragraph at lines 248--273
 []$[]$ 
  []
 
 [2 <./figure/ACT_p_unsign-1.pdf> <./figure/child_hist-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 281.
+Package xcolor Warning: Incompatible color definition on input line 277.
 
-<figure/child_p_unsign-1.pdf, id=31, 397.485pt x 162.6075pt>
+<figure/child_p_unsign-1.pdf, id=34, 397.485pt x 162.6075pt>
 File: figure/child_p_unsign-1.pdf Graphic file (type pdf)
 
 <use figure/child_p_unsign-1.pdf>
-Package pdftex.def Info: figure/child_p_unsign-1.pdf used on input line 282.
+Package pdftex.def Info: figure/child_p_unsign-1.pdf used on input line 278.
 (pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
  [3 <./figure/child_p_unsign-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 313.
+Package xcolor Warning: Incompatible color definition on input line 309.
 
-<figure/hb_hist-1.pdf, id=40, 542.025pt x 162.6075pt>
+<figure/hb_hist-1.pdf, id=43, 542.025pt x 162.6075pt>
 File: figure/hb_hist-1.pdf Graphic file (type pdf)
 
 <use figure/hb_hist-1.pdf>
-Package pdftex.def Info: figure/hb_hist-1.pdf used on input line 314.
+Package pdftex.def Info: figure/hb_hist-1.pdf used on input line 310.
 (pdftex.def)             Requested size: 500.484pt x 150.15154pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 330--330
+Underfull \hbox (badness 10000) in paragraph at lines 326--326
 []|\T1/cmr/bx/n/10 current
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 330--330
+Underfull \hbox (badness 10000) in paragraph at lines 326--326
 []|\T1/cmr/bx/n/10 expired
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 318--332
+Overfull \hbox (15.0pt too wide) in paragraph at lines 314--328
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 345--345
+Underfull \hbox (badness 10000) in paragraph at lines 341--341
 []|\T1/cmr/bx/n/10 Full
  []
 
 
-Overfull \hbox (2.64076pt too wide) in paragraph at lines 345--345
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 341--341
 []|\T1/cmr/bx/n/10 Interim
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 345--345
+Underfull \hbox (badness 10000) in paragraph at lines 341--341
 []|\T1/cmr/bx/n/10 Preliminary
  []
 
 
-Underfull \hbox (badness 1796) in paragraph at lines 345--345
+Underfull \hbox (badness 1796) in paragraph at lines 341--341
 []|\T1/cmr/bx/n/10 Single Ser-vice
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 345--345
+Underfull \hbox (badness 10000) in paragraph at lines 341--341
 []|\T1/cmr/bx/n/10 Grand
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 333--347
+Overfull \hbox (15.0pt too wide) in paragraph at lines 329--343
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 359--359
-[]|\T1/cmr/bx/n/10 Brookens-
- []
-
-
-Underfull \hbox (badness 7851) in paragraph at lines 359--359
-\T1/cmr/bx/n/10 Harvey, Bar-
- []
-
-
-Overfull \hbox (15.0pt too wide) in paragraph at lines 348--361
+Overfull \hbox (15.0pt too wide) in paragraph at lines 344--356
 []$[]$ 
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 365.
+Package xcolor Warning: Incompatible color definition on input line 360.
 
-<figure/hb_p_unsign-1.pdf, id=41, 397.485pt x 162.6075pt>
+<figure/hb_p_unsign-1.pdf, id=44, 397.485pt x 162.6075pt>
 File: figure/hb_p_unsign-1.pdf Graphic file (type pdf)
 
 <use figure/hb_p_unsign-1.pdf>
-Package pdftex.def Info: figure/hb_p_unsign-1.pdf used on input line 366.
+Package pdftex.def Info: figure/hb_p_unsign-1.pdf used on input line 361.
 (pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
  [4 <./figure/hb_hist-1.pdf> <./figure/hb_p_unsign-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 390.
+Package xcolor Warning: Incompatible color definition on input line 385.
 
-<figure/dd_hist-1.pdf, id=55, 542.025pt x 162.6075pt>
+<figure/dd_hist-1.pdf, id=58, 542.025pt x 162.6075pt>
 File: figure/dd_hist-1.pdf Graphic file (type pdf)
 
 <use figure/dd_hist-1.pdf>
-Package pdftex.def Info: figure/dd_hist-1.pdf used on input line 391.
+Package pdftex.def Info: figure/dd_hist-1.pdf used on input line 386.
 (pdftex.def)             Requested size: 500.484pt x 150.15154pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 407--407
+Underfull \hbox (badness 10000) in paragraph at lines 402--402
 []|\T1/cmr/bx/n/10 current
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 407--407
+Underfull \hbox (badness 10000) in paragraph at lines 402--402
 []|\T1/cmr/bx/n/10 expired
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 395--409
+Overfull \hbox (15.0pt too wide) in paragraph at lines 390--404
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 422--422
+Underfull \hbox (badness 10000) in paragraph at lines 417--417
 []|\T1/cmr/bx/n/10 Full
  []
 
 
-Overfull \hbox (2.64076pt too wide) in paragraph at lines 422--422
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 417--417
 []|\T1/cmr/bx/n/10 Interim
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 422--422
+Underfull \hbox (badness 10000) in paragraph at lines 417--417
 []|\T1/cmr/bx/n/10 Preliminary
  []
 
 
-Underfull \hbox (badness 1796) in paragraph at lines 422--422
+Underfull \hbox (badness 1796) in paragraph at lines 417--417
 []|\T1/cmr/bx/n/10 Single Ser-vice
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 422--422
+Underfull \hbox (badness 10000) in paragraph at lines 417--417
 []|\T1/cmr/bx/n/10 Grand
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 410--424
+Overfull \hbox (15.0pt too wide) in paragraph at lines 405--419
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 451--451
+Underfull \hbox (badness 10000) in paragraph at lines 442--442
 []|\T1/cmr/bx/n/10 Diephuis,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 451--451
-[]|\T1/cmr/bx/n/10 Dronamraju,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 451--451
+Underfull \hbox (badness 10000) in paragraph at lines 442--442
 []|\T1/cmr/bx/n/10 Mohring,
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 425--453
+Overfull \hbox (15.0pt too wide) in paragraph at lines 420--444
 []$[]$ 
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 457.
+Package xcolor Warning: Incompatible color definition on input line 448.
 
-<figure/dd_p_unsign-1.pdf, id=56, 397.485pt x 162.6075pt>
+<figure/dd_p_unsign-1.pdf, id=59, 397.485pt x 162.6075pt>
 File: figure/dd_p_unsign-1.pdf Graphic file (type pdf)
 
 <use figure/dd_p_unsign-1.pdf>
-Package pdftex.def Info: figure/dd_p_unsign-1.pdf used on input line 458.
+Package pdftex.def Info: figure/dd_p_unsign-1.pdf used on input line 449.
 (pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
  [5 <./figure/dd_hist-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 489.
+Package xcolor Warning: Incompatible color definition on input line 480.
 
-<figure/mi_hist-1.pdf, id=65, 542.025pt x 162.6075pt>
+<figure/mi_hist-1.pdf, id=68, 542.025pt x 162.6075pt>
 File: figure/mi_hist-1.pdf Graphic file (type pdf)
 
 <use figure/mi_hist-1.pdf>
-Package pdftex.def Info: figure/mi_hist-1.pdf used on input line 490.
+Package pdftex.def Info: figure/mi_hist-1.pdf used on input line 481.
 (pdftex.def)             Requested size: 500.484pt x 150.15154pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 507--507
+Underfull \hbox (badness 10000) in paragraph at lines 498--498
 []|\T1/cmr/bx/n/10 current
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 507--507
+Underfull \hbox (badness 10000) in paragraph at lines 498--498
 []|\T1/cmr/bx/n/10 expired
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 495--509
+Overfull \hbox (15.0pt too wide) in paragraph at lines 486--500
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 522--522
+Underfull \hbox (badness 10000) in paragraph at lines 513--513
 []|\T1/cmr/bx/n/10 Full
  []
 
 
-Overfull \hbox (2.64076pt too wide) in paragraph at lines 522--522
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 513--513
 []|\T1/cmr/bx/n/10 Interim
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 522--522
+Underfull \hbox (badness 10000) in paragraph at lines 513--513
 []|\T1/cmr/bx/n/10 Preliminary
  []
 
 
-Underfull \hbox (badness 1796) in paragraph at lines 522--522
+Underfull \hbox (badness 1796) in paragraph at lines 513--513
 []|\T1/cmr/bx/n/10 Single Ser-vice
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 522--522
+Underfull \hbox (badness 10000) in paragraph at lines 513--513
 []|\T1/cmr/bx/n/10 Grand
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 510--524
+Overfull \hbox (15.0pt too wide) in paragraph at lines 501--515
 []$[]$ 
  []
 
 [6 <./figure/dd_p_unsign-1.pdf> <./figure/mi_hist-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 568.
+Package xcolor Warning: Incompatible color definition on input line 548.
 
-<figure/mi_p_unsign-1.pdf, id=79, 397.485pt x 162.6075pt>
+<figure/mi_p_unsign-1.pdf, id=82, 397.485pt x 162.6075pt>
 File: figure/mi_p_unsign-1.pdf Graphic file (type pdf)
 
 <use figure/mi_p_unsign-1.pdf>
-Package pdftex.def Info: figure/mi_p_unsign-1.pdf used on input line 569.
+Package pdftex.def Info: figure/mi_p_unsign-1.pdf used on input line 549.
 (pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
- [7 <./figure/mi_p_unsign-1.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 595--599
-
- []
-
-[8] [9] [10] [11]
-Underfull \hbox (badness 10000) in paragraph at lines 801--805
+ [7 <./figure/mi_p_unsign-1.pdf>] [8] [9]
+[10]
+Underfull \hbox (badness 10000) in paragraph at lines 736--740
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 806--806
+Underfull \hbox (badness 10000) in paragraph at lines 741--741
+[]|\T1/cmr/bx/n/9 case
+ []
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 741.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 741.
+
+Underfull \hbox (badness 10000) in paragraph at lines 741--741
+[]|\T1/cmr/bx/n/9 days $\OML/cmm/m/it/9 >$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 741--741
 []|\T1/cmr/bx/n/9 case
  []
 
 
-Underfull \hbox (badness 4316) in paragraph at lines 806--806
-[]|\T1/cmr/bx/n/9 not seen
+Underfull \hbox (badness 10000) in paragraph at lines 741--741
+[]|\T1/cmr/bx/n/9 days $\OML/cmm/m/it/9 >$
  []
 
-
-Underfull \hbox (badness 4316) in paragraph at lines 806--806
-[]|\T1/cmr/bx/n/9 not seen
- []
-
-
-Underfull \hbox (badness 4316) in paragraph at lines 806--806
-[]|\T1/cmr/bx/n/9 not seen
- []
-
-
-Underfull \hbox (badness 4316) in paragraph at lines 806--806
-[]|\T1/cmr/bx/n/9 not seen
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 806--806
-\T1/cmr/bx/n/9 in 180
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 806--806
-[]|\T1/cmr/bx/n/9 case
- []
-
-
-Underfull \hbox (badness 4316) in paragraph at lines 806--806
-[]|\T1/cmr/bx/n/9 not seen
- []
-
-
-Underfull \hbox (badness 4316) in paragraph at lines 806--806
-[]|\T1/cmr/bx/n/9 not seen
- []
-
-
-Underfull \hbox (badness 4316) in paragraph at lines 806--806
-[]|\T1/cmr/bx/n/9 not seen
- []
-
-
-Underfull \hbox (badness 4316) in paragraph at lines 806--806
-[]|\T1/cmr/bx/n/9 not seen
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 806--806
-\T1/cmr/bx/n/9 in 180
- []
-
-
-Overfull \hbox (2.37384pt too wide) in paragraph at lines 847--847
-\T1/cmr/bx/n/9 Home 
- []
-
-
-Overfull \hbox (2.71692pt too wide) in paragraph at lines 847--847
-\T1/cmr/bx/n/9 Based|  
- []
-
-
-Overfull \hbox (1.6413pt too wide) in paragraph at lines 855--855
-\T1/cmr/bx/n/9 Adult|  
- []
-
-
-Overfull \hbox (1.6413pt too wide) in paragraph at lines 879--879
-\T1/cmr/bx/n/9 Adult|  
- []
-
-[12]
-Overfull \hbox (4.73987pt too wide) in paragraph at lines 926--926
+[11]
+Overfull \hbox (4.73987pt too wide) in paragraph at lines 863--863
 []|\T1/cmr/bx/n/9 Grand 
  []
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.926 ...  & \textbf{ 3409 } &  & {\textbf{1612} &
-                                                   {\textbf{937} & {\textbf{...
+l.863 ...  & \textbf{ 3419 } &  & {\textbf{1380} &
+                                                   {\textbf{830} & {\textbf{...
 I've put in what seems to be necessary to fix
 the current column of the current alignment.
 Try to go on, since this might almost work.
@@ -889,8 +863,8 @@ Try to go on, since this might almost work.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.926 ...9 } &  & {\textbf{1612} & {\textbf{937} &
-                                                   {\textbf{505} & {\textbf{...
+l.863 ...9 } &  & {\textbf{1380} & {\textbf{830} &
+                                                   {\textbf{475} & {\textbf{...
 I've put in what seems to be necessary to fix
 the current column of the current alignment.
 Try to go on, since this might almost work.
@@ -898,8 +872,8 @@ Try to go on, since this might almost work.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.926 ...f{1612} & {\textbf{937} & {\textbf{505} &
-                                                   {\textbf{106} \\
+l.863 ...f{1380} & {\textbf{830} & {\textbf{475} &
+                                                   {\textbf{135} \\
 I've put in what seems to be necessary to fix
 the current column of the current alignment.
 Try to go on, since this might almost work.
@@ -907,37 +881,37 @@ Try to go on, since this might almost work.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.927    \end
+l.864    \end
              {longtable}
 I've put in what seems to be necessary to fix
 the current column of the current alignment.
 Try to go on, since this might almost work.
 
-[13] [14]
+[12] [13]
 
-Package xcolor Warning: Incompatible color definition on input line 934.
+Package xcolor Warning: Incompatible color definition on input line 871.
 
-<figure/ssm-1.pdf, id=113, 397.485pt x 271.0125pt>
-File: figure/ssm-1.pdf Graphic file (type pdf)
- <use figure/ssm-1.pdf>
-Package pdftex.def Info: figure/ssm-1.pdf used on input line 935.
+<figure/ssm_ts-1.pdf, id=114, 397.485pt x 271.0125pt>
+File: figure/ssm_ts-1.pdf Graphic file (type pdf)
+
+<use figure/ssm_ts-1.pdf>
+Package pdftex.def Info: figure/ssm_ts-1.pdf used on input line 872.
 (pdftex.def)             Requested size: 397.48402pt x 271.0201pt.
-
-
+ 
 AED: lastpage setting LastPage
-[15 <./figure/ssm-1.pdf>] (December_2016.aux)
+[14 <./figure/ssm_ts-1.pdf>] (7_knitr_mm.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4694 strings out of 493673
- 67658 string characters out of 3141515
+ 4708 strings out of 493673
+ 67787 string characters out of 3141515
  218148 words of memory out of 3000000
- 7985 multiletter control sequences out of 15000+200000
- 9768 words of font info for 22 fonts, out of 3000000 for 9000
+ 7993 multiletter control sequences out of 15000+200000
+ 11591 words of font info for 28 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
- 36i,12n,43p,815b,365s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,12n,43p,751b,369s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dp
 i600\ecbx0900.pk> <C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour
 \jknappen\ec\dpi600\ecrm0900.pk> <C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\
@@ -946,10 +920,14 @@ cal\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1000.pk> <C:\Users\dalrym
 plej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ecbx1440.pk> <
 C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600
 \ecsl1000.pk> <C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jkn
-appen\ec\dpi600\ecrm1000.pk>
-Output written on December_2016.pdf (15 pages, 203522 bytes).
+appen\ec\dpi600\ecrm1000.pk><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/publ
+ic/amsfonts/cm/cmmi10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public
+/amsfonts/cm/cmmi7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/am
+sfonts/cm/cmmi9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfo
+nts/cm/cmr10.pfb>
+Output written on 7_knitr_mm.pdf (14 pages, 233903 bytes).
 PDF statistics:
- 496 PDF objects out of 1000 (max. 8388607)
+ 506 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  56 words of extra memory for PDF output out of 10000 (max. 10000000)
 

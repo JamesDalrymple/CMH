@@ -215,7 +215,7 @@ if(!file.exists( file.path(input$data_fy_wd,
 demo_table <- fread(file.path(input$data_fy_wd,
   paste0("demo table fy ", input$current_fy, ".csv")))
 setnames(demo_team, "month", "mon_fy")
-setnames(demo_table, "month", "mon_fy")
+# setnames(demo_table, "month", "mon_fy")
 demo_table[, team := cmh_recode(team)]
 demo_table <- setkey(demo_table, mon_fy)[
   !J(as.chr(as.yearmon(paste(input$current_month, input$calendar_year))))]
@@ -272,7 +272,7 @@ health_table <- fread(file.path(input$data_fy_wd,
   paste0("health table fy ", input$current_fy, ".csv")))
 health_table[, team := cmh_recode(team)]
 health_team[, team := cmh_recode(team)]
-setnames(health_table, "month", "mon_fy")
+# setnames(health_table, "month", "mon_fy")
 setnames(health_team, "month", "mon_fy")
 health_table <- setkey(health_table, mon_fy)[
   !J(as.chr(as.yearmon(paste(input$current_month, input$calendar_year))))]
@@ -404,9 +404,9 @@ p_ssm_tsa <- ggplot(data = ssm_tsa, aes_(x = ~primary_staff, y = ~`pct 2+`, ymax
   geom_bar(stat = "identity", color = "black", width = 0.5,
            position = position_dodge(0.5), fill = "#C282D6") +
   theme(axis.text.x = element_text(angle = 90)) +
-  geom_text(data=ssm_tsa, position = position_dodge(0.5), angle = 0,
-    aes(x = primary_staff, y = `pct 2+`, vjust = -0.1,
-        label = round(`pct 2+`)), fontface= "bold") +
+  geom_text(data=ssm_tsa, position = position_dodge(0.5), angle = 90,
+    aes(x = primary_staff, y = `pct 2+`, label = round(`pct 2+`)),
+    size = 2.5, hjust = -.1) +
   facet_wrap(~ts, scales = "free_x", nrow = 2) +
   aux$my_theme +
   scale_y_discrete(breaks = seq(0, 100, 25))
