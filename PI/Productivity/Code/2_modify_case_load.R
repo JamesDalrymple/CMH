@@ -1,6 +1,7 @@
 modify <- new.env(parent = .GlobalEnv)
 
 for(i in seq_along(input$folders)) { # i = 1
+  # load data for current month -----------------------------------------------
   modify$current_folder <-
     file.path(paste("FY", gsub(x=input$fy, pattern="20", replace="")),
               input$folders[i])
@@ -12,8 +13,7 @@ for(i in seq_along(input$folders)) { # i = 1
   prescribers <- copy(sql$output$prescribers)
   services <- copy(sql$output$services)
   cmh_adm <- copy(sql$output$cmh_adm)
-
-  # dates
+  # dates ---------------------------------------------------------------------
   date_cols <- c("hire_dt", "user_add_date")
   for (j in date_cols)
     set(staff_hr, j=j, value = as.Date(staff_hr[[j]]))
@@ -29,31 +29,57 @@ for(i in seq_along(input$folders)) { # i = 1
   modify$date_range <- paste(modify$start_date, "through", modify$end_date)
   modify$start_date <- date_convert(modify$start_date)
   modify$end_date <- date_convert(modify$end_date)
-
-  # prescribers ---
+  # prescribers ---------------------------------------------------------------
   # force prescribers to be supervised by Dr. Florence per Laura H. 6/17/2014
   prescribers <- unique(c(
     prescribers[, staff_name],
     cmh_adm[staff_type=="Psychiatrist", unique(assigned_staff)],
-    services[staff_type=="Psychiatrist", unique(author)] # probably redundant, but not a problem
+    services[staff_type=="Psychiatrist", unique(author)] # possibly redundant
   ))
-  setkey(cmh_adm, assigned_staff)[J(prescribers), supervisor := "Florence, Timothy"]
-  setkey(cmh_adm, supervisor)[J(prescribers), supervisor := "Florence, Timothy"]
+  setkey(cmh_adm, assigned_staff)[J(prescribers),
+                                  supervisor := "Florence, Timothy"]
+  setkey(cmh_adm, supervisor)[J(prescribers),
+                              supervisor := "Florence, Timothy"]
   setkey(cmh_adm, NULL)
-  setkey(services, author)[J(prescribers), supervisor := "Florence, Timothy"]
-  setkey(services, supervisor)[J(prescribers), supervisor := "Florence, Timothy"]
+  setkey(services, author)[J(prescribers),
+                           supervisor := "Florence, Timothy"]
+  setkey(services, supervisor)[J(prescribers),
+                               supervisor := "Florence, Timothy"]
   setkey(services, NULL)
-  # cmh_adm ---
+  # cmh admission records -----------------------------------------------------
   cmh_adm[is.na(supervisor), supervisor := "missing"]
-
-  # staff HR ---
+  # staff HR ------------------------------------------------------------------
+  # people who have multiple staff start/end dates are going to look like they
+  # have been continuously employed... not anything we can do about this, part
+  # of the database design unfortunately.
   staff_hr <- staff_hr[, unique(.SD),
     .SDc = c("staff", "hire_dt", "user_add_date",
              "last_login_dt", "termination_dt")]
-  staff_hr[, user_start := pmax(hire_dt, user_add_date, na.rm = TRUE)]
+  staff_hr[, user_start := pmin(hire_dt, user_add_date, na.rm = TRUE)]
   staff_hr[, user_end := pmax(as.Date(last_login_dt),
                               as.Date(termination_dt), na.rm = TRUE)]
-  staff_hr[user_start >= user_end]
+  # remove people who only were active one day
+  staff_hr <- staff_hr[!(user_start == user_end)]
+  modify$staff_emp <-
+    staff_hr[, unique(.SD), .SDcols = c("staff", "user_start", "user_end")]
+  # eliminate people active after end_date and inactive prior to start_date
+  modify$staff_emp <- modify$staff_emp[user_start <= modify$end_date]
+  modify$staff_emp <- modify$staff_emp[user_end >= modify$start_date]
+  # determine how much of the time frame a staff was active
+  modify$staff_emp[, active_start :=
+                     as.Date(ifelse(user_start <= modify$start_date,
+                            modify$start_date, user_start))]
+  modify$staff_emp[, active_end :=
+                     as.Date(ifelse(user_end >= modify$end_date,
+                            modify$end_date, user_end))]
+  modify$staff_emp[, amt_active :=
+    (as.num(active_end - active_start) + 1)/
+      (as.num(modify$end_date - modify$start_date) + 1)]
+
+
+
+  modify$staff_emp[active_start != modify$start_date]
+
   # services ---
   services <-
     sqldf("select distinct
