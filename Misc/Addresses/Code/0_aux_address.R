@@ -95,7 +95,7 @@ aux$geoCode <- function(address,verbose=FALSE) {
 aux$fix_city <- function(x) {
   y <- ifelse(substr(x, 1, 3) == "Yps", "Ypsilanti", x)
   y <- ifelse(substr(y, 1, 5) == "Ann A", "Ann Arbor", y)
-  return(cap_word(tolower(y)))
+  return(cap_word(y))
 }
 # unique( address[, aux$fix_city(city)] )
 

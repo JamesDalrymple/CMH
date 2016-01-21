@@ -62,7 +62,7 @@ aux$overlap_fix <- function(start, end) {
     repeat {
       # remove NAs
       removeStart <- which(is.na(start) | is.na(end))
-      if(length(removeStart)>0) {
+      if(length(removeStart) > 0) {
         start <- start[-removeStart]
         end <- end[-removeStart]
       }
@@ -84,21 +84,22 @@ aux$overlap_fix <- function(start, end) {
 
 aux$duration <-
   function(start, end) {
-    my_order <- order(start)
-    start <- start[my_order]
-    end <- end[my_order]
+    dt_time <- data.table(start = start, end = end)
+    setorder(dt_time, start)
 
     # initialize variables
     fullEnd <- NULL
     fullStart <- NULL
 
     # results
-    fixedTimes <- aux$overlap_fix (start=start, end=end)
+    fixedTimes <- aux$overlap_fix(start = dt_time$start, end = dt_time$end)
     # save results
     fullStart <- c(fullStart, fixedTimes[, start])
     fullEnd <-  c(fullEnd, fixedTimes[, end])
     # sum elapsed time
-    if(length(fullStart)<1 | length(fullEnd)<1) {totalMin = NA} else {
+    if(length(fullStart) < 1 | length(fullEnd) < 1) {
+      totalMin = NA
+      } else {
       totalMin <- sum(aux$time_diff(t1=fullStart, t2=fullEnd), na.rm=TRUE)
     }
     return(totalMin)

@@ -75,11 +75,6 @@ for(i in seq_along(input$folders)) { # i = 1
   modify$staff_emp[, amt_active :=
     (as.num(active_end - active_start) + 1)/
       (as.num(modify$end_date - modify$start_date) + 1)]
-
-
-
-  modify$staff_emp[active_start != modify$start_date]
-
   # services ---
   services <-
     sqldf("select distinct
@@ -97,7 +92,8 @@ for(i in seq_along(input$folders)) { # i = 1
   services[is.na(supervisor) | supervisor=="", supervisor := "unknown"]
 
   ### remove and save errors ###
-  services[, elapsed_time := aux$elapsed_time(start=begin_time, end=end_time)]
+  services[, elapsed_time :=
+             aux$elapsed_time(start = begin_time, end = end_time)]
   services[, error := NA_character_] # initialize
   # only midnight staff allowed to do this
   services[begin_time > end_time,
@@ -120,17 +116,13 @@ for(i in seq_along(input$folders)) { # i = 1
   services <- services[order(author, doc_date, begin_time)]
   # remove un-needed columns
   services[, c("staff_type", "doc_type", "error") := NULL]
-  # removing duplicates for many reasons: staff type, sal 0 units, etc.
-
-
-  services
-  for (i in seq_along(names(services))) {
-    names(services)
+  # trim whitespace
+  char_cols <-
+    names(sapply(services, class)[sapply(services, class)=="character"])
+  for (j in seq_along(char_cols)) {
+    set(services, j=j, value = stringi::stri_trim(services[[j]], side = "both"))
   }
-
-
-
-  services <- str_trim(services)
+  rm(char_cols, j)
   services <- unique(services)
 
   ## Team, Supervisor, Author ##
@@ -202,7 +194,8 @@ for(i in seq_along(input$folders)) { # i = 1
     count(distinct adm.case_no) as case_load,
     count(distinct srv.case_no) as cl_seen
     from cmh_adm as adm
-    left join services as srv on adm.case_no = srv.case_no and adm.assigned_staff = srv.author
+    left join services as srv on
+      adm.case_no = srv.case_no and adm.assigned_staff = srv.author
     group by adm.supervisor
     order by adm.supervisor")
   s_cl_seen <- data.table(s_cl_seen)
@@ -211,14 +204,14 @@ for(i in seq_along(input$folders)) { # i = 1
   ### TEAM ###
   # face-to-face hours by team, supervisor, author ##
   F2FhrsTSA <- setkey(services, f2f)[J("Y"),
-                                     list(F2F_Hours = duration(start=begin_time, end=end_time)/60),
+                                     list(F2F_Hours = aux$duration(start=begin_time, end=end_time)/60),
                                      by=c("team", "supervisor", "author", "doc_date")]
   setkey(F2FhrsTSA, NULL)
   F2FhrsTSA <- F2FhrsTSA[, list(F2F_Hours = sum(F2F_Hours, na.rm=TRUE)),
                          by=c("team", "supervisor", "author")]
   ## face-to-face hours by team, supervisor
   F2FhrsTS <- setkey(services, f2f)[J("Y"),
-                                    list(F2F_Hours = duration(start=begin_time, end=end_time)/60),
+                                    list(F2F_Hours = aux$duration(start=begin_time, end=end_time)/60),
                                     by=c("team", "supervisor", "author", "doc_date")]
   setkey(F2FhrsTS, NULL)
   F2FhrsTS <- F2FhrsTS[, list(F2F_Hours = sum(F2F_Hours, na.rm=TRUE)),
@@ -227,7 +220,7 @@ for(i in seq_along(input$folders)) { # i = 1
                        by=c("team", "supervisor")]
   ## face-to-face hours by team
   F2FhrsT <- setkey(services, f2f)[J("Y"),
-                                   list(F2F_Hours = duration(start=begin_time, end=end_time)/60),
+                                   list(F2F_Hours = aux$duration(start=begin_time, end=end_time)/60),
                                    by=c("team", "author", "doc_date")]
   setkey(F2FhrsT, NULL)
   F2FhrsT <- F2FhrsT[, list(F2F_Hours = sum(F2F_Hours, na.rm=TRUE)),
@@ -237,14 +230,14 @@ for(i in seq_along(input$folders)) { # i = 1
   ### NO TEAM ###
   ## face-to-face hours by supervisor, author ##
   F2FhrsSA <- setkey(services, f2f)[J("Y"),
-                                    list(F2F_Hours = duration(start=begin_time, end=end_time)/60),
+                                    list(F2F_Hours = aux$duration(start=begin_time, end=end_time)/60),
                                     by=c("supervisor", "author", "doc_date")]
   setkey(F2FhrsSA, NULL)
   F2FhrsSA <- F2FhrsSA[, list(F2F_Hours = sum(F2F_Hours, na.rm=TRUE)),
                        by=c("supervisor", "author")]
   ## face-to-face hours by supervisor
   F2FhrsS <- setkey(services, f2f)[J("Y"),
-                                   list(F2F_Hours = duration(start=begin_time, end=end_time)/60),
+                                   list(F2F_Hours = aux$duration(start=begin_time, end=end_time)/60),
                                    keyby=c("supervisor", "author", "doc_date")]
   setkey(F2FhrsS, NULL)
   F2FhrsS <- F2FhrsS[, list(F2F_Hours = sum(F2F_Hours, na.rm=TRUE)),
@@ -257,14 +250,14 @@ for(i in seq_along(input$folders)) { # i = 1
   ### TEAM ###
   ## total hours by team, supervisor, author ##
   totalHrsTSA <- services[,
-                          list(totalHrs = duration(start=begin_time, end=end_time)/60),
+                          list(totalHrs = aux$duration(start=begin_time, end=end_time)/60),
                           by=c("team", "supervisor", "author", "doc_date")]
   totalHrsTSA <- totalHrsTSA[, list(totalHrs = sum(totalHrs, na.rm=TRUE)),
                              by=c("team", "supervisor", "author")]
   ## total hours by team, supervisor ##
   setkey(services, NULL)
   totalHrsTS <- services[,
-                         list(totalHrs = duration(start=begin_time, end=end_time)/60),
+                         list(totalHrs = aux$duration(start=begin_time, end=end_time)/60),
                          by=c("team", "supervisor", "author", "doc_date")]
   totalHrsTS <- totalHrsTS[, list(totalHrs = sum(totalHrs, na.rm=TRUE)),
                            by=c("team", "supervisor", "author")]
@@ -274,7 +267,7 @@ for(i in seq_along(input$folders)) { # i = 1
   ### total hours by team ###
   setkey(services, NULL)
   totalHrsT <- services[,
-                        list(totalHrs = duration(start=begin_time, end=end_time)/60),
+                        list(totalHrs = aux$duration(start=begin_time, end=end_time)/60),
                         by=c("team", "author", "doc_date")]
   totalHrsT <- totalHrsT[, list(totalHrs = sum(totalHrs, na.rm=TRUE)),
                          by=c("team", "author")]
@@ -285,7 +278,7 @@ for(i in seq_along(input$folders)) { # i = 1
   setkey(services, NULL)
   ## total hours by supervisor ##
   totalHrsS <- services[,
-                        list(totalHrs = duration(start=begin_time, end=end_time)/60),
+                        list(totalHrs = aux$duration(start=begin_time, end=end_time)/60),
                         by=c("supervisor", "author", "doc_date")]
   totalHrsS <- totalHrsS[, list(totalHrs = sum(totalHrs, na.rm=TRUE)),
                          by=c("supervisor", "author")]
@@ -294,10 +287,17 @@ for(i in seq_along(input$folders)) { # i = 1
   ## total hours by supervisor, author ##
   setkey(services, NULL)
   totalHrsSA <- services[,
-                         list(totalHrs = duration(start=begin_time, end=end_time)/60),
+                         list(totalHrs = aux$duration(start=begin_time, end=end_time)/60),
                          by=c("supervisor", "author", "doc_date")]
   totalHrsSA <- totalHrsSA[, list(totalHrs = sum(totalHrs, na.rm=TRUE)),
                            by=c("supervisor", "author")]
+  # percent of the year that staff is active
+
+  modify$staff_emp
+
+
+
+
 
   ### all_TSA: total hours and F2F hours combined ###
   all_TSA <- merge(totalHrsTSA, F2FhrsTSA, by=c("team", "supervisor", "author"), all=TRUE)
@@ -320,7 +320,7 @@ for(i in seq_along(input$folders)) { # i = 1
 
   ### contact + unique consumer summaries ###
   # team summary
-  t_summary <- mergeDT( DT = list(
+  t_summary <- mmerge(l = list(
     services[f2f=="Y", list(f2f_contacts = length(case_no),
                             f2f_consumers = length(unique(case_no))),
              by=list(team)],
@@ -332,7 +332,7 @@ for(i in seq_along(input$folders)) { # i = 1
              by=list(team)] ),
     by="team", all=TRUE)
   # team + supervisor summary
-  ts_summary <- mergeDT( DT = list(
+  ts_summary <- mmerge(l = list(
     services[f2f=="Y", list(f2f_contacts = length(case_no),
                             f2f_consumers = length(unique(case_no))),
              by=list(team, supervisor)],
@@ -344,7 +344,7 @@ for(i in seq_along(input$folders)) { # i = 1
              by=list(team, supervisor)] ),
     by=c("team", "supervisor"), all=TRUE)
   # supervisor summary
-  s_summary <- mergeDT( DT = list(
+  s_summary <- mmerge(l = list(
     services[f2f=="Y", list(f2f_contacts = length(case_no),
                             f2f_consumers = length(unique(case_no))),
              by=list(supervisor)],
@@ -357,7 +357,7 @@ for(i in seq_along(input$folders)) { # i = 1
     by=c("supervisor"), all=TRUE)
 
   # supervisor + author summary
-  sa_summary <- mergeDT( DT = list(
+  sa_summary <- mmerge(l = list(
     services[f2f=="Y", list(f2f_contacts = length(case_no),
                             f2f_consumers = length(unique(case_no))),
              by=list(supervisor, author)],
@@ -370,7 +370,7 @@ for(i in seq_along(input$folders)) { # i = 1
     by=c("supervisor", "author"), all=TRUE)
 
   # team + supervisor + author summary
-  tsa_summary <- mergeDT( DT = list(
+  tsa_summary <- mmerge(l = list(
     services[f2f=="Y", list(f2f_contacts = length(case_no),
                             f2f_consumers = length(unique(case_no))),
              by=list(team, supervisor, author)],
@@ -383,11 +383,11 @@ for(i in seq_along(input$folders)) { # i = 1
     by=c("team", "supervisor", "author"), all=TRUE)
 
   ### combine hour summaries and contact/consumer summaries ###
-  comb_TSA <- mergeDT( DT=list(all_TSA, tsa_summary, tsa_cl_seen), by=c("team", "supervisor", "author"), all=TRUE)
-  comb_TS <- mergeDT( DT=list(all_TS, ts_summary, ts_cl_seen), by=c("team", "supervisor"), all=TRUE)
-  comb_T <- mergeDT( DT=list(all_T, t_summary, t_cl_seen), by=c("team"), all=TRUE)
-  comb_SA <- mergeDT( DT=list(all_SA, sa_summary, sa_cl_seen), by=c("supervisor", "author"), all=TRUE)
-  comb_S <- mergeDT( DT=list(all_S, s_summary, s_cl_seen), by=c("supervisor"), all=TRUE)
+  comb_TSA <- mmerge(l = list(all_TSA, tsa_summary, tsa_cl_seen), by=c("team", "supervisor", "author"), all=TRUE)
+  comb_TS <- mmerge(l = list(all_TS, ts_summary, ts_cl_seen), by=c("team", "supervisor"), all=TRUE)
+  comb_T <- mmerge(l = list(all_T, t_summary, t_cl_seen), by=c("team"), all=TRUE)
+  comb_SA <- mmerge(l = list(all_SA, sa_summary, sa_cl_seen), by=c("supervisor", "author"), all=TRUE)
+  comb_S <- mmerge(l = list(all_S, s_summary, s_cl_seen), by=c("supervisor"), all=TRUE)
 
   #### save results ####
   ### create information about the file to share with end-users ###
