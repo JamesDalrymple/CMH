@@ -1,6 +1,7 @@
 # read in all FB files, and move them to archived folder and remove them from
 # downloads folder
-rm(list = ls()) # scrub()
+library(wccmh)
+scrub()
 # source local helper file ----------------------------------------------------
 source(file.path("~", "Github/CMH/FB storage", "1_FB_auxillary.R"))
 # read in all FB files in the download folder ---------------------------------
@@ -10,7 +11,6 @@ d00_list <- list.files(download_location, pattern = "D00",
                        full.names = TRUE)
 
 # fb creation date (same as download date)
-
 for (i in seq_along(d00_list)) {
   # i=1
   cur_dt <- read.fb(d00_list[i]) # current data.table
@@ -45,15 +45,13 @@ for (i in seq_along(d00_list)) {
                        function(x) {
                          format(as.Date(x), "%m_%d_%y")
                        })
-  date_range <-
-    gsub(x = date_range,
-         pattern = "0(\\d)",
-         replace = "\\1")
   date_range <- paste(date_range, collapse = "_to_")
   # the new file name we are assigning to cur_dt
   new_name <- paste("fb", rate_set, prov_type, date_range, "ran", create_date)
-  saveRDS(object = cur_dt,
+  saveRDS(object = cur_dt,♦
           file = file.path(move_location, "rds",
                            paste0(new_name, ".rds")))
+  print("RDS file saved:")
+  print(file.path(move_location, "rds", paste0(new_name, ".rds")))
   file.remove(d00_list[i])
 }

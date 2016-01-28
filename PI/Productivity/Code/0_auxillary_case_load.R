@@ -11,7 +11,7 @@
 # add F2F and NF2F times to get the total time. Therefore, I (6/11/2014)
 # calculate NF2F as follows: total time - F2F time = NF2F time
 
-pkg_loader(c("RODBC", "sqldf", "data.table", "stringr"))
+pkg_loader(c("RODBC", "sqldf", "data.table", "stringr", "xlsx"))
 aux <- new.env(parent = .GlobalEnv)
 
 # all CSTS teams (Access included)
@@ -106,6 +106,21 @@ aux$duration <-
   }
   # DO NOT VECTORIZE DURATAION!!! ... breaks using this for subset groupings
   aux$elapsed_time <- Vectorize(aux$duration) # to create elpased time
+
+aux$sep_word <- function(x, split = ",") {
+  x <- gsub(x = x, pattern = "[()]", replace = "")
+  word_parts <- strsplit(x = x, split = ", |,| |-")
+  return(word_parts)
+}
+# x <- "firstname, (middlename), lastname-hyphenlastname"
+# aux$sep_word(x)
+
+aux$map_intersect <- function(x, y) {
+  return(Map(x, y, f = function(x, y) intersect(x, y))) }
+aux$count_intersect <- function(x, y) {
+  length(unlist(aux$map_intersect(x, y)))
+}
+
 
   #   # remove list of 'midnight staff'
   #   midnight_staff <- c("Anderson, Jill", "Burchard, Angela", "Holston, Christine", "Karol, Tiffany",

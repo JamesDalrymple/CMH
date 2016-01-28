@@ -1,5 +1,3 @@
-library(wccmh)
-scrub()
 aux <- new.env(parent=.GlobalEnv)
 aux$alter_rates <- function(x) {
   x <- tolower(x)

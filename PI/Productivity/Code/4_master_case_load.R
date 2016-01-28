@@ -12,15 +12,15 @@ base_wd <- switch(Sys.info()["nodename"],
 
 # inputs ----------------------------------------------------------------------
 input <- list(
-  fy = "2015",
-  folders = c("fy_14", "fy_15"),
+  fy = "2016",
+  names = c("fy_14", "fy_15"),
   start_dates = c("10/1/2013", "10/1/2014"),
   end_dates = c("9/30/2014", "9/30/2015"),
   github_wd = "C:/Users/dalrymplej/Documents/GitHub/CMH/PI/Productivity",
   dropbox_wd = file.path(base_wd, "Dropbox/PI Projects/Case Load"))
 input$datawd <- file.path(base_wd, input$dropbox_wd, "Data")
 input$code_wd <- file.path(input$github_wd, "Code")
-input$results_wd <- file.path(base_wd, input$dropbox_wd, "Results")
+input$results_wd <- file.path(input$dropbox_wd, "Results")
 rm(base_wd)
 
 time <- list(
