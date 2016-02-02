@@ -10,9 +10,9 @@ base_wd <- switch(Sys.info()["nodename"],
                   "WSHSQLGP" = "C:/Users/dalrymplej" # county PC
 )
 input <- list(
-  current_month = "December",
+  current_month = "January",
   current_fy = "2016",
-  run_date = "1/4/2016",
+  run_date = "2/1/2016",
   github_wd = file.path(base_wd,
                         "Documents/GitHub/CMH/PI/Monthly Management"),
   dropbox_wd = file.path(base_wd,
@@ -28,8 +28,8 @@ input$run_underscore <- gsub(input$run_date, pattern = "/", replacement = "_")
 
 ########### NOT EVEN CLOSE TO WORKING YET!!!! #################################
 
-knitr::knit(input = file.path(input$code_wd, "LaTeX/7_knitr_mm.Rnw"),
-            output = file.path(input$code_wd, "LaTeX/test.txt"),
-            envir = globalenv())
-tools::texi2pdf(file = file.path(input$code_wd, "LaTeX/test.txt"))
+# knitr::knit(input = file.path(input$code_wd, "LaTeX/7_knitr_mm.Rnw"),
+#             output = file.path(input$code_wd, "LaTeX/test.txt"),
+#             envir = globalenv())
+# tools::texi2pdf(file = file.path(input$code_wd, "LaTeX/test.txt"))
 

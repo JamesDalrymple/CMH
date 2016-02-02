@@ -1,8 +1,15 @@
-options(repos=c(CRAN="http://cran.mtu.edu/"))
-pkg_loader(c("xtable", "knitr", "data.table", "ggplot2", "zoo", "xlsx",
-             "RODBC"))
+options(repos = c(CRAN="https://cran.mtu.edu/"),
+        show.error.messages = TRUE,
+        showErrorCalls = TRUE,
+        show.error.locations = "top")
 
 aux <- new.env(parent = .GlobalEnv)
+
+aux$packages <- c("xtable", "knitr", "data.table", "ggplot2", "zoo", "xlsx",
+  "RODBC")
+
+# lapply(X = aux$packages, FUN = function(x) require(x, character.only = TRUE))
+pkg_loader(packages = aux$packages)
 aux$channel <- "WSHSQLGP"
 
 # inputs -----------------------------------------------------------------------
@@ -14,8 +21,8 @@ input$fy_file <- gsub(x = input$fy_file,
                       pattern="_01_", replace="_1_", fixed=TRUE)
 # calendar year
 input$calendar_year <-
-  if (input$current_month %in% c("October", "November", "December"))
-    as.chr(as.num(input$current_fy)-1) else  current_fy
+  if (input$current_month %nin% c("October", "November", "December"))
+    as.chr(as.num(input$current_fy)-1) else  input$current_fy
 # end date for report which feeds many sql queries
 input$report_end <-
   as.Date(as.yearmon(paste(input$current_month,
