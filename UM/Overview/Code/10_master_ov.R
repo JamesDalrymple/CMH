@@ -17,7 +17,7 @@ project_wd$dropbox <- cmh_wd[J("Dropbox", "WSHSQLGP"), base]
 project_wd$project <- "CMH/UM/Overview"
 project_wd$code <- file.path(project_wd$github, project_wd$project, "Code")
 project_wd$results <- file.path(project_wd$dropbox,
-  "Dropbox/Utilization Management/UM Monthly Reports/Results")
+  "Utilization Management/UM Monthly Reports/Results")
 project_wd$data <- file.path(project_wd$github, project_wd$project, "Data")
 project_wd$fb_archives <- "G:/CSTS Data Analyst Archives/FB_archives/rds"
 rm(cmh_wd)

@@ -268,3 +268,13 @@ aux$clinicalStay = function(start, expiration, discharge) {
   }
   return(as.numeric(clinStay))
 }
+
+aux$ask <- function (msg = "Please choose an option 1-3:")
+  {
+    cat(msg)
+    y <- readLines(con = stdin(), n = 1)
+    if (y %nin% c(1, 2, 3)) {
+      y <- aux$ask()
+    }
+    return(y)
+  }
