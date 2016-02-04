@@ -2,7 +2,7 @@ sql <- list(
   channel = odbcConnect("WSHSQLGP"),
   query = list()
   )
-
+# community hospitalization
 sql$query$comm_hosp <-
   sprintf(
     "select distinct
@@ -13,18 +13,18 @@ sql$query$comm_hosp <-
     and hosp.auth_eff between '%1$s' and '%2$s'
     and hosp.contract_paneltype not like 'State Facility%%'",
     input$min_start, input$max_end)
-
+# state hospitalization
 sql$query$state_hosp <-
   sprintf(
     "select distinct
     hosp.case_no, hosp.auth_eff, hosp.auth_exp, hosp.hosp_disc,
-    hosp.auth_days
+    hosp.auth_days, hosp.hosp
     from encompass.dbo.tblE2_Hosp as hosp
     where hosp.county = 'Washtenaw' and hosp.cpt_code not like '09%%'
     and hosp.auth_eff between '%1$s' and '%2$s'
     and hosp.contract_paneltype like 'State Facility%%'",
     input$min_start, input$max_end)
-
+# admissions
 sql$query$adm <-
   sprintf(
 "select distinct
@@ -42,7 +42,7 @@ where adm.county = 'Washtenaw' and adm.provider in
   and adm.provider_eff <= '%2$s' and
   (adm.provider_exp >= '%1$s' or adm.provider_exp is null)",
     input$min_start, input$max_end)
-
+# services
 sql$query$served <-
   sprintf(
     "select distinct
@@ -52,7 +52,7 @@ sql$query$served <-
     svc.provider_type <> 'SUD Treatment Agency' and
     svc.service_date between '%1$s' and '%2$s'",
     input$min_start, input$max_end)
-
+# generate output based on sql$query list
 sql$output <- sapply(
   names(sql$query),
   FUN = function(x) {

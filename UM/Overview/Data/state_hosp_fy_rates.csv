@@ -1,4 +1,4 @@
-Hosp,rate,fy
+hosp,rate,fy
 Caro Center,439,2011
 Kalamazoo Psychiatric,427,2011
 Walter Reuther Hospital,323,2011
@@ -24,3 +24,8 @@ Kalamazoo Psychiatric,532,2015
 Walter Reuther Hospital,463,2015
 Hawthorn Center,288,2015
 Forensic Center,100,2015
+Caro Center,512,2016
+Kalamazoo Psychiatric,532,2016
+Walter Reuther Hospital,463,2016
+Hawthorn Center,288,2016
+Forensic Center,100,2016
