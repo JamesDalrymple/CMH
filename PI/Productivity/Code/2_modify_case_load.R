@@ -355,16 +355,12 @@ for(i in seq_along(input$names)) { # i = 1
              by = list(team, supervisor, author)] ),
     by = c("team", "supervisor", "author"), all = TRUE)
 
-
-
   # author combining ----------------------------------------------------------
   modify$staff_active <-
     modify$staff_emp[, unique(.SD), .SDc = c("staff", "amt_active")]
-
   # combine hour summaries and contact/consumer summaries ---
   comb_TSA <- mmerge(l = list(all_TSA, tsa_summary, tsa_cl_seen),
                      by = c("team", "supervisor", "author"), all = TRUE)
-
   comb_TSA[modify$staff_active, amt_active := round(i.amt_active, 2),
            on = c("author" = "staff")]
   comb_TS <- mmerge(l = list(all_TS, ts_summary, ts_cl_seen),
@@ -377,79 +373,7 @@ for(i in seq_along(input$names)) { # i = 1
            on = c("author" = "staff")]
   comb_S <- mmerge(l = list(all_S, s_summary, s_cl_seen),
                    by = c("supervisor"), all = TRUE)
-  # save results --------------------------------------------------------------
-  ### create information about the file to share with end-users ###
-  aboutFile <- data.table(
-    rbind(
-      date_range = modify$date_range,
-      last_updated = as.chr(Sys.time()),
-      num_services = nrow(services),
-      num_errors = nrow(time_errors),
-      data_source = "Encompass database via SQL & R",
-      sql_location = "D:/James/Performance Improvement/Productivity/productivity.sql",
-      note1 = "cl_seen for team gives credit if the consumer under the team are seen by anyone.",
-      note2 = "cl seen for supervisor and team/supervisor require staff seeing consumer to be assigned to supervisor.",
-      note3 = "cl seen for team/supervisor/author require staff to see their own consumers, covering by another staff is not counted."
-    ),
-    keep.rownames=TRUE
-  )
-  setnames(aboutFile, colnames(aboutFile), c("About", "Details"))
-  # a second data information table for end users
-  aboutFile2 <- data.table(tab_letters = c("T", "S", "A"),
-                           aggregation_by = c("Team", "Supervisor", "Author"))
-  # create workbook ---
-  wb <- createWorkbook()
-  cs3 <- CellStyle(wb) + Font(wb, isBold = TRUE) + Border()
-  # create sheet TSA ---
-  sheet_TSA <- createSheet(wb, sheetName = "TSA")
-  addDataFrame(x = comb_TSA, sheet = sheet_TSA, showNA = FALSE,
-               row.names = FALSE, startRow=1, startColumn=1, colnamesStyle=cs3)
-  # create sheet TS ---
-  sheet_TS <- createSheet(wb, sheetName = "TS")
-  addDataFrame(x = comb_TS, sheet = sheet_TS, showNA = FALSE,
-               row.names = FALSE, startRow = 1, startColumn = 1,
-               colnamesStyle = cs3)
-  # create sheet T ---
-  sheet_T <- createSheet(wb, sheetName = "T")
-  addDataFrame(x=comb_T, sheet=sheet_T, showNA=FALSE, row.names = FALSE, startRow=1, startColumn=1,
-               colnamesStyle=cs3)
-  # create sheet SA ---
-  sheet_SA <- createSheet(wb, sheetName = "SA")
-  addDataFrame(x = comb_SA, sheet = sheet_SA, showNA = FALSE,
-               row.names = FALSE, startRow=1, startColumn=1, colnamesStyle=cs3)
-  # create sheet S ---
-  sheet_S <- createSheet(wb, sheetName="S")
-  addDataFrame(x = comb_S, sheet = sheet_S, showNA = FALSE, row.names = FALSE,
-               startRow = 1, startColumn = 1, colnamesStyle = cs3)
-  # create sheet data information ---
-  sheet_info <- createSheet(wb, sheetName = "data info")
-  addDataFrame(x = aboutFile, sheet = sheet_info, showNA = FALSE,
-               row.names = FALSE, col.names = TRUE, startRow = 1,
-               startColumn = 1, colnamesStyle = cs3)
-  addDataFrame(x = aboutFile2, sheet = sheet_info, showNA = FALSE,
-               row.names = FALSE, col.names = TRUE,
-               startRow = nrow(aboutFile) + 3, startColumn = 1,
-               colnamesStyle = cs3)
-  # create error worksheet ---
-  sheet_error <- createSheet(wb, sheetName = "time errors")
-  addDataFrame(x = time_errors, sheet = sheet_error, showNA = FALSE,
-               row.names = FALSE, startRow = 1, startColumn = 1,
-               colnamesStyle = cs3)
-  # save workbook ---
-  if (!file.exists(file.path(input$results_wd, modify$current_folder))) {
-    dir.create(path = file.path(input$results_wd, modify$current_folder),
-               recursive = TRUE)
-    print(paste("this folder path created:",
-                file.path(input$results_wd, modify$current_folder)))
-  }
-  modify$save_name <- paste0("productivity ", input$names[i], " ran ",
-                             format(Sys.Date(), "%m_%d_%y"), ".xlsx")
-  saveWorkbook(wb = wb,
-    file = file.path(input$results_wd, modify$current_folder, modify$save_name))
-  time$end_time <- Sys.time()
-
-  print(paste("This result", input$names[i], "ran for",
-              round(time$end_time - time$local_start, 2)))
+  source(file.path(input$code_wd, "3_export_case_load.R"))
 }
 print(paste("This project ran for",
             round(time$end_time - time$global_start, 2)))
