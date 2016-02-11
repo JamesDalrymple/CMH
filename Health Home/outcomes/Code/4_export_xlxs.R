@@ -94,7 +94,10 @@ if (!dir.exists(project_wd$results)) {
   dir.create(project_wd$results)
   p_msg("directory created", project_wd$results)
 }
-writeDoc(hh_doc, file = file.path(project_wd$results, "outcomes.docx"))
+
+
+writeDoc(hh_doc, file = file.path(project_wd$results,
+  paste0("outcomes run ", format(input$run_date, "%m_%d_%y"), ".docx")))
 
 # #### create workbook ####
 # wb <- createWorkbook()

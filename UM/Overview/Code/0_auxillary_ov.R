@@ -1,6 +1,16 @@
-pkg_loader(packages=c("ggplot2", "RODBC", "ReporteRs", "xlsx", "stringi"))
+pkg_loader(packages = c("ggplot2", "RODBC", "ReporteRs", "xlsx",
+                        "stringi", "sqldf"))
 aux <- new.env(parent  = .GlobalEnv )
 
+aux$count_overlap <- function(fy_start, fy_end, h_start, h_exp, h_end) {
+  dt_count <- data.table(fy_start, fy_end, h_start, h_exp, h_end)
+  dt_count[is.na(h_end), h_end := input$max_end]
+  dt_count[, count_start := pmax(fy_start, h_start, na.rm = TRUE)]
+  dt_count[, count_end := pmin(fy_end,
+                               pmax(h_exp, h_end, na.rm = TRUE), na.rm = TRUE)]
+  dt_count[, days_overlap := as.num(count_end - count_start) + 1]
+  return(dt_count[, days_overlap])
+}
 
 input$calendar_year <-
   as.chr(ifelse(input$months %in% c("October", "November", "December"),

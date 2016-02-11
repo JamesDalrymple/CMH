@@ -98,7 +98,7 @@ modify$bmi_dt <-setkey(modify$bmi_dt, case_no, vt_date)[
 
 # first and last available BMI
 modify$bmi_dt[!is.na(bmi), min_vt_date :=
-min(vt_date, na.rm = TRUE), by = case_no]
+  min(vt_date, na.rm = TRUE), by = case_no]
 modify$bmi_dt[!is.na(bmi), max_vt_date :=
   max(vt_date, na.rm = TRUE), by = case_no]
 modify$bmi_dt[, bmi_date_diff :=
