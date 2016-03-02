@@ -21,7 +21,7 @@ input$fy_file <- gsub(x = input$fy_file,
                       pattern="_01_", replace="_1_", fixed=TRUE)
 # calendar year
 input$calendar_year <-
-  if (input$current_month %nin% c("October", "November", "December"))
+  if (input$current_month %in% c("October", "November", "December"))
     as.chr(as.num(input$current_fy)-1) else  input$current_fy
 # end date for report which feeds many sql queries
 input$report_end <-

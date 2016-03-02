@@ -23,10 +23,11 @@ if (!file.exists(file.path(input$data_wd, "teamStaffLevels.csv"))) {
       r_file <- list.files(x, pattern = "teamStaffLevels.csv")
       if (length(r_file) >= 1) {return(x)} else {return(NULL)}
       })
+  aux$fy_mons_completed <- rapply(aux$fy_mons_completed, unlist)
   aux$fy_mons_completed <- lapply(aux$fy_mons_completed,
          FUN = function(x) {
-           pieces <- unlist(strsplit(x, split = "/"))
-           last_p <- pieces[length(pieces)]
+           pieces <<- unlist(strsplit(x, split = "/"))
+           last_p <<- pieces[length(pieces)]
            if (last_p %in% c("October", "November", "December")) {
              result <- as.yearmon(paste(last_p, as.num(input$current_fy)-1))
            } else {

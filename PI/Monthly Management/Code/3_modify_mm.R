@@ -94,7 +94,8 @@ modify$ipos_interim <- setkey(ipos, ipos_type)[J("Interim IPOS"),
 setkey(modify$ipos_interim, NULL)
 modify$ipos_interim[is.na(modify$ipos_interim)] <- 0
 # how many consumers have an Interim IPOS 30+ days ---
-modify$ipos_interim_30_plus <- ipos[, list(Interim_IPOS_Over_30_Days = sum(ipos30Plus, na.rm=TRUE)), by=team]
+modify$ipos_interim_30_plus <- ipos[,
+  list(Interim_IPOS_Over_30_Days = sum(ipos30Plus, na.rm = TRUE)), by = team]
 modify$ipos_interim_30_plus <-
   setkey(modify$ipos_interim_30_plus, team)[J(aux$teamsCMH)]
 modify$ipos_interim_30_plus[is.na(modify$ipos_interim_30_plus)] <- 0
@@ -104,7 +105,9 @@ modify$ipos_prelim <- setkey(ipos, ipos_type)[J("Preliminary IPOS"),
 setkey(modify$ipos_prelim, NULL)
 modify$ipos_prelim[is.na(modify$ipos_prelim)] <- 0
 # which consumers have an Single Service IPOS ---
-modify$ipos_single <- setkey(ipos, ipos_type)[J("Single Service IPOS"), list(Single_Service_IPOS = length(ip_effdt)), by=team]
+modify$ipos_single <-
+  setkey(ipos, ipos_type)[J("Single Service IPOS"),
+    list(Single_Service_IPOS = length(ip_effdt)), by=team]
 setkey(modify$ipos_single, NULL)
 modify$ipos_single[is.na(modify$ipos_single)] <- 0
 # join IPOS data.table's ---
@@ -157,7 +160,7 @@ ipos_table2 <- mmerge(l = list(modify$currentIPOS, iposTeam2c), by="team")
 ipos_table2 <- cbind(month=as.character(as.yearmon(
   paste(input$current_month, input$calendar_year))), ipos_table2)
 ## ipos table 3
-ipos_table3 <- ipos[current==0 | ipos_type=="",
+ipos_table3 <- ipos[current == 0 | ipos_type=="",
   list(expired_missing_IPOS = length(unique(case_no))),
   by=list(team, supervisor, primary_staff)]
 ipos_table3 <- setkey(ipos_table3, team)[aux$teamsCMH, nomatch = NA]

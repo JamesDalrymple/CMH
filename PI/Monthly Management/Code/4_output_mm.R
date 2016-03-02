@@ -33,9 +33,6 @@ iposAllMonths <-
   setkey(iposAllMonths, mon_fy)[
     !J(as.chr(as.yearmon(paste(input$current_month, input$calendar_year))))]
 setkey(iposAllMonths, NULL)
-
-sapply(iposAllMonths, class)
-sapply(ipos_graph, class)
 ipos_graph <- rbindlist(list(iposAllMonths, ipos_graph))
 ipos_graph[, team := cmh_recode(team)]
 rm(iposAllMonths)
@@ -116,7 +113,7 @@ ipos_graph <- setkey(ipos_graph, variable)["pctCurrentIPOS"]
 ipos_graph[, mon_fy := as.chr(mon_fy)]
 # merge with all possibilities
 ipos_graph <- merge(graph$all_combinations,
-  ipos_graph, all=TRUE, by=c("team", "mon_fy"))
+  ipos_graph, all.x=TRUE, by=c("team", "mon_fy"))
 # factor based on 12 consecutive months
 ipos_graph[, mon_fy := factor(mon_fy,
   levels = as.chr(as.yearmon(input$fy_start)+0:11/12))]
@@ -172,7 +169,7 @@ unsign_draft_t1 <- fread(file.path(input$data_fy_wd,
   paste0("unsign_draft_docs t1 fy ", input$current_fy, ".csv")))
 # merge with all possibilities
 unsign_draft_t1 <- merge(graph$all_combinations, unsign_draft_t1,
-                        all=TRUE, by=c("team", "mon_fy"))
+                        all.x=TRUE, by=c("team", "mon_fy"))
 # re-order - may not be necessary
 unsign_draft_t1 <- unsign_draft_t1[order(team, as.yearmon(mon_fy))]
 # factor based on 12 consecutive months
@@ -228,7 +225,7 @@ demo_table <- fread(file.path(input$data_fy_wd,
 demo_table[is.na(con_errors), con_errors := 0]
 # merge with all possibilities
 demo_table <-
-  merge(graph$all_combinations, demo_table, all=TRUE, by=c("team", "mon_fy"))
+  merge(graph$all_combinations, demo_table, all.x=TRUE, by=c("team", "mon_fy"))
 # re-order - may not be necessary
 demo_table <- demo_table[order(team, as.yearmon(mon_fy))]
 # factor based on 12 consecutive months
@@ -286,7 +283,7 @@ health_table <- fread(file.path(input$data_fy_wd,
 health_table[is.na(con_errors), con_errors := 0]
 # merge with all possibilities
 health_table <- merge(graph$all_combinations, health_table,
-                      all=TRUE, by=c("team", "mon_fy"))
+                      all.x=TRUE, by=c("team", "mon_fy"))
 # re-order - may not be necessary
 health_table <- health_table[order(team, as.yearmon(mon_fy))]
 # factor based on 12 consecutive months
@@ -343,7 +340,7 @@ wage_table <- fread(file.path(input$data_fy_wd,
   paste0("wage table fy ", input$current_fy, ".csv")))
 # merge with all possibilities
 wage_table <- merge(graph$all_combinations, wage_table,
-                    all=TRUE, by=c("team", "mon_fy"))
+                    all.x=TRUE, by=c("team", "mon_fy"))
 # re-order - may not be necessary
 wage_table <- wage_table[order(team, as.yearmon(mon_fy))]
 # factor based on 12 consecutive months

@@ -71,199 +71,131 @@ and User1.US_LOGINTZ is not null
 and StaffType.CO_name not like ('Rights Officer%')"
 
 # services ---
-sql$query$services <-
-  list("select distinct
+sql$query$services <- # in a list format b/c R has a limit for sprintf
+  list(
+# bio-psycho-social, intake assessment
+"select distinct
 	doc.case_no, cast(doc.DO_DATE as date) as doc_date,
-  doc.begintime as begin_time, doc.endtime as end_time,
-  doc.staff as author, adm.staff_type, doc.supervisor,
-  bps.in_facetof as f2f, doc.do_title as doc_type
+	doc.begintime as begin_time, doc.endtime as end_time,
+	doc.staff as author, doc.supervisor, bps.in_facetof as f2f,
+	doc.do_title as doc_type
 from encompass.dbo.ENCInitialIntake as bps
-join encompass.dbo.tblE2_document doc on bps.in_RCDID  = doc.DO_RCDID
-left join encompass.dbo.tblE2_CMH_Adm_Consumers adm on
-  adm.assigned_staff = doc.staff and adm.supervisor = doc.supervisor and
-  (adm.team_effdt <= '%2$s' and
-  (adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
-  doc.case_no = adm.case_no
-where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = 'Washtenaw'",
+join encompass.dbo.tblE2_document doc on bps.in_RCDID = doc.DO_RCDID
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "union",
 # Emergency Note
 "select distinct
-  doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
-  doc.endtime as end_time, doc.staff as author, adm.staff_type,
-  doc.supervisor, erm_note.ER_FACETOF as f2f, doc.do_title as doc_type
+	doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
+	doc.endtime as end_time, doc.staff as author, doc.supervisor,
+	erm_note.ER_FACETOF as f2f, doc.do_title as doc_type
 from encompass.dbo.ENCEmergencyNote as erm_note
 join encompass.dbo.tblE2_document doc on erm_note.ER_RCDID = doc.DO_RCDID
-left join encompass.dbo.tblE2_CMH_Adm_Consumers adm on
-  adm.assigned_staff = doc.staff and adm.supervisor = doc.supervisor and
-  (adm.team_effdt <= '%2$s' and
-  (adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
-  doc.case_no = adm.case_no
-where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = 'Washtenaw'",
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
+"union",
+# SIS Assessment (2 ppl work at the PHIP, and we can safely assume f2f = 'Y'
+"select distinct
+doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
+doc.endtime as end_time, doc.staff as author, doc.supervisor,
+'Y' as f2f, doc.do_title as doc_type
+from encompass.dbo.PCCSISAssessment as sis
+join encompass.dbo.tblE2_document doc on sis.SI_RCDID = doc.DO_RCDID
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "union",
 # Injection/Dispense Note
 "select distinct
-doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
-doc.endtime as end_time, doc.staff as author, adm.staff_type,
-doc.supervisor, phr.ID_FACETOF as f2f, doc.do_title as doc_type
+	doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
+	doc.endtime as end_time, doc.staff as author, doc.supervisor,
+	phr.ID_FACETOF as f2f, doc.do_title as doc_type
 from encompass.dbo.ENCInjectionDispenseNote as phr
 join encompass.dbo.tblE2_document doc on phr.ID_RCDID = doc.DO_RCDID
-left join encompass.dbo.tblE2_CMH_Adm_Consumers adm on
-adm.assigned_staff = doc.staff and adm.supervisor = doc.supervisor and
-(adm.team_effdt <= '%2$s' and
-(adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
-doc.case_no = adm.case_no
-where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = 'Washtenaw'",
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "union",
 # Personal Health Review
 "select distinct
   doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
-doc.endtime as end_time, doc.staff as author, adm.staff_type,
-doc.supervisor, phr.PH_FACETOF as f2f, doc.do_title as doc_type
+  doc.endtime as end_time, doc.staff as author, doc.supervisor,
+  phr.PH_FACETOF as f2f, doc.do_title as doc_type
 from encompass.dbo.ENCPersonalHealthReview as phr
 join encompass.dbo.tblE2_document doc on phr.PH_RCDID = doc.DO_RCDID
-left join encompass.dbo.tblE2_CMH_Adm_Consumers adm on
-adm.assigned_staff = doc.staff and adm.supervisor = doc.supervisor and
-(adm.team_effdt <= '%2$s' and
-(adm.team_expdt >= '%2$s' or adm.team_expdt is null)) and
-doc.case_no = adm.case_no
-where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = 'Washtenaw'",
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "union",
 # Pre-Screening Assessment
 "select distinct
-  doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
-  doc.endtime as end_time, doc.staff as author, adm.staff_type,
-  doc.supervisor, prescreen.PS_FACETOF as f2f, doc.do_title as doc_type
+	doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
+	doc.endtime as end_time, doc.staff as author, doc.supervisor,
+	prescreen.PS_FACETOF as f2f, doc.do_title as doc_type
 from encompass.dbo.ENCPreScreening as prescreen
 join encompass.dbo.tblE2_document doc on prescreen.PS_RCDID = doc.DO_RCDID
-left join encompass.dbo.tblE2_CMH_Adm_Consumers adm on
-  adm.assigned_staff = doc.staff and adm.supervisor = doc.supervisor and
-  (adm.team_effdt <= '%2$s' and
-  (adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
-doc.case_no = adm.case_no
-where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = 'Washtenaw'",
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "union",
 # psychiatric evaluation
 "select distinct
-  doc.case_no, cast(doc.do_date as date) as doc_date,
-  doc.begintime as begin_time, doc.endtime as end_time, doc.staff as author,
-  adm.staff_type, doc.supervisor, pe.IP_FACETOF as f2f, doc.DO_TITLE as doc_type
+	doc.case_no, cast(doc.do_date as date) as doc_date,	doc.begintime as begin_time,
+doc.endtime as end_time, doc.staff as author, doc.supervisor,
+pe.IP_FACETOF as f2f, doc.DO_TITLE as doc_type
 from encompass.dbo.ENCInitialPsychiatricEvaluation as pe
 join encompass.dbo.tblE2_document doc on PE.IP_RCDID = doc.DO_RCDID
-left join encompass.dbo.tblE2_document_signed Signed on
-  Signed.DO_RCDID = doc.DO_RCDID
-  left join encompass.dbo.tblE2_CMH_Adm_Consumers adm on
-  adm.assigned_staff = doc.staff and adm.supervisor = doc.supervisor and
-  (adm.team_effdt <= '%2$s' and
-  (adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
-  doc.case_no = adm.case_no
-where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = 'Washtenaw'",
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "union",
 # medication review note
-"select distinct
-  doc.case_no, cast(doc.DO_DATE as date) as doc_date,
-  doc.begintime as begin_time, doc.endtime as end_time,
-  doc.staff as author, adm.staff_type,
-  doc.supervisor, mr.MR_FACETOF as f2f, doc.do_title as doc_type
+"select  distinct
+	doc.Case_No, cast(doc.DO_DATE as date) as doc_date,
+	doc.begintime as begin_time, doc.endtime as end_time,
+	doc.staff as author, doc.supervisor,
+	mr.MR_FACETOF as f2f, doc.do_title as doc_type
 from encompass.dbo.ENCMedicationReviewNote as mr
 join encompass.dbo.tblE2_document as doc on mr.MR_RCDID = doc.DO_RCDID
-left join encompass.dbo.tblE2_CMH_Adm_Consumers adm on
-  adm.assigned_staff = doc.staff and adm.supervisor = doc.supervisor and
-  (adm.team_effdt <= '%2$s' and
-  (adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
-  doc.case_no = adm.case_no
-where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = 'Washtenaw'",
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "union",
 # screening form: P is phone requrest, W is walk-in request
 "select distinct
-  doc.case_no, cast(doc.DO_DATE as date) as doc_date,
-  doc.begintime as begin_time, doc.endtime as end_time,
-  doc.staff as author, adm.staff_type, doc.supervisor,
-  case SC_CONTYPE
+	 doc.Case_No, cast(doc.DO_DATE as date) as doc_date,
+doc.begintime as begin_time, doc.endtime as end_time,
+doc.staff as author, doc.supervisor,
+case SC_CONTYPE
   when 'P' then 'N'
   when 'W' then 'Y'
   else SC_CONTYPE end as f2f,
-  doc.do_title as doc_type
+doc.do_title as doc_type
 from encompass.dbo.ENCScreeningCall as SCall
 join encompass.dbo.tblE2_document as doc on SCall.SC_RCDID = doc.DO_RCDID
-left join encompass.dbo.tblE2_CMH_Adm_Consumers adm on
-  adm.assigned_staff = doc.staff and adm.supervisor = doc.supervisor and
-  (adm.team_effdt <= '%2$s' and
-  (adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
-  doc.case_no = adm.case_no
-where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = 'Washtenaw'",
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "union",
 # specialized documents: OT Evaluation, Psychologist Evaluation,
 # Nutrition Assessment, (3/6 used in WSH)
 "select distinct
-  doc.case_no, cast(doc.DO_DATE as date) as doc_date,
-  doc.begintime as begin_time, doc.endtime as end_time,
-  doc.staff as author, adm.staff_type, doc.supervisor,
-  'Y' as f2f,	doc.do_title as doc_type
+	doc.case_no, cast(doc.DO_DATE as date) as doc_date,
+doc.begintime as begin_time, doc.endtime as end_time,
+doc.staff as author, doc.supervisor, 'Y' as f2f,
+doc.do_title as doc_type
 from encompass.dbo.ENCSpecializedAssessment as spec
 join encompass.dbo.tblE2_document doc on spec.sp_RCDID  = doc.DO_RCDID
-left join encompass.dbo.tblE2_CMH_Adm_Consumers adm on
-  adm.assigned_staff = doc.staff and adm.supervisor = doc.supervisor and
-  (adm.team_effdt <= '%2$s' and
-  (adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
-  doc.case_no = adm.case_no
-where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = 'Washtenaw'",
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "union",
 # wellness note
 "select  distinct
-  doc.case_no, cast(doc.DO_DATE as date) as doc_date,
-  doc.begintime as begin_time, doc.endtime as end_time,
-  doc.staff as author, adm.staff_type, doc.supervisor,
-  wn.WN_FACETOF as f2f, doc.do_title as doc_type
+	doc.case_no, cast(doc.DO_DATE as date) as doc_date,
+doc.begintime as begin_time, doc.endtime as end_time,
+doc.staff as author, doc.supervisor,
+wn.WN_FACETOF as f2f, doc.do_title as doc_type
 from encompass.dbo.ENCWellnessNoteHeader as WN
 join encompass.dbo.tblE2_document doc on WN.WN_RCDID = doc.DO_RCDID
-left join encompass.dbo.tblE2_CMH_Adm_Consumers adm on
-  adm.assigned_staff = doc.staff and adm.supervisor = doc.supervisor and
-  (adm.team_effdt <= '%2$s' and
-  (adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
-  doc.case_no = adm.case_no
-where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = 'Washtenaw'",
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "union",
 # progress note
 "select distinct
-  doc.case_no, cast(doc.DO_DATE as date) as doc_date,
-  doc.begintime as begin_time, doc.endtime as end_time,
-  doc.staff as author, adm.staff_type, doc.supervisor,
-  PN.PR_FACETOF as f2f, doc.do_title as doc_type
+	doc.case_no, cast(doc.DO_DATE as date) as doc_date,
+doc.begintime as begin_time, doc.endtime as end_time,
+doc.staff as author, doc.supervisor,
+PN.PR_FACETOF as f2f, doc.do_title as doc_type
 from encompass.dbo.ENCProgressNote as PN
 join encompass.dbo.tblE2_document as doc on doc.DO_RCDID = PR_RCDID
-left join encompass.dbo.tblE2_CMH_Adm_Consumers adm on
-  adm.assigned_staff = doc.staff and adm.supervisor = doc.supervisor and
-  (adm.team_effdt <= '%2$s' and
-  (adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
-doc.case_no = adm.case_no
-  where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = 'Washtenaw'",
-"union",
-# SALs
-"select distinct
-  sal.case_no, sal.sa_srvdate as doc_date, sal.sa_begtime as begin_time,
-  sal.sa_endtime as end_time,
-  sal.author, adm.staff_type, sal.supervisor_of_author as supervisor,
-  sal.sa_face as f2f, sal.do_title + 'sal' as doc_type
-from encompass.dbo.tblE2_SALs as sal
-left join encompass.dbo.tblE2_CMH_Adm_Consumers as adm on
-  adm.assigned_staff = sal.author and
-  adm.supervisor = sal.supervisor_of_author and
-  (adm.team_effdt <= '%2$s' and
-  (adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
-  sal.case_no = adm.case_no
-where sal.do_title not in ('Bio/Psycho/Social', 'Emergency Note',
-  'Injection/Dispense Note', 'Group Progress Note', 'Medication Review Note',
-  'Progress Note', 'Nutrition Assessment', 'OT Evaluation',
-  'Personal Health Review', 'Pre-Screening Assessment',
-  'Psychiatric Evalulation', 'Psychologist Evaluation', 'Screening Form',
-  'Wellness Note') and
-  sal.sa_srvdate between '%1$s' and '%2$s' and
-  sal.county='Washtenaw' and sal.cpt_code not like '%%J%%'")
+where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'")
 # sprintf has a 8192 character limit, so we break it up into lists
 # and reassemble it
 sql$query$services <-
   rapply(sql$query$services, f = function(x) {
-    sprintf(fmt = x, modify$start_date, modify$end_date)
+    sprintf(fmt = x, modify$start_date, modify$end_date, "Washtenaw")
   })
 sql$query$services <-
   lapply(sql$query$services, FUN = function(x) {
@@ -276,18 +208,17 @@ sql$query$services <- paste(sql$query$services, collapse =" ")
 # admissions ---
 sql$query$cmh_adm <-
   sprintf("select distinct
-  adm.case_no, adm.team2 as team, adm.assigned_staff, adm.staff_type, adm.supervisor,
-  adm.team_effdt, adm.team_expdt, adm.cmh_effdt, adm.cmh_expdt,
+  adm.case_no, adm.team2 as team, adm.assigned_staff, adm.staff_type,
+  adm.supervisor, adm.team_effdt, adm.team_expdt, adm.cmh_effdt, adm.cmh_expdt,
   adm.staff_eff, adm.staff_exp
 from encompass.dbo.tblE2_CMH_Adm_Consumers as adm
-left join encompass.dbo.tblE2_CMH_Active_Users staff_active on staff_active.ST_RCDID = adm.E2_ST_RCDID
-where adm.county = 'Washtenaw' and
+where adm.county = '%3$s' and
 	team2 in ('WSH - DD Adult', 'WSH - MI - Adult', 'WSH - ACT', 'WSH - ATO',
 	'WSH - Children''s Services', 'WSH - Children''s Services - Home Based',
 	'WSH - Access/Engagement', 'Washtenaw County Community Mental Health') and
 	(adm.team_effdt <= '%2$s' and (adm.team_expdt >= '%1$s' or adm.team_expdt is null)) and
 	(adm.staff_eff <= '%2$s' and (adm.staff_exp >= '%1$s' or adm.staff_exp is null))",
-  modify$start_date, modify$end_date)
+  modify$start_date, modify$end_date, "Washtenaw")
 
 sql$output <- sapply(
   names(sql$query),

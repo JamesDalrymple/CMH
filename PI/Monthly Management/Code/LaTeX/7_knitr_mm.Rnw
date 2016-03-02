@@ -63,8 +63,6 @@
 
 <<initialize, cache=FALSE, echo=FALSE, warnings=FALSE, message=FALSE, tidy=TRUE>>=
   options(repos = c(CRAN="http://cran.mtu.edu/"))
-  # code_dir <- substr(getwd(), 1, regexpr("/[^/]*$", text = getwd())[1]-1)
-  # print(code_dir); flush.console()
   suppressWarnings(source(file.path(
     "C:/Users/dalrymplej/Documents/GitHub/CMH/PI/Monthly Management/Code/6_source_mm.R")))
   # source(input$code_wd, "6_source_mm.R")
@@ -76,8 +74,6 @@
 %%%%%%%%%%%%% ACT %%%%%%%%%%%%%%%%%
 \section{ACT}
 \subsection{IPOS}
-print(code_dir)
-flush.console()
 % ACT Graph 1.1.1\\
 <<ACT_hist, echo=FALSE, fig.height=2.25, fig.width=7.25>>=
 hist_ipos$ACT

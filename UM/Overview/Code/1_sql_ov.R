@@ -7,7 +7,7 @@ sql$query$comm_hosp <-
   sprintf(
     "select distinct
     hosp.case_no, hosp.auth_eff, hosp.auth_exp, hosp.hosp_disc,
-    hosp.auth_days
+    hosp.auth_days, hosp.dob
     from encompass.dbo.tblE2_Hosp as hosp
     where hosp.county = 'Washtenaw' and hosp.cpt_code not like '09%%'
     and hosp.auth_eff between '%1$s' and '%2$s'
@@ -18,7 +18,7 @@ sql$query$state_hosp <-
   sprintf(
     "select distinct
     hosp.case_no, hosp.auth_eff, hosp.auth_exp, hosp.hosp_disc,
-    hosp.auth_days, hosp.hosp
+    hosp.auth_days, hosp.hosp, hosp.dob
     from encompass.dbo.tblE2_Hosp as hosp
     where hosp.county = 'Washtenaw' and hosp.cpt_code not like '09%%'
     and hosp.auth_eff between '%1$s' and '%2$s'

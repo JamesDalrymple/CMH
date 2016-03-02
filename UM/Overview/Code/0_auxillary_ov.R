@@ -42,6 +42,13 @@ aux$abw_money <- function(cost, consumers) {
   return(result)
 }
 
+aux$dist_cases <- function(x) {
+  x <- unique(x)
+  x <- x[!is.na(x)]
+  result <- length(x) # NA only becomes 0
+  return(result)
+}
+
 ### monthly Overall CMH Program graphs ----
 # function to create and save ggplots for CMH programs by fiscal year
 aux$plotPrMoCMH <- function(dataInput) {

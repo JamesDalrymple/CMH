@@ -3,7 +3,7 @@ prepare <- new.env(parent = .GlobalEnv)
 
 # community hospitalization ---------------------------------------------------
 comm_hosp <- copy(sql$output$comm_hosp)
-prepare$date_cols <- c("auth_eff", "auth_exp", "hosp_disc")
+prepare$date_cols <- c("auth_eff", "auth_exp", "hosp_disc", "dob")
 for (j in prepare$date_cols) {
   set(comm_hosp, j = j, value = date_convert((comm_hosp[[j]])))
 }
@@ -54,7 +54,7 @@ if (length(intersect(names(comm_hosp), "check")) == 1) {
 } else {prepare$check = data.table()}
 # state hospitalizations ------------------------------------------------------
 state_hosp <- copy(sql$output$state_hosp)
-prepare$date_cols <- c("auth_eff", "auth_exp", "hosp_disc")
+prepare$date_cols <- c("auth_eff", "auth_exp", "hosp_disc", "dob")
 for (j in prepare$date_cols) {
   set(state_hosp, j = j, value = date_convert((state_hosp[[j]])))
 }
