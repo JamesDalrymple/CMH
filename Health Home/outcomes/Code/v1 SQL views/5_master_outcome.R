@@ -25,11 +25,7 @@ rm(cmh_wd)
 # user input ------------------------------------------------------------------
 input <- list(
   run_date = Sys.Date(),
-  end_date = Sys.Date(), # data parameter end
-  days_req_cmh = 60,
-  days_req_hh = 60,
-  cmh_exp_after = date_convert("7/1/2014"),
-  record_dist_req = 14 # at least X days between pre/post values
+  end_date = Sys.Date() # data parameter end
 )
  # for folder
 project_wd$data <- file.path(project_wd$data,
@@ -43,5 +39,5 @@ library(wccmh)
 source(file.path(project_wd$code, "0_outcome auxillary.R"))
 source(file.path(project_wd$code, "1_outcome_sql.R"))
 source(file.path(project_wd$code, "2_outcome_base.R"))
-# source(file.path(project_wd$code, "3_outcome_analyze.R"))
+source(file.path(project_wd$code, "3_outcome_analyze.R"))
 source(file.path(project_wd$code, "4_export_xlxs.R"))

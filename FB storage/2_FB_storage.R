@@ -48,7 +48,7 @@ for (i in seq_along(d00_list)) {
   date_range <- paste(date_range, collapse = "_to_")
   # the new file name we are assigning to cur_dt
   new_name <- paste("fb", rate_set, prov_type, date_range, "ran", create_date)
-  saveRDS(object = cur_dt,♦
+  saveRDS(object = cur_dt,
           file = file.path(move_location, "rds",
                            paste0(new_name, ".rds")))
   print("RDS file saved:")

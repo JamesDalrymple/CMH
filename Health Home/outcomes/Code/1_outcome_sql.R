@@ -1,44 +1,61 @@
 # consumer pool requirements:
 # 1. be 18+ years old on vital date/wellness_note_date
 # 2. be 18+ years for at least a year so that we have the potential to have
-# a before and after for (a) BMI, (b) wellness overallhealth, (c) blood press.
+# a before and after for (a) BMI, (b) wellness overall health, (c) blood press.
 # 3. be on  Access, MI, DD, ACT team for at least 1 year so that we have
 # potential for a before and after (see #2 for why)
 # 4. current closed consumers count if they were with us for at least a year
 # and fit requirements 1-3.
 # 5. team is last given CMH  team. perhaps if this is difficult, use admission
 # records with priority data.table.
-# note: check PHR for blood pressure too? ask Snow
+sql <- list(
+  channel = odbcConnect("WSHSQLGP"),
+  query = list()
+)
 
-sql <- new.env(parent = .GlobalEnv)
-sql$channel <- odbcConnect("WSHSQLGP")
-
-sql$query$outcome <-
+# CMH admissions ---
+# team timeline: WSH - Pilot Disease Management <= WSH - SAMHSA PBHCI <= WSH - Health Home
+# assigned_staff = 'SAMHSA' for all queries to find if nurse assigned
+sql$query$cmh_adm <-
 "select distinct
-  HH.case_no, hh.dob, hh.team, hh.cmh_effdt, hh.hh_team, hh.hh_adm_date,
-  hh.samhsa_staff, hh.stafftype,
-  V.VT_DATE as vt_date, V.BMI as bmi, V.diastolic,
-  V.systolic, V.weight, V.height_feet, V.height_inches
-from encompass.dbo.E2_Fn_CMH_Open_w_HH_Team_or_not() HH
-left join encompass.dbo.tblE2_Vitals V on HH.Case_No = V.Case_No
-  and ( V.VT_DATE >= HH_adm_date or  (HH_team is null and
-  V.VT_DATE >= CMH_effdt and V.VT_DATE >= '7/1/14'))"
+  case_no, team2 as team, cmh_effdt, cmh_expdt, team_effdt, team_expdt, dob,
+  staff_eff, staff_exp, assigned_staff, staff_type, supervisor as current_sup
+from encompass.dbo.tblE2_CMH_Adm_Consumers_w_OBRA
+where county = 'Washtenaw'"
 
-sql$query$wellness <-
-"select distinct HH.*, W.WellnessNote_date, W.Overall_Health_Rating
-from E2_Fn_CMH_Open_w_HH_Team_or_not() HH
-left join tblE2_WellnessNote_Header W on HH.Case_No = W.Case_No
-  and ( W.WellnessNote_date >= HH_adm_date or
-  (HH_team is null and  W.WellnessNote_date>= CMH_effdt
-  and  W.WellnessNote_date >= '7/1/14'))
-  and W.Overall_Health_Rating is not null"
+# vitals: perhaps add a filter to get WCCMH consumers during a date range? ---
+sql$query$vitals <-
+"select distinct
+case_no, vt_date, diastolic, systolic, weight, height_feet, height_inches,
+bmi, pulse, respirationRate as respiration_rate, staff, staff_type,
+smokingStatus as smoke_status
+from encompass.dbo.tblE2_Vitals"
 
-sql$output <-
-      sqlQuery(query = get("outcome", with(sql, query)),
-        channel = sql$channel, stringsAsFactors = FALSE)
-sql$output <- data.table(sql$output)
+# services ---
+# /* use productivity services: case_no, doc_date, doc_type, doc_author, doc_staff_type, f2f */
 
-sql$wellness <-
-  sqlQuery(query = get("wellness", with(sql, query)),
-           channel = sql$channel, stringsAsFactors = FALSE)
-sql$wellness <- data.table(sql$wellness)
+# wellness note: overall health, pain ---
+sql$query$wn <-
+"select distinct
+  case_no, wellnessnote_date as wn_date,
+  overall_health_rating as ovr_health, pain
+from encompass.dbo.tblE2_WellnessNote_Header
+where county = 'Washtenaw'"
+
+# lab values ---
+sql$query$labs <-
+"select case_no, lab_name, lab_value, lab_result_date as lab_date
+from tblE2_Consumers_Lab_Result_Both
+where county = 'Washtenaw'"
+
+sql$output <- sapply(
+  names(sql$query),
+  FUN = function(x) {
+    output <-
+      sqlQuery(query = get(x, with(sql, query)),
+               channel = sql$channel, stringsAsFactors = FALSE)
+    output <- data.table(output)
+    return(output)
+  },
+  USE.NAMES = TRUE
+)

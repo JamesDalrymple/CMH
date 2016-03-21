@@ -23,8 +23,8 @@ project_wd$results <- "Utilization Management/Fund Only/Results"
 rm(cmh_wd)
 # user input ------------------------------------------------------------------
 input <- list(
-  run_date = "12/18/2015",
-  end_date = "10/31/2015" # data parameter end
+  run_date = "3/7/2016",
+  end_date = "12/31/2015" # data parameter end
 )
  # for folder
 project_wd$data <- file.path(project_wd$data,

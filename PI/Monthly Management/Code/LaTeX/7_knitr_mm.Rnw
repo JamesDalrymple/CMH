@@ -502,6 +502,6 @@ print(p_ssm_ts)
 
 %' \pagebreak
 %' <<ssm_tsa, fig.show="hold", message=FALSE, echo=FALSE, fig.height=5, fig.width=8>>=
-%' print(p_ssm_tsa)
+%'
 %' @
 \end{document}

@@ -6,25 +6,6 @@ aux <- new.env(parent = .GlobalEnv)
 
 aux$all_na <- function(x) all(is.na(x))
 
-aux$cat_error <- function(old, new) {
-  old[is.na(old)] <- ""
-  if (any(is.na(new))) p_stop("new cannot be NA.")
-  result <- ifelse(old=="", new, paste(old, new, sep = "|"))
-  return(result)
-}
-# old = c(NA, NA, "bad1")
-# new = c("bad2", "bad2", "bad3")
-# aux$cat_error(old, new)
-
-aux$calc_bmi <- function(lb, inches) {
-  result <- 703*lb/inches^2
-  return(result)
-}
-aux$new_bmi <- function(lb, inches) {
-  result <- 5734*lb/inches^2.5
-  return(result)
-}
-
 # journal of american medical association (JAMA), plus hybrid for missing data
 aux$bp_jama <-
   data.table(
@@ -79,42 +60,6 @@ aux$jama_eval <- function(x1, x2) {
   return(input_dt[, category])
 }
 
-aux$health_num <- function(x) {
-  x[is.na(x)] <- "No Response"
-  as.int(factor(x, levels = Cs("No Response", Poor, Fair, Good, Excellent),
-                labels = as.chr(c(9, 1:4))))
-}
-
-aux$health_compare <- function(pre, post) {
-  post <- aux$health_num(post)
-  pre <- aux$health_num(pre)
-  post[post==9] <- NA
-  pre[pre==9] <- NA
-  comp_lab <- cut(post-pre, breaks = c(-Inf, -.1, 0.1, Inf),
-                  labels = c("worsened", "maintained", "improved"))
-  return(as.chr(comp_lab))
-}
-
-aux$pain_num <- function(x) {
-  x[is.na(x)] <- "No Response"
-  as.int(factor(x,
-  levels = Cs("No Response", None, Rarely, Mild, Moderate, Chronic, Severe),
-  labels = as.chr(c(9, 6:1))))
-}
-
-aux$pain_compare <- function(pre, post) {
-  post <- aux$pain_num(post)
-  pre <- aux$pain_num(pre)
-  post[post==9] <- NA
-  pre[pre==9] <- NA
-  comp_lab <- cut(post-pre, breaks = c(-Inf, -.1, 0.1, Inf),
-                  labels = c("worsened", "maintained", "improved"))
-  return(as.chr(comp_lab))
-}
-# aux$pain_compare(pre = c(Cs(Mild, Rarely, Chronic, Moderate, Chronic, Severe)),
-#                  post = c(Cs(None, Rarely, Mild, Moderate, Chronic, Severe)))
-
-
 aux$outcome_colors <- c("lightcyan1", "lightskyblue")
 aux$my_theme <- theme(legend.position = "top",
                  panel.background = element_rect(fill = "white", colour = NA),
@@ -125,7 +70,3 @@ aux$my_theme <- theme(legend.position = "top",
                                                  size = .2 ),
                  strip.background = element_rect(fill = "white", colour = "white"),
                  plot.title = element_text(size=10))
-
-aux$health_home_nurse <- c("Achatz, Charles", "Byrd, Kelicia", "Toader, Andreea",
-  "Lewis, Destiny", "VanHoeck, Marie", "Fellabaum, Kathleen")
-health_home_staff <- c("Hershberger, Merton", "Rama, Linda")

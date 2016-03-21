@@ -137,19 +137,17 @@ and Doc.County = 'Washtenaw'",
 
 sql$fb_full_list <- list.files(path = "G:/CSTS Data Analyst Archives/FB_archives/rds",
                       full.names = TRUE)
-sql$fb_read <- agrep(x = sql$fb_full_list,
+sql$fb_read <- grep(x = sql$fb_full_list,
 pattern = paste(
   format(date_convert(input$end_date) - 365, "%m_%d_%y"),
   format(date_convert(input$end_date), "%m_%d_%y"),
   sep = "_to_"
-), value=TRUE
-)
+), value=TRUE)
 
 sql$fb_read <-
   grep(x = sql$fb_read,
-       pattern = gsub(x=input$run_par, pattern = "20", replace = ""),
-       value = TRUE)
-
+    pattern = format(as.Date(input$run_par, format = "%m_%d_%Y"), "%m_%d_%y"),
+    value = TRUE)
 
 if (length(sql$fb_read) != 2) p_stop("you are not reading in 2 funding bucket
                               files, please look at sql$fb_read", sql$fb_read)

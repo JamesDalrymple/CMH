@@ -111,12 +111,7 @@
 \begin{document}
 \pagestyle{fancy}
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in as.yearmon.character(month): yearmon variable can only have one format}}\end{kframe}
-\end{knitrout}
 
 \lhead{Monthly Management Report - February}
 \cfoot{CSTS February Monthly PI Report - \textit{Powered by R and LaTeX} - Page \thepage\ of \pageref{LastPage}}
@@ -126,56 +121,67 @@
 \subsection{IPOS}
 % ACT Graph 1.1.1\\
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/ACT_hist-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'hist\_ipos' not found}}\end{kframe}
 \end{knitrout}
 
-\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in copy(full\_ipos\_t2[team == team\_list[1]]): object 'full\_ipos\_t2' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in xtable(tmpDT, align = c("{}p\{0.10 \textbackslash{}\textbackslash{}textwidth\}"{}, "{}p\{0.10 \textbackslash{}\textbackslash{}textwidth\}|"{}, : object 'tmpDT' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in nrow(dt\_xtable): object 'act\_t2' not found}}\end{kframe}
-
-\begin{minipage}{\linewidth} { ACT: IPOS Table 1.1.2 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
-% Tue Mar 01 13:05:58 2016
+\begin{minipage}{\linewidth} { ACT: IPOS Table 1.1.1 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:30 2016
 \scalebox{0.8}{
-\begin{tabular}{p{0.1\textwidth}|p{0.07\textwidth}p{0.07\textwidth}p{0.14 \textwidth}p{0.14\textwidth}p{0.15\textwidth}|p{0.08\textwidth}}
+\begin{tabular}{p{0.10 \textwidth}|p{0.08 \textwidth}p{0.14 \textwidth}p{0.08 \textwidth}}
   \toprule
-\textbf{month} & \textbf{Full_IPOS} & \textbf{Interim_IPOS} & \textbf{Interim_IPOS_Over_30_Days} & \textbf{Preliminary_IPOS} & \textbf{Single_Service_IPOS} & \textbf{Grand_Total} \\ 
+\textbf{month} & \textbf{current IPOS} & \textbf{blank/missing IPOS} & \textbf{expired IPOS} \\ 
   \midrule
-Dec-15 & 121 &  &   0 &  &  & 121 \\ 
-  Feb 2016 & 118 &  &   0 &  &  & 118 \\ 
-  Jan-16 & 119 &  &   0 &  &  & 119 \\ 
-   \rowcolor[gray]{0.90}Nov-15 & 117 &   1 &   0 &   0 &   0 & 118 \\ 
-   \rowcolor[gray]{0.90}Oct-15 & 116 &   0 &   0 &   1 &   0 & 117 \\ 
+Oct 2015 & 114 &   0 &   3 \\ 
+  Nov 2015 & 116 &   0 &   2 \\ 
+  Dec 2015 & 117 &   0 &   4 \\ 
+   \rowcolor[gray]{0.90}Jan 2016 & 116 &   0 &   3 \\ 
+   \rowcolor[gray]{0.90}Feb 2016 & 113 &   0 &   4 \\ 
    \bottomrule
 \end{tabular}
 }
  \par \bigskip \end{minipage}
 
-\begin{kframe}
+\begin{minipage}{\linewidth} { ACT: IPOS Table 1.1.2 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:30 2016
+\scalebox{0.8}{
+\begin{tabular}{p{0.1\textwidth}|p{0.07\textwidth}p{0.07\textwidth}p{0.14 \textwidth}p{0.14\textwidth}p{0.15\textwidth}|p{0.08\textwidth}}
+  \toprule
+\textbf{month} & \textbf{Full IPOS} & \textbf{Interim IPOS} & \textbf{Interim IPOS Over 30 Days} & \textbf{Preliminary IPOS} & \textbf{Single Service IPOS} & \textbf{Grand Total} \\ 
+  \midrule
+Oct 2015 & 116 &   0 &   0 &   1 &   0 & 117 \\ 
+  Nov 2015 & 117 &   1 &   0 &   0 &   0 & 118 \\ 
+  Dec 2015 & 121 &  &   0 &  &  & 121 \\ 
+   \rowcolor[gray]{0.90}Jan 2016 & 119 &  &   0 &  &  & 119 \\ 
+   \rowcolor[gray]{0.90}Feb 2016 & 117 &  &   0 &  &  & 117 \\ 
+   \bottomrule
+\end{tabular}
+}
+ \par \bigskip \end{minipage}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in copy(full\_ipos\_t3[team == "{}ACT"{}]): object 'full\_ipos\_t3' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in setnames(tmpDT, old = c("{}supText"{}, "{}primary\_staff"{}), new = c("{}supervisor"{}, : Items of 'old' not found in column names: supText,primary\_staff}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `align<-.xtable`(`*tmp*`, value = c("{}p\{0.01\textbackslash{}\textbackslash{}textwidth\}"{}, "{}p\{0.15\textbackslash{}\textbackslash{}textwidth\}|"{}, : "{}align"{} must have length equal to 8 ( ncol(x) + 1 )}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in nrow(dt\_xtable): object 'act\_t3' not found}}\end{kframe}
+\begin{minipage}{\linewidth} { ACT: IPOS Table 1.1.3 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:30 2016
+\scalebox{0.8}{
+\begin{tabular}{p{0.15\textwidth}|p{0.15\textwidth}p{0.25\textwidth}}
+  \toprule
+\textbf{supervisor} & \textbf{primary staff} & \textbf{expired/missing IPOS} \\ 
+  \midrule
+\textbf{Rahn, Nathan} &  & \hspace{2cm}\textbf{\textbf{4}} \\ 
+   & Ing, Daniel & 2 \\ 
+   & Jabzanka, Thaddeus & 1 \\ 
+   \rowcolor[gray]{0.90} & Woodward, Devon & 1 \\ 
+   \bottomrule
+\end{tabular}
+}
+ \par \bigskip \end{minipage}
 
 \begin{absolutelynopagebreak}
 \subsection{Unsigned/Draft Documents}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/ACT_p_unsign-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'p\_unsign' not found}}\end{kframe}
 \end{knitrout}
 \end{absolutelynopagebreak}
 
@@ -205,57 +211,82 @@ Dec-15 & 121 &  &   0 &  &  & 121 \\
 \section{Children's Services}
 \subsection{IPOS}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/child_hist-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'hist\_ipos' not found}}\end{kframe}
 \end{knitrout}
 % \end{absolutelynopagebreak}
 
-\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in copy(full\_ipos\_t2[team == team\_list[2]]): object 'full\_ipos\_t2' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `align<-.xtable`(`*tmp*`, value = c("{}p\{0.10 \textbackslash{}\textbackslash{}textwidth\}"{}, "{}p\{0.10 \textbackslash{}\textbackslash{}textwidth\}|"{}, : "{}align"{} must have length equal to 8 ( ncol(x) + 1 )}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in nrow(dt\_xtable): object 'child\_t2' not found}}\end{kframe}
-
-\begin{minipage}{\linewidth} { Children's Services: IPOS Table 2.1.2 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
-% Tue Mar 01 13:05:58 2016
+\begin{minipage}{\linewidth} { Children's Services: IPOS Table 2.1.1 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:31 2016
 \scalebox{0.8}{
-\begin{tabular}{p{0.1\textwidth}|p{0.07\textwidth}p{0.07\textwidth}p{0.14\textwidth}p{0.14\textwidth}p{0.15\textwidth}|p{0.08\textwidth}}
+\begin{tabular}{p{0.10 \textwidth}|p{0.08 \textwidth}p{0.14 \textwidth}p{0.08 \textwidth}}
   \toprule
-\textbf{month} & \textbf{Full_IPOS} & \textbf{Interim_IPOS} & \textbf{Interim_IPOS_Over_30_Days} & \textbf{Preliminary_IPOS} & \textbf{Single_Service_IPOS} & \textbf{Grand_Total} \\ 
+\textbf{month} & \textbf{current IPOS} & \textbf{blank/missing IPOS} & \textbf{expired IPOS} \\ 
   \midrule
-Dec-15 & 509 &   1 &   0 &  34 &  & 544 \\ 
-  Feb 2016 & 516 &   1 &   0 &  33 &  & 550 \\ 
-  Jan-16 & 508 &   1 &   1 &  43 &  & 552 \\ 
-   \rowcolor[gray]{0.90}Nov-15 & 510 &   1 &   0 &  32 &   0 & 543 \\ 
-   \rowcolor[gray]{0.90}Oct-15 & 508 &   1 &   0 &  32 &   0 & 541 \\ 
+Oct 2015 & 525 &   0 &  16 \\ 
+  Nov 2015 & 527 &   0 &  16 \\ 
+  Dec 2015 & 515 &   0 &  29 \\ 
+   \rowcolor[gray]{0.90}Jan 2016 & 503 &   0 &  49 \\ 
+   \rowcolor[gray]{0.90}Feb 2016 & 524 &   0 &  31 \\ 
    \bottomrule
 \end{tabular}
 }
  \par \bigskip \end{minipage}
 
-\begin{kframe}
+\begin{minipage}{\linewidth} { Children's Services: IPOS Table 2.1.2 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:31 2016
+\scalebox{0.8}{
+\begin{tabular}{p{0.1\textwidth}|p{0.07\textwidth}p{0.07\textwidth}p{0.14\textwidth}p{0.14\textwidth}p{0.15\textwidth}|p{0.08\textwidth}}
+  \toprule
+\textbf{month} & \textbf{Full IPOS} & \textbf{Interim IPOS} & \textbf{Interim IPOS Over 30 Days} & \textbf{Preliminary IPOS} & \textbf{Single Service IPOS} & \textbf{Grand Total} \\ 
+  \midrule
+Oct 2015 & 508 &   1 &   0 &  32 &   0 & 541 \\ 
+  Nov 2015 & 510 &   1 &   0 &  32 &   0 & 543 \\ 
+  Dec 2015 & 509 &   1 &   0 &  34 &  & 544 \\ 
+   \rowcolor[gray]{0.90}Jan 2016 & 508 &   1 &   1 &  43 &  & 552 \\ 
+   \rowcolor[gray]{0.90}Feb 2016 & 522 &   1 &   0 &  32 &  & 555 \\ 
+   \bottomrule
+\end{tabular}
+}
+ \par \bigskip \end{minipage}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in copy(full\_ipos\_t3[team == "{}Child"{}]): object 'full\_ipos\_t3' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in setnames(tmpDT, old = c("{}supText"{}, "{}primary\_staff"{}), new = c("{}supervisor"{}, : Items of 'old' not found in column names: supText,primary\_staff}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `align<-.xtable`(`*tmp*`, value = c("{}p\{0.10\textbackslash{}\textbackslash{}textwidth\}"{}, "{}p\{0.18\textbackslash{}\textbackslash{}textwidth\}|"{}, : "{}align"{} must have length equal to 8 ( ncol(x) + 1 )}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in nrow(dt\_xtable): object 'child\_t3' not found}}\end{kframe}
+\begin{minipage}{\linewidth} { Children's Services: IPOS Table 2.1.3 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:31 2016
+\scalebox{0.8}{
+\begin{tabular}{p{0.18\textwidth}|p{0.20\textwidth}p{0.25\textwidth}}
+  \toprule
+\textbf{supervisor} & \textbf{primary staff} & \textbf{expired/missing IPOS} \\ 
+  \midrule
+\textbf{Brookens-Harvey, Barbara} &  & \hspace{2cm}\textbf{\textbf{6}} \\ 
+   & Hill, Mikki & 1 \\ 
+   & Leimstoll, Dawn & 2 \\ 
+   \rowcolor[gray]{0.90} & Mathison, Shannon & 2 \\ 
+   \rowcolor[gray]{0.90} & Womack, Nicole & 1 \\ 
+   \rowcolor[gray]{0.90}\textbf{Cortes, Patricia} &  & \hspace{2cm}\textbf{\textbf{2}} \\ 
+   & Spring, Elizabeth & 2 \\ 
+  \textbf{Hapeman, Christine} &  & \hspace{2cm}\textbf{\textbf{19}} \\ 
+   & Burnett, Karen & 2 \\ 
+   \rowcolor[gray]{0.90} & Ferguson, Peter & 5 \\ 
+   \rowcolor[gray]{0.90} & Fortune, Barbara & 10 \\ 
+   \rowcolor[gray]{0.90} & Groth, Melissa & 2 \\ 
+  \textbf{LeVar, Sarah} &  & \hspace{2cm}\textbf{\textbf{4}} \\ 
+   & Depp, John & 1 \\ 
+   & Hall, Philip & 2 \\ 
+   \rowcolor[gray]{0.90} & Thurman, Judith & 1 \\ 
+   \rowcolor[gray]{0.90}\textbf{Spring, Elizabeth} &  & \hspace{2cm}\textbf{\textbf{1}} \\ 
+   \rowcolor[gray]{0.90} & Bauer, Ann & 1 \\ 
+   \bottomrule
+\end{tabular}
+}
+ \par \bigskip \end{minipage}
 
 \begin{absolutelynopagebreak}
 \subsection{Unsigned/Draft Documents}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/child_p_unsign-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'p\_unsign' not found}}\end{kframe}
 \end{knitrout}
 \end{absolutelynopagebreak}
 
@@ -285,56 +316,64 @@ Dec-15 & 509 &   1 &   0 &  34 &  & 544 \\
 \section{Children's Services Home Based}
 \subsection{IPOS}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/hb_hist-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'hist\_ipos' not found}}\end{kframe}
 \end{knitrout}
 
-\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in copy(full\_ipos\_t2[team == team\_list[3]]): object 'full\_ipos\_t2' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `align<-.xtable`(`*tmp*`, value = c("{}p\{0.10 \textbackslash{}\textbackslash{}textwidth\}"{}, "{}p\{0.10 \textbackslash{}\textbackslash{}textwidth\}|"{}, : "{}align"{} must have length equal to 8 ( ncol(x) + 1 )}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in nrow(dt\_xtable): object 'hb\_t2' not found}}\end{kframe}
-
-\begin{minipage}{\linewidth} { Children's Services Home Based: IPOS Table 3.1.2 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
-% Tue Mar 01 13:05:58 2016
+\begin{minipage}{\linewidth} { Children's Services Home Based: IPOS Table 3.1.1 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:32 2016
 \scalebox{0.8}{
-\begin{tabular}{p{0.1\textwidth}|p{0.07\textwidth}p{0.07\textwidth}p{0.14\textwidth}p{0.14\textwidth}p{0.15\textwidth}|p{0.08\textwidth}}
+\begin{tabular}{p{0.10 \textwidth}|p{0.08 \textwidth}p{0.14 \textwidth}p{0.08 \textwidth}}
   \toprule
-\textbf{month} & \textbf{Full_IPOS} & \textbf{Interim_IPOS} & \textbf{Interim_IPOS_Over_30_Days} & \textbf{Preliminary_IPOS} & \textbf{Single_Service_IPOS} & \textbf{Grand_Total} \\ 
+\textbf{month} & \textbf{current IPOS} & \textbf{blank/missing IPOS} & \textbf{expired IPOS} \\ 
   \midrule
-Dec-15 &  23 &  &   0 &  &  &  23 \\ 
-  Feb 2016 &  20 &  &   0 &   1 &  &  21 \\ 
-  Jan-16 &  23 &  &   0 &  &  &  23 \\ 
-   \rowcolor[gray]{0.90}Nov-15 &  26 &   0 &   0 &   0 &   0 &  26 \\ 
-   \rowcolor[gray]{0.90}Oct-15 &  27 &   0 &   0 &   0 &   0 &  27 \\ 
+Oct 2015 &  27 &   0 &   0 \\ 
+  Nov 2015 &  26 &   0 &   0 \\ 
+  Dec 2015 &  23 &   0 &   0 \\ 
+   \rowcolor[gray]{0.90}Jan 2016 &  22 &   0 &   1 \\ 
+   \rowcolor[gray]{0.90}Feb 2016 &  21 &   0 &   0 \\ 
    \bottomrule
 \end{tabular}
 }
  \par \bigskip \end{minipage}
 
-\begin{kframe}
+\begin{minipage}{\linewidth} { Children's Services Home Based: IPOS Table 3.1.2 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:32 2016
+\scalebox{0.8}{
+\begin{tabular}{p{0.1\textwidth}|p{0.07\textwidth}p{0.07\textwidth}p{0.14\textwidth}p{0.14\textwidth}p{0.15\textwidth}|p{0.08\textwidth}}
+  \toprule
+\textbf{month} & \textbf{Full IPOS} & \textbf{Interim IPOS} & \textbf{Interim IPOS Over 30 Days} & \textbf{Preliminary IPOS} & \textbf{Single Service IPOS} & \textbf{Grand Total} \\ 
+  \midrule
+Oct 2015 &  27 &   0 &   0 &   0 &   0 &  27 \\ 
+  Nov 2015 &  26 &   0 &   0 &   0 &   0 &  26 \\ 
+  Dec 2015 &  23 &  &   0 &  &  &  23 \\ 
+   \rowcolor[gray]{0.90}Jan 2016 &  23 &  &   0 &  &  &  23 \\ 
+   \rowcolor[gray]{0.90}Feb 2016 &  20 &  &   0 &   1 &  &  21 \\ 
+   \bottomrule
+\end{tabular}
+}
+ \par \bigskip \end{minipage}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in copy(full\_ipos\_t3[team == "{}Child HB"{}]): object 'full\_ipos\_t3' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in setnames(tmpDT, old = c("{}supText"{}, "{}primary\_staff"{}), new = c("{}supervisor"{}, : Items of 'old' not found in column names: supText,primary\_staff}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `align<-.xtable`(`*tmp*`, value = c("{}p\{0.01\textbackslash{}\textbackslash{}textwidth\}"{}, "{}p\{0.15\textbackslash{}\textbackslash{}textwidth\}|"{}, : "{}align"{} must have length equal to 8 ( ncol(x) + 1 )}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in nrow(dt\_xtable): object 'hb\_t3' not found}}\end{kframe}
+\begin{minipage}{\linewidth} { Children's Services Home Based: IPOS Table 3.1.3 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:32 2016
+\scalebox{0.8}{
+\begin{tabular}{p{0.15\textwidth}|p{0.15\textwidth}p{0.25\textwidth}}
+  \toprule
+\textbf{supervisor} & \textbf{primary staff} & \textbf{expired/missing IPOS} \\ 
+  \midrule
+none/missing &  & 0 \\ 
+   \bottomrule
+\end{tabular}
+}
+ \par \bigskip \end{minipage}
 
 \begin{absolutelynopagebreak}
 \subsection{Unsigned/Draft Documents}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/hb_p_unsign-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'p\_unsign' not found}}\end{kframe}
 \end{knitrout}
 \end{absolutelynopagebreak}
 
@@ -357,59 +396,78 @@ Dec-15 &  23 &  &   0 &  &  &  23 \\
 \section{DD Adult}
 \subsection{IPOS}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/dd_hist-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'hist\_ipos' not found}}\end{kframe}
 \end{knitrout}
 
-\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in copy(full\_ipos\_t2[team == team\_list[4]]): object 'full\_ipos\_t2' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `align<-.xtable`(`*tmp*`, value = c("{}p\{0.10 \textbackslash{}\textbackslash{}textwidth\}"{}, "{}p\{0.10 \textbackslash{}\textbackslash{}textwidth\}|"{}, : "{}align"{} must have length equal to 8 ( ncol(x) + 1 )}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in nrow(dt\_xtable): object 'dd\_t2' not found}}\end{kframe}
-
-\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'team\_list' not found}}\end{kframe}\begin{minipage}{\linewidth} { DD Adult: IPOS Table 4.1.2 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
-% Tue Mar 01 13:05:58 2016
+\begin{minipage}{\linewidth} { DD Adult: IPOS Table 4.1.1 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:33 2016
 \scalebox{0.8}{
-\begin{tabular}{p{0.1\textwidth}|p{0.07\textwidth}p{0.07\textwidth}p{0.14\textwidth}p{0.14\textwidth}p{0.15\textwidth}|p{0.08\textwidth}}
+\begin{tabular}{p{0.10 \textwidth}|p{0.08 \textwidth}p{0.14 \textwidth}p{0.08 \textwidth}}
   \toprule
-\textbf{month} & \textbf{Full_IPOS} & \textbf{Interim_IPOS} & \textbf{Interim_IPOS_Over_30_Days} & \textbf{Preliminary_IPOS} & \textbf{Single_Service_IPOS} & \textbf{Grand_Total} \\ 
+\textbf{month} & \textbf{current IPOS} & \textbf{blank/missing IPOS} & \textbf{expired IPOS} \\ 
   \midrule
-Dec-15 &  23 &  &   0 &  &  &  23 \\ 
-  Feb 2016 &  20 &  &   0 &   1 &  &  21 \\ 
-  Jan-16 &  23 &  &   0 &  &  &  23 \\ 
-   \rowcolor[gray]{0.90}Nov-15 &  26 &   0 &   0 &   0 &   0 &  26 \\ 
-   \rowcolor[gray]{0.90}Oct-15 &  27 &   0 &   0 &   0 &   0 &  27 \\ 
+Oct 2015 & 892 &   0 &  31 \\ 
+  Nov 2015 & 921 &   0 &  10 \\ 
+  Dec 2015 & 918 &   0 &  14 \\ 
+   \rowcolor[gray]{0.90}Jan 2016 & 875 &   0 &  57 \\ 
+   \rowcolor[gray]{0.90}Feb 2016 & 912 &   0 &  20 \\ 
    \bottomrule
 \end{tabular}
 }
  \par \bigskip \end{minipage}
 
-\begin{kframe}
+\begin{minipage}{\linewidth} { DD Adult: IPOS Table 4.1.2 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:33 2016
+\scalebox{0.8}{
+\begin{tabular}{p{0.1\textwidth}|p{0.07\textwidth}p{0.07\textwidth}p{0.14\textwidth}p{0.14\textwidth}p{0.15\textwidth}|p{0.08\textwidth}}
+  \toprule
+\textbf{month} & \textbf{Full IPOS} & \textbf{Interim IPOS} & \textbf{Interim IPOS Over 30 Days} & \textbf{Preliminary IPOS} & \textbf{Single Service IPOS} & \textbf{Grand Total} \\ 
+  \midrule
+Oct 2015 & 896 &  10 &   1 &   6 &  11 & 923 \\ 
+  Nov 2015 & 901 &  10 &   1 &   9 &  11 & 931 \\ 
+  Dec 2015 & 903 &   9 &   1 &   8 &  12 & 932 \\ 
+   \rowcolor[gray]{0.90}Jan 2016 & 903 &  10 &   1 &   7 &  12 & 932 \\ 
+   \rowcolor[gray]{0.90}Feb 2016 & 905 &  10 &   1 &   6 &  11 & 932 \\ 
+   \bottomrule
+\end{tabular}
+}
+ \par \bigskip \end{minipage}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in copy(full\_ipos\_t3[team == team\_list[4]]): object 'full\_ipos\_t3' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in setnames(tmpDT, old = c("{}supText"{}, "{}primary\_staff"{}), new = c("{}supervisor"{}, : Items of 'old' not found in column names: supText,primary\_staff}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `align<-.xtable`(`*tmp*`, value = c("{}p\{0.01\textbackslash{}\textbackslash{}textwidth\}"{}, "{}p\{0.15\textbackslash{}\textbackslash{}textwidth\}|"{}, : "{}align"{} must have length equal to 8 ( ncol(x) + 1 )}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in nrow(dt\_xtable): object 'dd\_t3' not found}}\end{kframe}
+\begin{minipage}{\linewidth} { DD Adult: IPOS Table 4.1.3 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:33 2016
+\scalebox{0.8}{
+\begin{tabular}{p{0.15\textwidth}|p{0.25\textwidth}p{0.25\textwidth}}
+  \toprule
+\textbf{supervisor} & \textbf{primary staff} & \textbf{expired/missing IPOS} \\ 
+  \midrule
+\textbf{Diephuis, Krista} &  & \hspace{2cm}\textbf{\textbf{2}} \\ 
+   & Greenleaf, Daryl & 1 \\ 
+   & Wells, Tracy & 1 \\ 
+   \rowcolor[gray]{0.90}\textbf{Dronamraju, Rani} &  & \hspace{2cm}\textbf{\textbf{2}} \\ 
+   \rowcolor[gray]{0.90} & Price, Wendy & 2 \\ 
+   \rowcolor[gray]{0.90}\textbf{Mohring, Kathleen} &  & \hspace{2cm}\textbf{\textbf{7}} \\ 
+   & Kalina, Ernest & 1 \\ 
+   & Mackenzie, Deborah & 4 \\ 
+   & Moore, Carmen & 1 \\ 
+   \rowcolor[gray]{0.90} & Terry, Yvette & 1 \\ 
+   \rowcolor[gray]{0.90}\textbf{Wells, Tracy} &  & \hspace{2cm}\textbf{\textbf{9}} \\ 
+   \rowcolor[gray]{0.90} & Hoover, Danielle & 2 \\ 
+   & Jacobs, Kevin & 1 \\ 
+   & Petty, Cheryl & 4 \\ 
+   & Schramm, Joshua & 2 \\ 
+   \bottomrule
+\end{tabular}
+}
+ \par \bigskip \end{minipage}
 
 \begin{absolutelynopagebreak}
 \subsection{Unsigned/Draft Documents}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/dd_p_unsign-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'p\_unsign' not found}}\end{kframe}
 \end{knitrout}
 \end{absolutelynopagebreak}
 
@@ -439,57 +497,82 @@ Dec-15 &  23 &  &   0 &  &  &  23 \\
 \section{MI Adult}
 \subsection{IPOS}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/mi_hist-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'hist\_ipos' not found}}\end{kframe}
 \end{knitrout}
 % \end{absolutelynopagebreak}
 
-\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in copy(full\_ipos\_t2[team == "{}MI"{}]): object 'full\_ipos\_t2' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `align<-.xtable`(`*tmp*`, value = c("{}p\{0.10 \textbackslash{}\textbackslash{}textwidth\}"{}, "{}p\{0.10 \textbackslash{}\textbackslash{}textwidth\}|"{}, : "{}align"{} must have length equal to 8 ( ncol(x) + 1 )}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in nrow(dt\_xtable): object 'mi\_t2' not found}}\end{kframe}
-
-\begin{minipage}{\linewidth} { MI Adult: IPOS Table 5.1.2 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
-% Tue Mar 01 13:05:59 2016
+\begin{minipage}{\linewidth} { MI Adult: IPOS Table 5.1.1 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:34 2016
 \scalebox{0.8}{
-\begin{tabular}{p{0.1\textwidth}|p{0.07\textwidth}p{0.07\textwidth}p{0.14\textwidth}p{0.14\textwidth}p{0.15\textwidth}|p{0.08\textwidth}}
+\begin{tabular}{p{0.10 \textwidth}|p{0.08 \textwidth}p{0.14 \textwidth}p{0.08 \textwidth}}
   \toprule
-\textbf{month} & \textbf{Full_IPOS} & \textbf{Interim_IPOS} & \textbf{Interim_IPOS_Over_30_Days} & \textbf{Preliminary_IPOS} & \textbf{Single_Service_IPOS} & \textbf{Grand_Total} \\ 
+\textbf{month} & \textbf{current IPOS} & \textbf{blank/missing IPOS} & \textbf{expired IPOS} \\ 
   \midrule
-Dec-15 & 1741 &  15 &   6 &  38 &   3 & 1797 \\ 
-  Feb 2016 & 1735 &  10 &   6 &  37 &   4 & 1786 \\ 
-  Jan-16 & 1736 &  14 &   8 &  35 &   3 & 1788 \\ 
-   \rowcolor[gray]{0.90}Nov-15 & 1740 &   6 &   2 &  45 &   3 & 1794 \\ 
-   \rowcolor[gray]{0.90}Oct-15 & 1756 &   2 &   1 &  48 &   3 & 1809 \\ 
+Oct 2015 & 1750 &   0 &  59 \\ 
+  Nov 2015 & 1744 &   0 &  50 \\ 
+  Dec 2015 & 1755 &   0 &  42 \\ 
+   \rowcolor[gray]{0.90}Jan 2016 & 1682 &   0 & 106 \\ 
+   \rowcolor[gray]{0.90}Feb 2016 & 1742 &   0 &  39 \\ 
    \bottomrule
 \end{tabular}
 }
  \par \bigskip \end{minipage}
 
-\begin{kframe}
+\begin{minipage}{\linewidth} { MI Adult: IPOS Table 5.1.2 \newline } % latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:34 2016
+\scalebox{0.8}{
+\begin{tabular}{p{0.1\textwidth}|p{0.07\textwidth}p{0.07\textwidth}p{0.14\textwidth}p{0.14\textwidth}p{0.15\textwidth}|p{0.08\textwidth}}
+  \toprule
+\textbf{month} & \textbf{Full IPOS} & \textbf{Interim IPOS} & \textbf{Interim IPOS Over 30 Days} & \textbf{Preliminary IPOS} & \textbf{Single Service IPOS} & \textbf{Grand Total} \\ 
+  \midrule
+Oct 2015 & 1756 &   2 &   1 &  48 &   3 & 1809 \\ 
+  Nov 2015 & 1740 &   6 &   2 &  45 &   3 & 1794 \\ 
+  Dec 2015 & 1741 &  15 &   6 &  38 &   3 & 1797 \\ 
+   \rowcolor[gray]{0.90}Jan 2016 & 1736 &  14 &   8 &  35 &   3 & 1788 \\ 
+   \rowcolor[gray]{0.90}Feb 2016 & 1734 &   7 &   3 &  36 &   4 & 1781 \\ 
+   \bottomrule
+\end{tabular}
+}
+ \par \bigskip \end{minipage}
 
+% latex table generated in R 3.2.3 by xtable 1.8-0 package
+% Fri Mar 04 14:22:34 2016
+\begin{longtable} { >{\raggedright}p{0.14\textwidth}|p{0.30\textwidth}p{0.25\textwidth}}
+  \multicolumn{3}{l}{{MI Adult: IPOS Table 5.1.3}}\ \label{}\\  \toprule  \textbf{supervisor}  & \textbf{primary staff} & \textbf{expired/missing IPOS} \\\midrule  \endfirsthead  \multicolumn{3}{c}{{MI Adult: IPOS Table 5.1.3 -- continued from previous page}}\\  \toprule  \textbf{supervisor} & \textbf{primary staff}& \textbf{expired/missing IPOS} \\\midrule  \endhead  \midrule  \multicolumn{3}{r}{{Continued on next page}}\\  \bottomrule \endfoot  \bottomrule \endlastfoot  \textbf{Edwards, Sheri} &  & \hspace{2cm}\textbf{\textbf{25}} \\ 
+   & Allen, Katekia & 4 \\ 
+   & Aseltyne, Sarah & 1 \\ 
+   \rowcolor[gray]{0.90} & Atwell, Andrea & 2 \\ 
+   \rowcolor[gray]{0.90} & Johnson, Tamika & 4 \\ 
+   \rowcolor[gray]{0.90} & Jordan, Shad & 2 \\ 
+   & Melody, Alex & 3 \\ 
+   & O'Donnell, Alexandra & 2 \\ 
+   & Perry, Meredith & 1 \\ 
+   \rowcolor[gray]{0.90} & Svensson, Kathy & 2 \\ 
+   \rowcolor[gray]{0.90} & Thomas, Kristian & 1 \\ 
+   \rowcolor[gray]{0.90} & Toole, Keisha & 2 \\ 
+   & Wright, Christine & 1 \\ 
+  \textbf{Gentz, Judith} &  & \hspace{2cm}\textbf{\textbf{1}} \\ 
+   & Meadows, Cassandra & 1 \\ 
+   \rowcolor[gray]{0.90}\textbf{Noe, Tori} &  & \hspace{2cm}\textbf{\textbf{6}} \\ 
+   \rowcolor[gray]{0.90} & Davis, Shauntai & 5 \\ 
+   \rowcolor[gray]{0.90} & Reid, Courtney & 1 \\ 
+  \textbf{Shovels, John} &  & \hspace{2cm}\textbf{\textbf{3}} \\ 
+   & Edwards, Sheri & 2 \\ 
+   & Stacy, John & 1 \\ 
+   \rowcolor[gray]{0.90}\textbf{Stacy, John} &  & \hspace{2cm}\textbf{\textbf{5}} \\ 
+   \rowcolor[gray]{0.90} & Blach, Aura & 4 \\ 
+   \rowcolor[gray]{0.90} & Sims, Elaina & 1 \\ 
+   \end{longtable}
 
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in copy(full\_ipos\_t3[team == "{}MI"{}]): object 'full\_ipos\_t3' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in setnames(tmpDT, old = c("{}supText"{}, "{}primary\_staff"{}), new = c("{}supervisor"{}, : Items of 'old' not found in column names: supText,primary\_staff}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `align<-.xtable`(`*tmp*`, value = c("{}p\{0.01\textbackslash{}\textbackslash{}textwidth\}"{}, "{}p\{0.14\textbackslash{}\textbackslash{}textwidth\}|"{}, : "{}align"{} must have length equal to 8 ( ncol(x) + 1 )}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `align<-.xtable`(`*tmp*`, value = c("{}p\{0.01\textbackslash{}\textbackslash{}textwidth\}"{}, "{}p\{0.14\textbackslash{}\textbackslash{}textwidth\}|"{}, : "{}align"{} must have length equal to 8 ( ncol(x) + 1 )}}\end{kframe}
 
 \begin{absolutelynopagebreak}
 \subsection{Unsigned/Draft Documents}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/mi_p_unsign-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'p\_unsign' not found}}\end{kframe}
 \end{knitrout}
 \end{absolutelynopagebreak}
 
@@ -516,7 +599,7 @@ Dec-15 & 1741 &  15 &   6 &  38 &   3 & 1797 \\
 \section{Unsigned and Draft Documents}
 \small{
 % latex table generated in R 3.2.3 by xtable 1.8-0 package
-% Tue Mar 01 13:05:59 2016
+% Fri Mar 04 14:22:34 2016
 \begin{longtable} { >{\raggedright}p{0.25\textwidth}|p{0.27\textwidth}p{0.22\textwidth}}
   \multicolumn{3}{l}{{Table 6.1}}\ \label{}\\  \toprule  \textbf{supervisor}  & \textbf{author} & \textbf{unsigned/draft docs} \\\midrule  \endfirsthead  \multicolumn{3}{c}{{Table 6.1 -- continued from previous page}}\\  \toprule  \textbf{supervisor} & \textbf{author}& \textbf{unsigned/draft docs} \\\midrule  \endhead  \midrule  \multicolumn{3}{r}{{Continued on next page}}\\  \bottomrule \endfoot  \bottomrule \endlastfoot  \textbf{Auiler, Carol} &  & \hspace{2cm}\textbf{12} \\ 
    & Hillier, Skye & 12 \\ 
@@ -531,219 +614,199 @@ Dec-15 & 1741 &  15 &   6 &  38 &   3 & 1797 \\
    \rowcolor[gray]{0.90} & McClure, Eric & 8 \\ 
    \rowcolor[gray]{0.90} & Schoffner, Shamekia & 21 \\ 
    & Womack, Nicole & 6 \\ 
-  \textbf{Chisholm, Debra} &  & \hspace{2cm}\textbf{25} \\ 
+  \textbf{Chisholm, Debra} &  & \hspace{2cm}\textbf{29} \\ 
    & Black, Christina & 1 \\ 
    \rowcolor[gray]{0.90} & Marshall, Deitra & 4 \\ 
-   \rowcolor[gray]{0.90} & Patterson, Kiarra & 2 \\ 
+   \rowcolor[gray]{0.90} & Patterson, Kiarra & 3 \\ 
    \rowcolor[gray]{0.90} & Philpot, Mary & 2 \\ 
    & Seldon, Kyesa & 1 \\ 
-   & Smith, Irene & 10 \\ 
+   & Smith, Irene & 13 \\ 
    & Wilson, Mike & 5 \\ 
    \rowcolor[gray]{0.90}\textbf{Colquitt, Ida} &  & \hspace{2cm}\textbf{1} \\ 
    \rowcolor[gray]{0.90} & Anderson, Jill & 1 \\ 
    \rowcolor[gray]{0.90}\textbf{Cortes, Patricia} &  & \hspace{2cm}\textbf{3} \\ 
    & Florence, Timothy & 2 \\ 
    & Spring, Elizabeth & 1 \\ 
-  \textbf{Darling, Gerri} &  & \hspace{2cm}\textbf{3} \\ 
-   \rowcolor[gray]{0.90} & Student1, RN & 2 \\ 
+  \textbf{Darling, Gerri} &  & \hspace{2cm}\textbf{2} \\ 
+   \rowcolor[gray]{0.90} & Student1, RN & 1 \\ 
    \rowcolor[gray]{0.90} & Student6, RN & 1 \\ 
    \rowcolor[gray]{0.90}\textbf{Diephuis, Krista} &  & \hspace{2cm}\textbf{5} \\ 
    & Gilkey, Jenoah & 1 \\ 
    & Owen, Debra & 4 \\ 
-  \textbf{Dronamraju, Rani} &  & \hspace{2cm}\textbf{45} \\ 
+  \textbf{Dronamraju, Rani} &  & \hspace{2cm}\textbf{41} \\ 
    \rowcolor[gray]{0.90} & Bryant, Biancia & 1 \\ 
-   \rowcolor[gray]{0.90} & Erickson, Sara & 2 \\ 
+   \rowcolor[gray]{0.90} & Erickson, Sara & 3 \\ 
    \rowcolor[gray]{0.90} & Ernst, Jessica & 8 \\ 
-   & Fenner, Caryette & 5 \\ 
-   & Klein, Jennifer & 3 \\ 
+   & Fenner, Caryette & 4 \\ 
+   & Klein, Jennifer & 2 \\ 
    & Lawson Chukwudi, Patricia & 11 \\ 
    \rowcolor[gray]{0.90} & McClain, Ashley & 1 \\ 
    \rowcolor[gray]{0.90} & Quine, Daniel & 2 \\ 
-   \rowcolor[gray]{0.90} & Winston, Charles & 9 \\ 
+   \rowcolor[gray]{0.90} & Winston, Charles & 6 \\ 
    & Yu, Lucia & 3 \\ 
-  \textbf{Edwards, Sheri} &  & \hspace{2cm}\textbf{85} \\ 
+  \textbf{Edwards, Sheri} &  & \hspace{2cm}\textbf{77} \\ 
    & Allen, Katekia & 20 \\ 
    \rowcolor[gray]{0.90} & Aseltyne, Sarah & 1 \\ 
-   \rowcolor[gray]{0.90} & Atwell, Andrea & 3 \\ 
-   \rowcolor[gray]{0.90} & Bajema, Stacey & 2 \\ 
+   \rowcolor[gray]{0.90} & Atwell, Andrea & 4 \\ 
+   \rowcolor[gray]{0.90} & Bajema, Stacey & 1 \\ 
    & Beckley, Jeff & 1 \\ 
-   & Beland, Darren & 13 \\ 
+   & Beland, Darren & 10 \\ 
    & Blaze, Renee & 1 \\ 
-   \rowcolor[gray]{0.90} & Donald, Angela & 5 \\ 
+   \rowcolor[gray]{0.90} & Donald, Angela & 2 \\ 
    \rowcolor[gray]{0.90} & Johnson, Tamika & 4 \\ 
    \rowcolor[gray]{0.90} & Jordan, Shad & 5 \\ 
-   & McLemore, Sherry & 1 \\ 
-   & Melody, Alex & 2 \\ 
+   & Melody, Alex & 1 \\ 
    & O'Donnell, Alexandra & 6 \\ 
-   \rowcolor[gray]{0.90} & Perry, Meredith & 1 \\ 
-   \rowcolor[gray]{0.90} & Svensson, Kathy & 15 \\ 
-   \rowcolor[gray]{0.90} & Thomas, Kristian & 1 \\ 
-   & Toole, Keisha & 2 \\ 
-   & Wright, Christine & 2 \\ 
-  \textbf{Florence, Timothy} &  & \hspace{2cm}\textbf{519} \\ 
-   \rowcolor[gray]{0.90} & Atkins, Thomas & 4 \\ 
-   \rowcolor[gray]{0.90} & Bright, Jessica & 29 \\ 
+   & Svensson, Kathy & 15 \\ 
+   \rowcolor[gray]{0.90} & Thomas, Kristian & 3 \\ 
+   \rowcolor[gray]{0.90} & Toole, Keisha & 2 \\ 
+   \rowcolor[gray]{0.90} & Wright, Christine & 1 \\ 
+  \textbf{Florence, Timothy} &  & \hspace{2cm}\textbf{487} \\ 
+   & Atkins, Thomas & 2 \\ 
+   & Bright, Jessica & 29 \\ 
    \rowcolor[gray]{0.90} & Demehri, Angela & 4 \\ 
-   & Edwards, Lauren & 1 \\ 
-   & Gargan, Michele & 5 \\ 
-   & Gentz, Judith & 5 \\ 
-   \rowcolor[gray]{0.90} & Hashimoto, Martha & 8 \\ 
-   \rowcolor[gray]{0.90} & Healy III, Daniel & 45 \\ 
-   \rowcolor[gray]{0.90} & Husby, Leah & 52 \\ 
-   & Mayman, Daniel & 8 \\ 
-   & Mobilio, Andrea & 72 \\ 
-   & Shauger, Michelle & 8 \\ 
-   \rowcolor[gray]{0.90} & Stetz, Sharon & 87 \\ 
-   \rowcolor[gray]{0.90} & Washington, W. Craig & 183 \\ 
-   \rowcolor[gray]{0.90} & Young, Martha & 8 \\ 
-  \textbf{Gentz, Lisa} &  & \hspace{2cm}\textbf{28} \\ 
-   & Leadford, William & 1 \\ 
-   & Rahn, Nathan & 27 \\ 
-   \rowcolor[gray]{0.90}\textbf{Hagaman, Brandie} &  & \hspace{2cm}\textbf{20} \\ 
-   \rowcolor[gray]{0.90} & Achatz, Charles & 1 \\ 
-   \rowcolor[gray]{0.90} & Fellabaum, Kathleen & 12 \\ 
-   & Hershberger, Merton & 2 \\ 
-   & Lewis, Destiny & 4 \\ 
-   & Rama, Linda & 1 \\ 
-   \rowcolor[gray]{0.90}\textbf{Hapeman, Christine} &  & \hspace{2cm}\textbf{37} \\ 
-   \rowcolor[gray]{0.90} & Burnett, Karen & 1 \\ 
-   \rowcolor[gray]{0.90} & Ferguson, Peter & 8 \\ 
-   & Fortune, Barbara & 22 \\ 
+   \rowcolor[gray]{0.90} & Edwards, Lauren & 1 \\ 
+   \rowcolor[gray]{0.90} & Gargan, Michele & 5 \\ 
+   & Gentz, Judith & 1 \\ 
+   & Hashimoto, Martha & 8 \\ 
+   & Healy III, Daniel & 45 \\ 
+   \rowcolor[gray]{0.90} & Husby, Leah & 42 \\ 
+   \rowcolor[gray]{0.90} & Mayman, Daniel & 8 \\ 
+   \rowcolor[gray]{0.90} & Mobilio, Andrea & 72 \\ 
+   & Shauger, Michelle & 5 \\ 
+   & Stetz, Sharon & 87 \\ 
+   & Washington, W. Craig & 174 \\ 
+   \rowcolor[gray]{0.90} & Young, Martha & 4 \\ 
+   \rowcolor[gray]{0.90}\textbf{Gentz, Lisa} &  & \hspace{2cm}\textbf{27} \\ 
+   \rowcolor[gray]{0.90} & Rahn, Nathan & 27 \\ 
+  \textbf{Hagaman, Brandie} &  & \hspace{2cm}\textbf{17} \\ 
+   & Fellabaum, Kathleen & 12 \\ 
+   & Hershberger, Merton & 1 \\ 
+   \rowcolor[gray]{0.90} & Lewis, Destiny & 4 \\ 
+   \rowcolor[gray]{0.90}\textbf{Hapeman, Christine} &  & \hspace{2cm}\textbf{26} \\ 
+   \rowcolor[gray]{0.90} & Fortune, Barbara & 19 \\ 
    & Grace, Carmen & 3 \\ 
-   & Jennings, Margaret & 2 \\ 
-   \rowcolor[gray]{0.90} & Sulfaro, Laura & 1 \\ 
-   \rowcolor[gray]{0.90}\textbf{Hashimoto, Martha} &  & \hspace{2cm}\textbf{1} \\ 
-   \rowcolor[gray]{0.90} & Yasugi, Shinji & 1 \\ 
-  \textbf{Healy III, Daniel} &  & \hspace{2cm}\textbf{2} \\ 
-   & Wright, Paul & 2 \\ 
-  \textbf{Hoener, Katie} &  & \hspace{2cm}\textbf{23} \\ 
-   \rowcolor[gray]{0.90} & Eggleston, Debra & 1 \\ 
-   \rowcolor[gray]{0.90} & Kuzmak, Chelsea & 1 \\ 
-   \rowcolor[gray]{0.90} & Lampe, Mary & 1 \\ 
-   & MacCormack, Catherine & 8 \\ 
-   & Montgomery, Ebony & 2 \\ 
-   & Mullaly, Margaret & 2 \\ 
+   & Jennings, Margaret & 3 \\ 
+   & Sulfaro, Laura & 1 \\ 
+   \rowcolor[gray]{0.90}\textbf{Healy III, Daniel} &  & \hspace{2cm}\textbf{2} \\ 
+   \rowcolor[gray]{0.90} & Wright, Paul & 2 \\ 
+   \rowcolor[gray]{0.90}\textbf{Hoener, Katie} &  & \hspace{2cm}\textbf{20} \\ 
+   & Eggleston, Debra & 2 \\ 
+   & Kuzmak, Chelsea & 1 \\ 
+   & MacCormack, Catherine & 5 \\ 
+   \rowcolor[gray]{0.90} & Montgomery, Ebony & 2 \\ 
+   \rowcolor[gray]{0.90} & Mullaly, Margaret & 2 \\ 
    \rowcolor[gray]{0.90} & Shaffer (Kniceley), Ashley & 4 \\ 
-   \rowcolor[gray]{0.90} & Twigg, Scott & 4 \\ 
-   \rowcolor[gray]{0.90}\textbf{Iekel-Johnson, Susan} &  & \hspace{2cm}\textbf{1} \\ 
+   & Twigg, Scott & 4 \\ 
+  \textbf{Iekel-Johnson, Susan} &  & \hspace{2cm}\textbf{1} \\ 
    & Frisch, Naomi & 1 \\ 
-  \textbf{Knapp, Timothy} &  & \hspace{2cm}\textbf{3} \\ 
-   & Ghedotte, Janette & 1 \\ 
+   \rowcolor[gray]{0.90}\textbf{Knapp, Timothy} &  & \hspace{2cm}\textbf{3} \\ 
+   \rowcolor[gray]{0.90} & Ghedotte, Janette & 1 \\ 
    \rowcolor[gray]{0.90} & Pearson, Thomas & 2 \\ 
-   \rowcolor[gray]{0.90}\textbf{LeVar, Sarah} &  & \hspace{2cm}\textbf{49} \\ 
-   \rowcolor[gray]{0.90} & Black, Janessa & 1 \\ 
+  \textbf{LeVar, Sarah} &  & \hspace{2cm}\textbf{44} \\ 
+   & Black, Janessa & 1 \\ 
    & Depp, John & 9 \\ 
-   & Hall, Philip & 8 \\ 
-   & Iekel-Johnson, Susan & 6 \\ 
-   \rowcolor[gray]{0.90} & Leadford, Elizabeth & 6 \\ 
-   \rowcolor[gray]{0.90} & Perez, Irene & 1 \\ 
-   \rowcolor[gray]{0.90} & Starr, Catherine & 16 \\ 
-   & Thurman, Judith & 2 \\ 
-  \textbf{Leadford, William} &  & \hspace{2cm}\textbf{13} \\ 
-   & Barnes, Alesha & 2 \\ 
-   \rowcolor[gray]{0.90} & Benton-Brown, Miayana & 3 \\ 
-   \rowcolor[gray]{0.90} & Burchard, Angela & 1 \\ 
+   \rowcolor[gray]{0.90} & Hall, Philip & 8 \\ 
+   \rowcolor[gray]{0.90} & Iekel-Johnson, Susan & 6 \\ 
+   \rowcolor[gray]{0.90} & Leadford, Elizabeth & 2 \\ 
+   & Perez, Irene & 1 \\ 
+   & Starr, Catherine & 16 \\ 
+   & Thurman, Judith & 1 \\ 
+   \rowcolor[gray]{0.90}\textbf{Leadford, William} &  & \hspace{2cm}\textbf{8} \\ 
+   \rowcolor[gray]{0.90} & Benton-Brown, Miayana & 1 \\ 
    \rowcolor[gray]{0.90} & Holston, Christine & 1 \\ 
    & Lloyd, Sylvia & 4 \\ 
    & Starkey, Sarah & 1 \\ 
    & Stevenson, Jennifer & 1 \\ 
    \rowcolor[gray]{0.90}\textbf{Lovelace, Julie} &  & \hspace{2cm}\textbf{2} \\ 
    \rowcolor[gray]{0.90} & Bagby, Chelsea & 2 \\ 
-   \rowcolor[gray]{0.90}\textbf{Mohring, Kathleen} &  & \hspace{2cm}\textbf{110} \\ 
+   \rowcolor[gray]{0.90}\textbf{Mohring, Kathleen} &  & \hspace{2cm}\textbf{91} \\ 
    & Allen, Brandy & 1 \\ 
-   & Auiler, Carol & 2 \\ 
+   & Auiler, Carol & 3 \\ 
    & Axberg, Stephanie & 22 \\ 
-   \rowcolor[gray]{0.90} & Ferriter, Michael & 16 \\ 
-   \rowcolor[gray]{0.90} & Kalina, Ernest & 6 \\ 
+   \rowcolor[gray]{0.90} & Ferriter, Michael & 6 \\ 
+   \rowcolor[gray]{0.90} & Kalina, Ernest & 3 \\ 
    \rowcolor[gray]{0.90} & Karm, Thomas & 2 \\ 
-   & Lovelace, Julie & 27 \\ 
+   & Lovelace, Julie & 24 \\ 
    & Mackenzie, Deborah & 4 \\ 
-   & McMillon, Tracy & 10 \\ 
+   & McMillon, Tracy & 7 \\ 
    \rowcolor[gray]{0.90} & Moore, Carmen & 1 \\ 
    \rowcolor[gray]{0.90} & Terry, Yvette & 17 \\ 
-   \rowcolor[gray]{0.90} & Walsh, Cherie & 2 \\ 
-  \textbf{Noe, Tori} &  & \hspace{2cm}\textbf{54} \\ 
-   & Brouwer, Patricia & 1 \\ 
-   & Davis, Shauntai & 19 \\ 
-   \rowcolor[gray]{0.90} & Halstead, Yarrow & 1 \\ 
-   \rowcolor[gray]{0.90} & Miron, Jason & 8 \\ 
-   \rowcolor[gray]{0.90} & Ray, Pamela & 5 \\ 
-   & Reid, Courtney & 18 \\ 
-   & Rossman, Mary & 2 \\ 
-  \textbf{O'brien, Colleen} &  & \hspace{2cm}\textbf{8} \\ 
-   \rowcolor[gray]{0.90} & Coleman, Belinda & 2 \\ 
-   \rowcolor[gray]{0.90} & Farrow, Marlene & 5 \\ 
-   \rowcolor[gray]{0.90} & Flanagan, Deborah & 1 \\ 
-  \textbf{Owen, Debra} &  & \hspace{2cm}\textbf{29} \\ 
-   & Cross, Ericka & 3 \\ 
-   & Hartman, LaShanda & 1 \\ 
-   \rowcolor[gray]{0.90} & Jasmund, Faith & 16 \\ 
-   \rowcolor[gray]{0.90} & Mack, Kristian & 5 \\ 
-   \rowcolor[gray]{0.90} & Popkey, Ann & 2 \\ 
+   \rowcolor[gray]{0.90} & Walsh, Cherie & 1 \\ 
+  \textbf{Noe, Tori} &  & \hspace{2cm}\textbf{47} \\ 
+   & Davis, Shauntai & 21 \\ 
+   & Miron, Jason & 8 \\ 
+   \rowcolor[gray]{0.90} & Reid, Courtney & 16 \\ 
+   \rowcolor[gray]{0.90} & Rossman, Mary & 2 \\ 
+   \rowcolor[gray]{0.90}\textbf{O'brien, Colleen} &  & \hspace{2cm}\textbf{8} \\ 
+   & Coleman, Belinda & 2 \\ 
+   & Farrow, Marlene & 5 \\ 
+   & Flanagan, Deborah & 1 \\ 
+   \rowcolor[gray]{0.90}\textbf{Owen, Debra} &  & \hspace{2cm}\textbf{24} \\ 
+   \rowcolor[gray]{0.90} & Cross, Ericka & 3 \\ 
+   \rowcolor[gray]{0.90} & Hartman, LaShanda & 1 \\ 
+   & Jasmund, Faith & 16 \\ 
+   & Popkey, Ann & 2 \\ 
    & Weems, Salim & 2 \\ 
-  \textbf{Paxton, Britt} &  & \hspace{2cm}\textbf{57} \\ 
-   & Culberson, Warren & 6 \\ 
+   \rowcolor[gray]{0.90}\textbf{Paxton, Britt} &  & \hspace{2cm}\textbf{44} \\ 
+   \rowcolor[gray]{0.90} & Culberson, Warren & 6 \\ 
    \rowcolor[gray]{0.90} & Fails, Bonita & 7 \\ 
-   \rowcolor[gray]{0.90} & Kalluri, Usha & 4 \\ 
-   \rowcolor[gray]{0.90} & Lappo, Elizabeth & 13 \\ 
+   & Kalluri, Usha & 4 \\ 
    & Lewis, Stacie & 10 \\ 
    & Pilarski, Katherine & 4 \\ 
-   & Seals, Dwight & 2 \\ 
+   \rowcolor[gray]{0.90} & Seals, Dwight & 2 \\ 
    \rowcolor[gray]{0.90} & Willis, Keisha & 11 \\ 
    \rowcolor[gray]{0.90}\textbf{Rahn, Nathan} &  & \hspace{2cm}\textbf{107} \\ 
-   \rowcolor[gray]{0.90} & Benjamins, Mary & 1 \\ 
+   & Benjamins, Mary & 1 \\ 
    & Burpee, Elena & 5 \\ 
    & Goode, Casey & 3 \\ 
-   & Hoogerhyde, Jill & 20 \\ 
+   \rowcolor[gray]{0.90} & Hoogerhyde, Jill & 20 \\ 
    \rowcolor[gray]{0.90} & Ing, Daniel & 32 \\ 
    \rowcolor[gray]{0.90} & Jabzanka, Thaddeus & 6 \\ 
-   \rowcolor[gray]{0.90} & Messina, Heather & 29 \\ 
+   & Messina, Heather & 29 \\ 
    & Scott, Vivian & 1 \\ 
    & Vanderlooven, Douglas & 2 \\ 
-   & Woodward, Devon & 8 \\ 
-   \rowcolor[gray]{0.90}\textbf{Sattler, Lydia} &  & \hspace{2cm}\textbf{119} \\ 
+   \rowcolor[gray]{0.90} & Woodward, Devon & 8 \\ 
+   \rowcolor[gray]{0.90}\textbf{Sattler, Lydia} &  & \hspace{2cm}\textbf{118} \\ 
    \rowcolor[gray]{0.90} & Adkins, Douglas & 7 \\ 
-   \rowcolor[gray]{0.90} & Allen, Michelle & 12 \\ 
+   & Allen, Michelle & 12 \\ 
    & Beuckelaere, Jacqueline & 18 \\ 
    & Cloud, Alda & 19 \\ 
-   & Krull, Lori & 12 \\ 
+   \rowcolor[gray]{0.90} & Krull, Lori & 13 \\ 
    \rowcolor[gray]{0.90} & Lawson, Kapra & 2 \\ 
    \rowcolor[gray]{0.90} & Mccrum, Andrea & 26 \\ 
-   \rowcolor[gray]{0.90} & Patterson, Frederick & 4 \\ 
+   & Patterson, Frederick & 4 \\ 
    & Shadbolt, Gail & 17 \\ 
-   & Vowels, Jill & 2 \\ 
-  \textbf{Schrader, Lisa} &  & \hspace{2cm}\textbf{30} \\ 
-   \rowcolor[gray]{0.90} & Kendrick-Jeffery, Dianne & 4 \\ 
+  \textbf{Schrader, Lisa} &  & \hspace{2cm}\textbf{28} \\ 
+   \rowcolor[gray]{0.90} & Kendrick-Jeffery, Dianne & 2 \\ 
    \rowcolor[gray]{0.90} & Millar, Thana & 8 \\ 
    \rowcolor[gray]{0.90} & Mitchell, Holly & 18 \\ 
   \textbf{Shovels, John} &  & \hspace{2cm}\textbf{7} \\ 
    & Edwards, Sheri & 1 \\ 
    & Hoener, Katie & 1 \\ 
    \rowcolor[gray]{0.90} & Stacy, John & 5 \\ 
-   \rowcolor[gray]{0.90}\textbf{Stacy, John} &  & \hspace{2cm}\textbf{42} \\ 
+   \rowcolor[gray]{0.90}\textbf{Stacy, John} &  & \hspace{2cm}\textbf{34} \\ 
    \rowcolor[gray]{0.90} & Blach, Aura & 2 \\ 
    & Lewis, Andrew & 1 \\ 
    & Martin, Kelly & 6 \\ 
    & Michalowski, Bryan & 5 \\ 
    \rowcolor[gray]{0.90} & Noe, Tori & 1 \\ 
-   \rowcolor[gray]{0.90} & Ruggeberg (Wolters), Lisa & 5 \\ 
-   \rowcolor[gray]{0.90} & Sims, Elaina & 5 \\ 
+   \rowcolor[gray]{0.90} & Ruggeberg (Wolters), Lisa & 2 \\ 
+   \rowcolor[gray]{0.90} & Sims, Elaina & 6 \\ 
    & Tasker, Melisa & 2 \\ 
-   & Wakely, Ann & 2 \\ 
-   & Wilson, Terrance & 13 \\ 
-   \rowcolor[gray]{0.90}\textbf{Stearns, Stephanie} &  & \hspace{2cm}\textbf{16} \\ 
+   & Wilson, Terrance & 9 \\ 
+  \textbf{Stearns, Stephanie} &  & \hspace{2cm}\textbf{16} \\ 
    \rowcolor[gray]{0.90} & Pickard, Steven & 16 \\ 
-   \rowcolor[gray]{0.90}\textbf{Wells, Tracy} &  & \hspace{2cm}\textbf{35} \\ 
-   & Dooley, Mary & 11 \\ 
-   & Hoover, Danielle & 2 \\ 
-   & Jacobs, Kevin & 1 \\ 
-   \rowcolor[gray]{0.90} & Jacobs, Sarah & 1 \\ 
+   \rowcolor[gray]{0.90}\textbf{Wells, Tracy} &  & \hspace{2cm}\textbf{48} \\ 
+   \rowcolor[gray]{0.90} & Dooley, Mary & 11 \\ 
+   & Fillman-Hatcher, Carolyn & 15 \\ 
+   & Hoover, Danielle & 1 \\ 
+   & Jacobs, Sarah & 1 \\ 
    \rowcolor[gray]{0.90} & Pickrel, April & 1 \\ 
-   \rowcolor[gray]{0.90} & Rich, Janet & 1 \\ 
-   & Schramm, Joshua & 3 \\ 
-   & Traverse, Laura & 3 \\ 
-   & Umholtz, Elaine & 12 \\ 
-   \rowcolor[gray]{0.90}\textbf{Grand total} &  & \textbf{1557} \\ 
+   \rowcolor[gray]{0.90} & Schramm, Joshua & 3 \\ 
+   \rowcolor[gray]{0.90} & Traverse, Laura & 3 \\ 
+   & Umholtz, Elaine & 13 \\ 
+  \textbf{Grand total} &  & \textbf{1445} \\ 
    \end{longtable}
 
 }
@@ -754,9 +817,9 @@ Dec-15 & 1741 &  15 &   6 &  38 &   3 & 1797 \\
 Caseload and Not Seen 30/60/90/180 days (No services at all) \newline
 \small{
 % latex table generated in R 3.2.3 by xtable 1.8-0 package
-% Tue Mar 01 13:05:59 2016
+% Fri Mar 04 14:22:34 2016
 \begin{longtable} { >{\raggedright}p{0.05\textwidth}p{0.22\textwidth}p{0.05\textwidth}p{0.09\textwidth}p{0.09\textwidth}p{0.09\textwidth}p{0.09\textwidth}p{0.09\textwidth}}
-  \multicolumn{8}{l}{{Table 6.1}}\ \label{}\\  \toprule  \textbf{team}  & \textbf{primary staff} & \textbf{case load} & \textbf{level} & \textbf{days $>$ 30} & \textbf{days $>$ 60} & \textbf{days $>$ 90} & \textbf{days $>$ 180} \\\midrule  \endfirsthead  \multicolumn{8}{c}{{Table 6.1 -- continued from previous page}}\\  \toprule  \textbf{team} & \textbf{primary staff}& \textbf{case load}& \textbf{level}& \textbf{days $>$ 30}& \textbf{days $>$ 60}& \textbf{days $>$ 90}& \textbf{days $>$ 180} \\\midrule  \endhead  \midrule  \multicolumn{8}{r}{{Continued on next page}}\\  \bottomrule \endfoot  \bottomrule \endlastfoot  \textbf{ACT Team} &  & \textbf{118} & - & \textbf{16} & \textbf{8} & \textbf{4} & \textbf{3} \\ 
+  \multicolumn{8}{l}{{Table 6.1}}\ \label{}\\  \toprule  \textbf{team}  & \textbf{primary staff} & \textbf{case load} & \textbf{level} & \textbf{days $>$ 30} & \textbf{days $>$ 60} & \textbf{days $>$ 90} & \textbf{days $>$ 180} \\\midrule  \endfirsthead  \multicolumn{8}{c}{{Table 6.1 -- continued from previous page}}\\  \toprule  \textbf{team} & \textbf{primary staff}& \textbf{case load}& \textbf{level}& \textbf{days $>$ 30}& \textbf{days $>$ 60}& \textbf{days $>$ 90}& \textbf{days $>$ 180} \\\midrule  \endhead  \midrule  \multicolumn{8}{r}{{Continued on next page}}\\  \bottomrule \endfoot  \bottomrule \endlastfoot  \textbf{ACT Team} &  & \textbf{117} & - & \textbf{16} & \textbf{8} & \textbf{4} & \textbf{3} \\ 
    & Behm, Emily & 17 & 4 & 3 & 0 & 0 & 0 \\ 
    & Halliday, Jessica & 10 & 4 & 0 & 0 & 0 & 0 \\ 
    \rowcolor[gray]{0.90} & Ing, Daniel & 13 & 4 & 3 & 2 & 2 & 2 \\ 
@@ -766,32 +829,32 @@ Caseload and Not Seen 30/60/90/180 days (No services at all) \newline
    & Scott, Vivian & 1 & 4 & 0 & 0 & 0 & 0 \\ 
    & Srivastava, Sabreen & 15 & 4 & 1 & 0 & 0 & 0 \\ 
    \rowcolor[gray]{0.90} & Vanderlooven, Douglas & 16 & 4 & 3 & 2 & 1 & 1 \\ 
-   \rowcolor[gray]{0.90} & Woodward, Devon & 18 & 4 & 0 & 0 & 0 & 0 \\ 
+   \rowcolor[gray]{0.90} & Woodward, Devon & 17 & 4 & 0 & 0 & 0 & 0 \\ 
    \hline
-\textbf{Child} &  & \textbf{549} & - & \textbf{261} & \textbf{130} & \textbf{85} & \textbf{28} \\ 
+\textbf{Child} &  & \textbf{555} & - & \textbf{257} & \textbf{131} & \textbf{86} & \textbf{28} \\ 
    & Angeski-Barron, Michelle & 24 & 3 & 5 & 1 & 0 & 0 \\ 
    & Bauer, Ann & 8 & 3 & 8 & 7 & 7 & 7 \\ 
-   & Black, Janessa & 13 & 3 & 7 & 3 & 1 & 0 \\ 
+   & Black, Janessa & 15 & 3 & 8 & 5 & 3 & 1 \\ 
    \rowcolor[gray]{0.90} & Brookens-Harvey, Barbara & 5 & 3 & 1 & 1 & 1 & 0 \\ 
-   \rowcolor[gray]{0.90} & Burnett, Karen & 34 & 3 & 17 & 10 & 8 & 3 \\ 
+   \rowcolor[gray]{0.90} & Burnett, Karen & 34 & 3 & 16 & 10 & 8 & 3 \\ 
    \rowcolor[gray]{0.90} & Burton, Alexia & 6 & 3 & 3 & 0 & 0 & 0 \\ 
-   & Depp, John & 29 & 3 & 19 & 15 & 8 & 2 \\ 
-   & Ellis, Shannon & 11 & 3 & 3 & 0 & 0 & 0 \\ 
-   & Ferguson, Peter & 49 & 3 & 33 & 21 & 17 & 6 \\ 
+   & Depp, John & 28 & 3 & 18 & 14 & 7 & 1 \\ 
+   & Ellis, Shannon & 12 & 3 & 3 & 0 & 0 & 0 \\ 
+   & Ferguson, Peter & 51 & 3 & 32 & 20 & 16 & 5 \\ 
    \rowcolor[gray]{0.90} & Fortune, Barbara & 26 & 3 & 19 & 15 & 10 & 5 \\ 
-   \rowcolor[gray]{0.90} & Groth, Melissa & 42 & 3 & 14 & 5 & 3 & 0 \\ 
+   \rowcolor[gray]{0.90} & Groth, Melissa & 42 & 3 & 13 & 5 & 3 & 0 \\ 
    \rowcolor[gray]{0.90} & Hall, Philip & 30 & 3 & 11 & 7 & 4 & 0 \\ 
    & Hill, Mikki & 4 & 3 & 4 & 2 & 0 & 0 \\ 
    & Iekel-Johnson, Susan & 29 & 3 & 17 & 8 & 3 & 0 \\ 
-   & Jennings, Margaret & 36 & 3 & 10 & 4 & 3 & 2 \\ 
-   \rowcolor[gray]{0.90} & Lafeldt, Jennifer & 8 & 3 & 2 & 0 & 0 & 0 \\ 
-   \rowcolor[gray]{0.90} & Leadford, Elizabeth & 16 & 3 & 7 & 2 & 2 & 0 \\ 
+   & Jennings, Margaret & 36 & 3 & 9 & 3 & 2 & 1 \\ 
+   \rowcolor[gray]{0.90} & Lafeldt, Jennifer & 9 & 3 & 3 & 1 & 1 & 1 \\ 
+   \rowcolor[gray]{0.90} & Leadford, Elizabeth & 16 & 3 & 6 & 2 & 2 & 0 \\ 
    \rowcolor[gray]{0.90} & Leimstoll, Dawn & 16 & 3 & 3 & 0 & 0 & 0 \\ 
    & Mathison, Shannon & 20 & 3 & 18 & 2 & 1 & 0 \\ 
-   & Perez, Irene & 25 & 3 & 7 & 0 & 0 & 0 \\ 
+   & Perez, Irene & 26 & 3 & 8 & 1 & 1 & 1 \\ 
    & Rivest, Christina & 36 & 3 & 15 & 8 & 4 & 0 \\ 
    \rowcolor[gray]{0.90} & Spring, Elizabeth & 2 & 3 & 0 & 0 & 0 & 0 \\ 
-   \rowcolor[gray]{0.90} & Starr, Catherine & 31 & 3 & 12 & 5 & 4 & 1 \\ 
+   \rowcolor[gray]{0.90} & Starr, Catherine & 31 & 3 & 11 & 5 & 4 & 1 \\ 
    \rowcolor[gray]{0.90} & Sulfaro, Laura & 5 & 3 & 5 & 4 & 3 & 0 \\ 
    & Tarvis, Shirley & 8 & 3 & 6 & 2 & 0 & 0 \\ 
    & Thurman, Judith & 29 & 3 & 11 & 5 & 3 & 0 \\ 
@@ -805,82 +868,82 @@ Caseload and Not Seen 30/60/90/180 days (No services at all) \newline
    & Tarvis, Shirley & 3 & - & 0 & 0 & 0 & 0 \\ 
    \rowcolor[gray]{0.90} & Womack, Nicole & 8 & - & 0 & 0 & 0 & 0 \\ 
    \hline
-\textbf{DD} &  & \textbf{931} & - & \textbf{452} & \textbf{265} & \textbf{160} & \textbf{41} \\ 
+\textbf{DD} &  & \textbf{930} & - & \textbf{411} & \textbf{248} & \textbf{151} & \textbf{37} \\ 
    \rowcolor[gray]{0.90} & Greenleaf, Daryl & 11 & respite & 10 & 9 & 8 & 5 \\ 
    & Bryant, Biancia & 36 & - & 12 & 4 & 1 & 0 \\ 
-   & Erickson, Sara & 36 & - & 24 & 10 & 5 & 2 \\ 
+   & Erickson, Sara & 36 & - & 20 & 10 & 5 & 2 \\ 
    & Ernst, Jessica & 43 & - & 13 & 7 & 1 & 0 \\ 
-   \rowcolor[gray]{0.90} & Fenner, Caryette & 35 & - & 17 & 4 & 1 & 0 \\ 
-   \rowcolor[gray]{0.90} & Fillman-Hatcher, Carolyn & 44 & - & 24 & 12 & 10 & 3 \\ 
+   \rowcolor[gray]{0.90} & Fenner, Caryette & 35 & - & 8 & 2 & 0 & 0 \\ 
+   \rowcolor[gray]{0.90} & Fillman-Hatcher, Carolyn & 44 & - & 21 & 12 & 10 & 3 \\ 
    \rowcolor[gray]{0.90} & Green, Laura & 15 & - & 8 & 8 & 5 & 0 \\ 
-   & Hoover, Danielle & 61 & - & 23 & 12 & 8 & 0 \\ 
-   & Jacobs, Kevin & 57 & - & 24 & 15 & 7 & 4 \\ 
+   & Hoover, Danielle & 61 & - & 21 & 11 & 7 & 0 \\ 
+   & Jacobs, Kevin & 57 & - & 23 & 15 & 7 & 4 \\ 
    & Jacobs, Sarah & 1 & - & 1 & 1 & 0 & 0 \\ 
    \rowcolor[gray]{0.90} & Kalina, Ernest & 1 & - & 1 & 0 & 0 & 0 \\ 
-   \rowcolor[gray]{0.90} & Karm, Thomas & 60 & - & 40 & 21 & 13 & 4 \\ 
-   \rowcolor[gray]{0.90} & Klein, Jennifer & 36 & - & 15 & 9 & 7 & 3 \\ 
+   \rowcolor[gray]{0.90} & Karm, Thomas & 60 & - & 26 & 15 & 9 & 2 \\ 
+   \rowcolor[gray]{0.90} & Klein, Jennifer & 35 & - & 13 & 8 & 7 & 3 \\ 
    & Lampe, Mary & 1 & - & 1 & 0 & 0 & 0 \\ 
-   & Lawson Chukwudi, Patricia & 39 & - & 23 & 19 & 14 & 6 \\ 
-   & Mackenzie, Deborah & 63 & - & 28 & 15 & 13 & 3 \\ 
+   & Lawson Chukwudi, Patricia & 39 & - & 21 & 17 & 12 & 4 \\ 
+   & Mackenzie, Deborah & 63 & - & 27 & 15 & 13 & 3 \\ 
    \rowcolor[gray]{0.90} & McClain, Ashley & 33 & - & 7 & 2 & 0 & 0 \\ 
-   \rowcolor[gray]{0.90} & Moore, Carmen & 61 & - & 41 & 16 & 10 & 3 \\ 
+   \rowcolor[gray]{0.90} & Moore, Carmen & 61 & - & 40 & 16 & 10 & 3 \\ 
    \rowcolor[gray]{0.90} & Petty, Cheryl & 49 & - & 10 & 8 & 7 & 1 \\ 
    & Price, Wendy & 31 & - & 16 & 5 & 3 & 0 \\ 
    & Rich, Janet & 42 & - & 16 & 15 & 11 & 0 \\ 
-   & Schramm, Joshua & 59 & - & 35 & 27 & 11 & 2 \\ 
-   \rowcolor[gray]{0.90} & Terry, Yvette & 61 & - & 38 & 28 & 17 & 3 \\ 
-   \rowcolor[gray]{0.90} & Umholtz, Elaine & 13 & - & 2 & 1 & 0 & 0 \\ 
+   & Schramm, Joshua & 59 & - & 35 & 23 & 11 & 2 \\ 
+   \rowcolor[gray]{0.90} & Terry, Yvette & 61 & - & 37 & 28 & 17 & 3 \\ 
+   \rowcolor[gray]{0.90} & Umholtz, Elaine & 13 & - & 1 & 1 & 0 & 0 \\ 
    \rowcolor[gray]{0.90} & Wells, Tracy & 1 & - & 1 & 1 & 1 & 1 \\ 
-   & Winston, Charles & 42 & - & 22 & 16 & 7 & 1 \\ 
+   & Winston, Charles & 42 & - & 22 & 15 & 6 & 1 \\ 
    \hline
-\textbf{MI} &  & \textbf{1785} & - & \textbf{827} & \textbf{476} & \textbf{305} & \textbf{89} \\ 
-   & Noe, Tori & 6 & Supervisor & 3 & 1 & 1 & 0 \\ 
-   \rowcolor[gray]{0.90} & Stacy, John & 9 & Supervisor & 2 & 1 & 0 & 0 \\ 
+\textbf{MI} &  & \textbf{1780} & - & \textbf{789} & \textbf{458} & \textbf{292} & \textbf{82} \\ 
+   & Noe, Tori & 7 & Supervisor & 3 & 1 & 1 & 0 \\ 
+   \rowcolor[gray]{0.90} & Stacy, John & 8 & Supervisor & 2 & 1 & 0 & 0 \\ 
    \rowcolor[gray]{0.90} & Edwards, Sheri & 2 & Therapy & 2 & 2 & 2 & 2 \\ 
-   \rowcolor[gray]{0.90} & Eggleston, Debra & 42 & 5 & 17 & 5 & 2 & 0 \\ 
+   \rowcolor[gray]{0.90} & Eggleston, Debra & 42 & 5 & 7 & 3 & 2 & 0 \\ 
    & Allen, Katekia & 55 & 4 & 31 & 22 & 17 & 7 \\ 
    & Koch, Lynn & 8 & 4 & 0 & 0 & 0 & 0 \\ 
-   & Montgomery, Ebony & 29 & 4 & 8 & 3 & 1 & 0 \\ 
+   & Montgomery, Ebony & 29 & 4 & 6 & 3 & 1 & 0 \\ 
    \rowcolor[gray]{0.90} & Shaffer (Kniceley), Ashley & 31 & 4 & 7 & 4 & 2 & 0 \\ 
-   \rowcolor[gray]{0.90} & Aseltyne, Sarah & 54 & 3 & 26 & 13 & 8 & 1 \\ 
-   \rowcolor[gray]{0.90} & Bajema, Stacey & 54 & 3 & 30 & 15 & 8 & 3 \\ 
+   \rowcolor[gray]{0.90} & Aseltyne, Sarah & 52 & 3 & 24 & 11 & 6 & 1 \\ 
+   \rowcolor[gray]{0.90} & Bajema, Stacey & 54 & 3 & 30 & 15 & 7 & 2 \\ 
    & Blach, Aura & 51 & 3 & 24 & 15 & 8 & 2 \\ 
-   & Brouwer, Patricia & 48 & 3 & 21 & 11 & 6 & 1 \\ 
+   & Brouwer, Patricia & 48 & 3 & 18 & 10 & 6 & 1 \\ 
    & Lewis, Andrew & 50 & 3 & 20 & 11 & 7 & 1 \\ 
    \rowcolor[gray]{0.90} & Martin, Kelly & 48 & 3 & 27 & 14 & 8 & 1 \\ 
-   \rowcolor[gray]{0.90} & McLemore, Sherry & 51 & 3 & 23 & 17 & 14 & 2 \\ 
-   \rowcolor[gray]{0.90} & Miron, Jason & 55 & 3 & 26 & 16 & 10 & 3 \\ 
-   & Sims, Elaina & 51 & 3 & 18 & 12 & 10 & 4 \\ 
+   \rowcolor[gray]{0.90} & McLemore, Sherry & 51 & 3 & 22 & 16 & 13 & 2 \\ 
+   \rowcolor[gray]{0.90} & Miron, Jason & 55 & 3 & 25 & 16 & 10 & 3 \\ 
+   & Sims, Elaina & 50 & 3 & 17 & 11 & 9 & 3 \\ 
    & Svensson, Kathy & 14 & 3 & 6 & 5 & 3 & 3 \\ 
-   & Wakely, Ann & 54 & 3 & 27 & 14 & 10 & 4 \\ 
-   \rowcolor[gray]{0.90} & Davis, Shauntai & 51 & 2 & 30 & 16 & 12 & 4 \\ 
-   \rowcolor[gray]{0.90} & Dempsey, Kelsey & 52 & 2 & 30 & 16 & 10 & 3 \\ 
-   \rowcolor[gray]{0.90} & Jordan, Shad & 53 & 2 & 21 & 10 & 3 & 1 \\ 
-   & Ray, Pamela & 48 & 2 & 16 & 11 & 4 & 1 \\ 
+   & Wakely, Ann & 54 & 3 & 26 & 13 & 9 & 4 \\ 
+   \rowcolor[gray]{0.90} & Davis, Shauntai & 51 & 2 & 26 & 13 & 11 & 3 \\ 
+   \rowcolor[gray]{0.90} & Dempsey, Kelsey & 52 & 2 & 29 & 16 & 10 & 3 \\ 
+   \rowcolor[gray]{0.90} & Jordan, Shad & 53 & 2 & 20 & 9 & 3 & 1 \\ 
+   & Ray, Pamela & 48 & 2 & 16 & 10 & 4 & 1 \\ 
    & Reina, Aaron & 54 & 2 & 23 & 11 & 5 & 0 \\ 
-   & Tisdale, Tina & 52 & 2 & 31 & 18 & 13 & 2 \\ 
+   & Tisdale, Tina & 52 & 2 & 31 & 18 & 12 & 2 \\ 
    \rowcolor[gray]{0.90} & Toole, Keisha & 53 & 2 & 22 & 13 & 12 & 3 \\ 
-   \rowcolor[gray]{0.90} & Wright, Christine & 52 & 2 & 21 & 11 & 9 & 2 \\ 
-   \rowcolor[gray]{0.90} & Atwell, Andrea & 54 & - & 30 & 20 & 14 & 7 \\ 
+   \rowcolor[gray]{0.90} & Wright, Christine & 51 & 2 & 20 & 11 & 9 & 2 \\ 
+   \rowcolor[gray]{0.90} & Atwell, Andrea & 54 & - & 29 & 19 & 13 & 7 \\ 
    & Beckley, Jeff & 50 & - & 24 & 13 & 7 & 2 \\ 
    & Donald, Angela & 53 & - & 19 & 9 & 7 & 1 \\ 
-   & Hoener, Katie & 19 & - & 9 & 8 & 2 & 1 \\ 
+   & Hoener, Katie & 20 & - & 10 & 9 & 3 & 2 \\ 
    \rowcolor[gray]{0.90} & Johnson, Tamika & 43 & - & 24 & 10 & 5 & 3 \\ 
-   \rowcolor[gray]{0.90} & Lampe, Mary & 37 & - & 19 & 11 & 2 & 0 \\ 
+   \rowcolor[gray]{0.90} & Lampe, Mary & 37 & - & 18 & 11 & 2 & 0 \\ 
    \rowcolor[gray]{0.90} & Meadows, Cassandra & 1 & - & 1 & 1 & 1 & 1 \\ 
-   & Melody, Alex & 51 & - & 24 & 14 & 10 & 1 \\ 
-   & O'Donnell, Alexandra & 56 & - & 35 & 26 & 19 & 7 \\ 
-   & Perry, Meredith & 45 & - & 22 & 9 & 8 & 4 \\ 
+   & Melody, Alex & 51 & - & 22 & 14 & 10 & 1 \\ 
+   & O'Donnell, Alexandra & 56 & - & 35 & 26 & 19 & 6 \\ 
+   & Perry, Meredith & 41 & - & 18 & 5 & 4 & 1 \\ 
    \rowcolor[gray]{0.90} & Reid, Courtney & 52 & - & 26 & 17 & 10 & 2 \\ 
-   \rowcolor[gray]{0.90} & Rossman, Mary & 52 & - & 22 & 13 & 7 & 1 \\ 
-   \rowcolor[gray]{0.90} & Ruggeberg (Wolters), Lisa & 52 & - & 25 & 19 & 11 & 5 \\ 
-   & Thomas, Kristian & 56 & - & 23 & 14 & 12 & 4 \\ 
-   & Twigg, Scott & 36 & - & 12 & 5 & 5 & 0 \\ 
+   \rowcolor[gray]{0.90} & Rossman, Mary & 53 & - & 22 & 13 & 7 & 1 \\ 
+   \rowcolor[gray]{0.90} & Ruggeberg (Wolters), Lisa & 52 & - & 24 & 18 & 10 & 4 \\ 
+   & Thomas, Kristian & 56 & - & 22 & 14 & 12 & 4 \\ 
+   & Twigg, Scott & 37 & - & 11 & 5 & 5 & 0 \\ 
    \hline
 MI &  & 1 & - & 0 & 0 & 0 & 0 \\ 
    \hline
 \hline
-\textbf{Grand Total} &  & \textbf{ 3404 } &  & {\textbf{1556} & {\textbf{879} & {\textbf{554} & {\textbf{161} \\ 
+\textbf{Grand Total} &  & \textbf{ 3403 } &  & {\textbf{1473} & {\textbf{845} & {\textbf{533} & {\textbf{150} \\ 
    \end{longtable}
 
 }
@@ -888,14 +951,13 @@ MI &  & 1 & - & 0 & 0 & 0 & 0 \\
 \pagebreak
 \section{Self-Sufficiency Matrix for MI Adult Program}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/ssm_ts-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in print(p\_ssm\_ts): object 'p\_ssm\_ts' not found}}\end{kframe}
 \end{knitrout}
 
 %' \pagebreak
 %' <<ssm_tsa, fig.show="hold", message=FALSE, echo=FALSE, fig.height=5, fig.width=8>>=
-%' print(p_ssm_tsa)
+%'
 %' @
 \end{document}

@@ -15,21 +15,17 @@ data.table::setkey(cmh_wd, dir_names, comp_names)[
 project_wd <- list()
 project_wd$github <- cmh_wd[J("GitHub", "WSHSQLGP"), base]
 project_wd$dropbox <- cmh_wd[J("Dropbox", "WSHSQLGP"), base]
-project_wd$project <- "CMH/Health Home/outcomes"
+project_wd$project <- "CMH/UM/Fund"
 project_wd$code <- file.path(project_wd$github, project_wd$project, "Code")
 project_wd$data <- file.path(project_wd$dropbox,
-                             "CMH/Health Home/outcomes/Data")
-project_wd$results <- file.path(project_wd$dropbox,
-                                "Health Home Dashboard/Outcomes/Results")
+                             "Utilization Management/Fund Only/Data")
+project_wd$results <- "Utilization Management/Fund Only/Results"
 rm(cmh_wd)
 # user input ------------------------------------------------------------------
 input <- list(
-  run_date = Sys.Date(),
-  end_date = Sys.Date(), # data parameter end
-  days_req_cmh = 60,
-  days_req_hh = 60,
-  cmh_exp_after = date_convert("7/1/2014"),
-  record_dist_req = 14 # at least X days between pre/post values
+  current_cost_qtr = "2016 Q1",
+  run_date = "3/7/2016",
+  end_date = "12/31/2015" # data parameter end
 )
  # for folder
 project_wd$data <- file.path(project_wd$data,
@@ -40,8 +36,8 @@ project_wd$data <- file.path(project_wd$data,
                              ))
 # load packages, source files -------------------------------------------------
 library(wccmh)
-source(file.path(project_wd$code, "0_outcome auxillary.R"))
-source(file.path(project_wd$code, "1_outcome_sql.R"))
-source(file.path(project_wd$code, "2_outcome_base.R"))
-# source(file.path(project_wd$code, "3_outcome_analyze.R"))
-source(file.path(project_wd$code, "4_export_xlxs.R"))
+# source(file.path(project_wd$dropbox, "WCCMH/R/global library.R"))
+source(file.path(project_wd$code, "0_service auxillary.R"))
+source(file.path(project_wd$code, "1_fund_sql.R"))
+source(file.path(project_wd$code, "/partial_fy_costs/2_pfc_service.R"))
+source(file.path(project_wd$code, "/partial_fy_costs/3_pfc_export.R"))

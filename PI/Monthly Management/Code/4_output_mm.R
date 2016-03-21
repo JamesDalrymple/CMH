@@ -33,10 +33,12 @@ iposAllMonths <-
   setkey(iposAllMonths, mon_fy)[
     !J(as.chr(as.yearmon(paste(input$current_month, input$calendar_year))))]
 setkey(iposAllMonths, NULL)
-ipos_graph <- rbindlist(list(iposAllMonths, ipos_graph))
+ipos_graph <- rbindlist(list(iposAllMonths, ipos_graph), use.names = TRUE)
 ipos_graph[, team := cmh_recode(team)]
 rm(iposAllMonths)
 ipos_graph <- unique(ipos_graph)
+ipos_graph[, mon_fy :=
+  as.yearmon(gsub(x = mon_fy, pattern="-", replace=" 20"))]
 write.csv(ipos_graph[order(team, mon_fy)],
   file.path(input$data_fy_wd, paste0("ipos fy ",
     input$current_fy, ".csv")), row.names=FALSE)
@@ -51,17 +53,18 @@ if(!file.exists(file.path(input$data_fy_wd,
 full_ipos_t1 <- fread(file.path(input$data_fy_wd,
   paste0("ipos t1 fy ", input$current_fy, ".csv")))
 full_ipos_t1[, team := cmh_recode(team)]
-# full_ipos_t1[, month :=
-#   as.chr(as.yearmon(gsub(x = month, pattern = "-", replace = " 20")))]
+full_ipos_t1[, month :=
+  as.chr(as.yearmon(gsub(x = month, pattern = "-", replace = " 20")))]
 full_ipos_t1 <- setkey(full_ipos_t1, month)[
   !J(as.chr(as.yearmon(paste(input$current_month, input$calendar_year))))]
-full_ipos_t1 <- rbindlist(list(full_ipos_t1, ipos_table1))
+full_ipos_t1 <- rbindlist(list(full_ipos_t1, ipos_table1), use.names = TRUE)
 full_ipos_t1 <- full_ipos_t1[!is.na(month)]
 write.csv(full_ipos_t1[order(month, team)],
   file.path(input$data_fy_wd, paste0("ipos t1 fy ",
     input$current_fy, ".csv")), row.names = FALSE)
 full_ipos_t1 <- fread(file.path(input$data_fy_wd,
   paste0("ipos t1 fy ", input$current_fy, ".csv")))
+full_ipos_t1[, month := gsub(x = month, pattern = "-", replace = " 20")]
 full_ipos_t1 <- full_ipos_t1[order(team, as.yearmon(month))]
 setnames(full_ipos_t1, names(full_ipos_t1),
   gsub(x=names(full_ipos_t1), pattern="_", replace=" "))
@@ -76,13 +79,15 @@ if (!file.exists(file.path(input$data_fy_wd,
 full_ipos_t2 <- fread(file.path(input$data_fy_wd,
   paste0("ipos t2 fy ", input$current_fy, ".csv")))
 full_ipos_t2[, team := cmh_recode(team)]
+full_ipos_t2[, month := gsub(x = month, pattern = "-", replace = " 20")]
 full_ipos_t2 <- setkey(full_ipos_t2, month)[!J(as.chr(
   as.yearmon(paste(input$current_month, input$calendar_year))))]
-full_ipos_t2 <- rbindlist(list(full_ipos_t2, ipos_table2))
+full_ipos_t2 <- rbindlist(list(full_ipos_t2, ipos_table2), use.names = TRUE)
 write.csv(full_ipos_t2[order(team, month)], file.path(input$data_fy_wd,
   paste0("ipos t2 fy ", input$current_fy, ".csv")), row.names = FALSE)
 full_ipos_t2 <- fread(file.path(input$data_fy_wd,
   paste0("ipos t2 fy ", input$current_fy, ".csv")))
+full_ipos_t2[, month := gsub(x = month, pattern="-", replace = " 20")]
 full_ipos_t2 <- full_ipos_t2[order(team, as.yearmon(month))]
 setnames(full_ipos_t2, old=c("blank_missing_IPOS", "currentIPOS", "expiredIPOS"),
   new=c("blank/missing IPOS", "current IPOS", "expired IPOS"))
@@ -161,7 +166,9 @@ unsign_draft_t1[, team := cmh_recode(team)]
 # setnames(unsign_draft_t1, "month", "mon_fy")
 unsign_draft_t1 <- setkey(unsign_draft_t1, mon_fy)[
   !J(as.chr(as.yearmon(paste(input$current_month, input$calendar_year))))]
-unsign_draft_t1 <- rbindlist(list(unsign_draft_t1, unsignTeam))
+unsign_draft_t1 <- rbindlist(list(unsign_draft_t1,
+                                  unsignTeam), use.names = FALSE)
+unsign_draft_t1[, mon_fy := gsub(x = mon_fy, pattern = "-", replace = " 20")]
 write.csv(unsign_draft_t1[order(team, as.yearmon(mon_fy))],
   file.path(input$data_fy_wd, paste0("unsign_draft_docs t1 fy ",
     input$current_fy, ".csv")), row.names=FALSE)
@@ -218,6 +225,7 @@ demo_table <- setkey(demo_table, mon_fy)[
   !J(as.chr(as.yearmon(paste(input$current_month, input$calendar_year))))]
 setcolorder(demo_team, names(demo_table))
 demo_table <- rbindlist(list(demo_table, demo_team), use.names = TRUE)
+demo_table[, mon_fy := gsub(x = mon_fy, pattern = "-", replacement = " 20")]
 write.csv(demo_table[order(team, as.yearmon(mon_fy))], file.path(input$data_fy_wd,
   paste0("demo table fy ", input$current_fy, ".csv")), row.names=FALSE)
 demo_table <- fread(file.path(input$data_fy_wd,
@@ -275,6 +283,7 @@ health_table <- setkey(health_table, mon_fy)[
   !J(as.chr(as.yearmon(paste(input$current_month, input$calendar_year))))]
 setcolorder(health_team, names(health_table))
 health_table <- rbindlist(list(health_table, health_team), use.names = TRUE)
+health_table[, mon_fy := gsub(x = mon_fy, pattern = "-", replace = " ")]
 write.csv(health_table[order(team, as.yearmon(mon_fy))],
   file.path(input$data_fy_wd,  paste0("health table fy ",
     input$current_fy, ".csv")), row.names = FALSE)
@@ -333,6 +342,7 @@ wage_table <- setkey(wage_table, mon_fy)[!
   J(as.chr(as.yearmon(paste(input$current_month, input$calendar_year))))]
 setcolorder(wageTeam, names(wage_table))
 wage_table <- rbindlist(list(wage_table, wageTeam), use.names = TRUE)
+wage_table[, mon_fy := gsub(x = mon_fy, pattern = "-", replace = " ")]
 write.csv(wage_table[order(team, as.yearmon(mon_fy))],
   file.path(input$data_fy_wd,  paste0("wage table fy ",
     input$current_fy, ".csv")), row.names=FALSE)
@@ -383,29 +393,56 @@ p_ssm_ts <- ggplot(data = ssm_ts, aes_(x = ~ts, y = ~`pct 2+`)) +
            position = position_dodge(0.5), fill = "#C282D6") +
   ggtitle(expression(atop("At Least 2 SSMs since March 2014",
                           atop(italic("case load inside parentheses"), "")))) +
-  labs(x = "team: supervisor", y = "percent") +
   geom_label(data=ssm_ts, aes(x = ts, y = 1,
     label = sprintf('%1$s%% (%2$s / %3$s)', round(`pct 2+`),
                     ssm_ts[, `2+ SSMs`], num_cases)),
     hjust = "inward", fontface= "bold", label.padding = unit(.25, "lines")) +
   coord_flip() +
-  theme(panel.background = element_rect(fill = "white", colour = NA),
-        panel.border = element_rect(fill = NA,
-                                    colour = "grey50"),
-        panel.grid.major = element_line(colour = "grey70",size = 0.2),
-        panel.grid.minor = element_line(colour = "grey85",
-                                        size = .2 ),
-        plot.title = element_text(size=10))
-# team/supervisor/author
-p_ssm_tsa <- ggplot(data = ssm_tsa, aes_(x = ~primary_staff, y = ~`pct 2+`, ymax = 120)) +
-  geom_bar(stat = "identity", color = "black", width = 0.5,
-           position = position_dodge(0.5), fill = "#C282D6") +
-  theme(axis.text.x = element_text(angle = 90)) +
-  geom_text(data=ssm_tsa, position = position_dodge(0.5), angle = 90,
-    aes(x = primary_staff, y = `pct 2+`, label = round(`pct 2+`)),
-    size = 2.5, hjust = -.1) +
-  facet_wrap(~ts, scales = "free_x", nrow = 2) +
-  aux$my_theme +
-  scale_y_discrete(breaks = seq(0, 100, 25))
+  theme_light() +
+  labs(title = "At Least 2 SSMs by Team, Supervisor", x = "team: supervisor",
+       y = "percent of case load with 2+ SSMs")
+
+ # team/supervisor/author
+  graph$ssm_tsa_skip <-
+    ssm_tsa[, sum(num_cases) <= 10, by = ts][isTRUE(V1), ts]
+  graph$ssm_tsa_table <- ssm_tsa[ts %in% graph$ssm_tsa_skip]
+  ssm_tsa <- ssm_tsa[ts %nin% graph$ssm_tsa_skip]
+
+  p_ssm_tsa <- ggplot(data = ssm_tsa, aes_(x = ~primary_staff, y = ~`pct 2+`, ymax = 120)) +
+    geom_bar(stat = "identity", color = "black", width = 0.5,
+             position = position_dodge(0.5), fill = "#C282D6") +
+    theme(axis.text.x = element_text(angle = 90)) +
+    geom_text(data=ssm_tsa, position = position_dodge(0.5), angle = 90,
+              aes(x = primary_staff, y = `pct 2+`, label = round(`pct 2+`)),
+              size = 2.5, hjust = -.1) +
+    facet_wrap(~ts, scales = "free", ncol = 3) +
+    theme_light() + theme(axis.text.x = element_text(angle = 90)) +
+    scale_y_discrete(breaks = seq(0, 100, 25)) +
+    labs(title = "At Least 2 SSMs by Supervisor,  Staff",
+         y = "percent of case load with 2+ SSMs")
+  gt <- ggplotGrob(p_ssm_tsa)
+
+
+  tsa_try <- ssm_tsa[, length(primary_staff), by = ts][, V1]
+  tsa_len <- ssm_tsa[, length(primary_staff), by = ts]
+  tsa_N <- as.list(tsa_len[, V1])
+  tsa_N <- rapply(tsa_N, f = function(x) unit(x, "null"), how = "list")
+
+
+  require(grid)
+  # Get the column index in the gt layout corresponding to the panels.
+  panelI <- gt$layout$l[grepl("panel", gt$layout$name)]
+
+  # Replace the default panel widths with relative heights.
+  gt$widths <- grid:::unit.list(gt$widths)
+  setattr(tsa_try, "class", c("unit.list", "unit"))
+  gt$widths[panelI] <- tsa_N[c(4:6, 1:3)]
+
+  # Add extra width between panels (assuming two panels)
+  # gt$widths[panelI[1] + 1] = list(unit(1, "cm"))
+
+  # ## Draw gt
+  # grid.newpage()
+  # grid.draw(gt)
 
 # http://stackoverflow.com/questions/31572239/set-space-in-facet-wrap-like-in-facet-grid

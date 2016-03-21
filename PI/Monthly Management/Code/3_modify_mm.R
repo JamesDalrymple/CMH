@@ -151,7 +151,7 @@ ipos_table1 <-
   mmerge(l = list(modify$ipos_full, modify$ipos_interim,
     modify$ipos_interim_30_plus, modify$ipos_prelim, modify$ipos_single),
     by="team" )
-ipos_table1[, `Grand Total` :=
+ipos_table1[, Grand_Total :=
   psum(Full_IPOS, Interim_IPOS, Preliminary_IPOS, Single_Service_IPOS)]
 ipos_table1 <- cbind(month=as.character(as.yearmon(
   paste(input$current_month, input$calendar_year))), ipos_table1)
