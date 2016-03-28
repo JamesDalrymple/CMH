@@ -28,7 +28,7 @@ input <- list(
   end_date = Sys.Date(), # data parameter end
   days_req_cmh = 60,
   days_req_hh = 60,
-  cmh_exp_after = date_convert("7/1/2014"),
+  cmh_exp_after = wccmh::date_convert("7/1/2014"),
   record_dist_req = 14 # at least X days between pre/post values
 )
  # for folder

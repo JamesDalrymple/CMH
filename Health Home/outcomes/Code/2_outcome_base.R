@@ -11,12 +11,13 @@ vitals[, vt_date := as.Date(vt_date)]
 
 # CMH admissions --------------------------------------------------------------
 cmh_adm[, cmh_team := cmh_recode(team)]
+cmh_adm[like(team, "Health Home"), cmh_team := "Health Home"]
 cmh_adm[, dob := as.Date(dob)]
 cmh_adm[, cur_age := as.num(round((Sys.Date() - dob)/365.25, 4))]
-# create secondary team for possibly comparison with Jessica's work
-cmh_adm[like(team, "PBHCI"), secondary_team := "SAMHSA PBHCI"]
-cmh_adm[like(team, "Health Home"), secondary_team := "Health Home"]
-cmh_adm[like(team, "Pilot Disease"), secondary_team := "Disease Mgmt"]
+# # create secondary team for possibly comparison with Jessica's work
+# cmh_adm[like(team, "PBHCI"), secondary_team := "SAMHSA PBHCI"]
+# cmh_adm[like(team, "Health Home"), secondary_team := "Health Home"]
+# cmh_adm[like(team, "Pilot Disease"), secondary_team := "Disease Mgmt"]
 
 # identifying Health Home staff (nurse and non-nurse too)
 modify$hh_staff <- cmh_adm[current_sup == "Hagaman, Brandie" &
@@ -25,19 +26,20 @@ modify$hh_nurse <- cmh_adm[current_sup == "Hagaman, Brandie" &
   assigned_staff %in% modify$hh_staff & staff_type == "Registered Nurse",
   unique(assigned_staff)]
 cmh_adm[, team := NULL]
-cmh_adm[cmh_team == "OBRA", cmh_team := "non-core CMH"]
-cmh_adm[cmh_team == "PORT", cmh_team := "non-core CMH"]
 
 modify$date_cols <-
   Cs(cmh_effdt, cmh_expdt, team_effdt, team_expdt, staff_eff, staff_exp)
 for (j in modify$date_cols) {
   set(cmh_adm, j = j, value = as.Date(cmh_adm[[j]]))
 }
-modify$cmh_core <- cmh_adm[, unique(.SD), .SDcols = Cs(case_no, cmh_effdt,
-  cmh_expdt, team_effdt, team_expdt, cmh_team, secondary_team, dob)]
-modify$cmh_core[, cur_age := round(as.int(Sys.Date()-as.Date(dob))/365.25, 4)]
-# modify$cmh_core[, cn_cmh_eff := .GRP, by = list(case_no, cmh_effdt)]
-# overlap_fix_dt requires that NO blanks exist in end dates
+cmh_adm[, cur_age := round(as.int(Sys.Date()-as.Date(dob))/365.25, 4)]
+
+# cmh core teams only ---------------------------------------------------------
+modify$cmh_core <-
+  cmh_adm[cmh_team %in% Cs(Child, DD, Access, ACT, MI, "Child HB"),
+    unique(.SD), .SDcols = Cs(case_no, cmh_effdt, cmh_expdt,
+  team_effdt, team_expdt, cmh_team, dob, cur_age)]
+# blanks in expdt cause problems
 modify$cmh_core[is.na(cmh_expdt), cmh_expdt := Sys.Date() + 999]
 modify$cmh_core[is.na(team_expdt), team_expdt := Sys.Date() + 999]
 
@@ -45,83 +47,55 @@ modify$cmh_core[is.na(team_expdt), team_expdt := Sys.Date() + 999]
 modify$cmh_core <- modify$cmh_core[cmh_effdt <= cmh_expdt]
 modify$cmh_core <- modify$cmh_core[team_effdt <= team_expdt]
 
+# # fixes MOST but not all record
+# b1 <- Sys.time()
+# overlap_fix_dt(overlap_dt = copy(modify$cmh_core),
+#                id_cols = c("case_no", "cmh_effdt", "cmh_team"),
+#                start_col = "team_effdt", expire_col = "team_expdt",
+#                disc_col = "team_expdt",
+#                overlap_int = 1L, range_class = "Date")
+# b2 <- Sys.time()
+# b2 - b1 # 2.9 mins
+# # fixes ALL records
 
-# fixes MOST but not all records
-overlap_fix_dt(overlap_dt = modify$cmh_core,
-               id_cols = c("case_no", "cmh_effdt", "cmh_team"),
-               start_col = "team_effdt", expire_col = "team_expdt",
-               disc_col = "team_expdt",
-               overlap_int = 1L, range_class = "Date")
-modify$cmh_core <-
-  modify$cmh_core[, list(cmh_effdt = min(cmh_effdt),
-                           cmh_expdt = max(cmh_expdt),
-                           team_effdt = min(team_effdt),
-                           team_expdt = max(team_expdt)),
-                    by = list(case_no, cmh_team, cur_age, overlap_id)]
-
-test <- cmh_adm[case_no == 11660 & cmh_team == "ACT", unique(.SD),
-        .SDcols = Cs(case_no, cmh_effdt, cmh_expdt, team_effdt, team_expdt, cmh_team)]
-modify$cmh_core[case_no == 11660 & cmh_team == "ACT"]
-modify$cmh_core2[case_no == 11660 & cmh_team == "ACT"]
-
-
-modify$cmh_core2 <-
-  modify$cmh_core2[cmh_team %nin% c("unknown", "non-core CMH", "non-CMH")]
-modify$cmh_core2[cmh_priority_dt,
-  priority := i.priority, on = c(cmh_team = "team")]
-modify$cmh_core2[, min_priority := as.int(min(priority, na.rm = TRUE)),
-  by = list(case_no, cmh_effdt, overlap_id)]
-modify$cmh_core2 <- modify$cmh_core2[min_priority == priority]
-modify$cmh_core2[, Cs(priority, min_priority) := NULL]
-modify$cmh_core2[, overlap_id := NULL]
-
-# case_no 10869 is an example of someone who has an ACT adm inside of MI Adult
-# admission. We would need to rewrite the admission record to be able to join
-# to other datasets via data.table::foverlaps
-
-# find most recent CMH core team ----------------------------------------------
-setorder(modify$cmh_core2, case_no, -cmh_effdt, -team_effdt)
-modify$cmh_core2[, team_order := seq.int(.N), by = list(case_no, cmh_effdt)]
-modify$cmh_core2[, adm_order := as.integer(as.factor(.GRP)),
-                    by = list(case_no, cmh_effdt)]
-modify$cmh_core2[, case_grp := seq(.N), by = case_no]
-
-modify$last_core <-
-  copy(modify$cmh_core2[team_order == 1 & adm_order == 1 & case_grp == 1])
-modify$last_core[, Cs(team_order, adm_order) := NULL]
-modify$last_core <-
-  modify$last_core[cmh_team %in%
-  c("DD", "MI", "Child", "ACT", "Child HB", "Access")]
-modify$last_core[, days_core_team :=
-  as.int(pmin(team_expdt, input$end_date)-team_effdt)]
-modify$last_core[,
-  days_cmh := as.int(pmin(cmh_expdt, input$end_date)-cmh_effdt)]
+a1 <- Sys.time()
+modify$cmh_core[cmh_priority_dt, priority := i.priority, on = c(cmh_team = "team")]
+modify$cmh_core <- overlap_combine(overlap_dt = modify$cmh_core,
+                id_cols = c("case_no", "cmh_effdt"), team_col = "cmh_team",
+                start_col = "team_effdt", end_col = "team_expdt",
+                overlap_int = 1L, replace_blanks = Sys.Date()+999,
+                priority_col = "priority")
+a2 <- Sys.time()
+a2 - a1 # 17.5-19 secs
 
 # find HH consumers open for a year or more -----------------------------------
 modify$hh_teams <-
-  modify$cmh_core[secondary_team == "Health Home",
-  list(cmh_effdt = min(cmh_effdt),
-       cmh_expdt = max(cmh_expdt),
-       hh_effdt = min(team_effdt),
-       hh_expdt = max(team_expdt)),
-  by = list(case_no, cur_age, overlap_id)]
+  cmh_adm[cmh_team %in% c("Health Home"), unique(.SD),
+  .SDcols = Cs(case_no, cmh_effdt, cmh_expdt, team_effdt,
+               team_expdt, cmh_team, dob, cur_age)]
+# blanks in expdt cause problems
+modify$hh_teams[is.na(cmh_expdt), cmh_expdt := Sys.Date() + 999]
+modify$hh_teams[is.na(team_expdt), team_expdt := Sys.Date() + 999]
+
+# remove 11 very odd records: overlap_fix_dt requires start to be before end
+modify$hh_teams <- modify$hh_teams[cmh_effdt <= cmh_expdt]
+modify$hh_teams <- modify$hh_teams[team_effdt <= team_expdt]
+
 # there are 5 cases that admitted, discharged, then readmitted to CMH & HH
 # NOTE: I add 999 to NA discharges to fix ovrlp; future expdt are due to that
 # Q: Should we add total HH days/person if disc+readmit CMH/HH (i.e. 5 mon gap)
+# A: No, per LH and BH, early March 2016
 
-# setorder(modify$hh_teams, case_no, -cmh_effdt)
-# modify$hh_teams[, adm_grp := seq(.N), by = list(case_no)]
 modify$hh_teams[, days_cmh :=
   as.int(pmin(cmh_expdt, input$end_date) - cmh_effdt)]
 modify$hh_teams[, days_hh :=
-  as.int(pmin(hh_expdt, input$end_date) - hh_effdt)]
+  as.int(pmin(team_expdt, input$end_date) - team_effdt)]
 # requiring people to be X days open CMH/HH
 modify$hh_teams[, error := NA_character_]
 modify$hh_teams[days_cmh < input$days_req_cmh,
   error := aux$cat_error(old = error, new = "cmh_days_req not met")]
 modify$hh_teams[days_hh < input$days_req_hh, error :=
   aux$cat_error(old = error, new = "hh_days_req not met")]
-modify$hh_teams[, Cs(overlap_id) := NULL]
 modify$hh_teams[cur_age < 18, error := aux$cat_error(error, "age < 18")]
 modify$hh$eligible <- modify$hh_teams[is.na(error), length(unique(case_no))]
 modify$hh$ineligible <- modify$hh_teams[!is.na(error), length(unique(case_no))]
@@ -144,7 +118,10 @@ modify$bmi[, Cs(weight, height_feet, height_inches) :=
            by = list(case_no, vt_date)]
 modify$bmi <- unique(modify$bmi)
 
-setkey(modify$cmh_core2, case_no, team_effdt, team_expdt)
+
+## LEFT OFF HERE --------------------------------------------------------------
+
+setkey(╬, case_no, team_effdt, team_expdt)
 modify$bmi[, vt_date2 := vt_date]
 modify$bmi <-
   foverlaps(modify$bmi,
