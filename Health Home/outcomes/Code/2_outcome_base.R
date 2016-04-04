@@ -13,7 +13,6 @@ vitals[, vt_date := as.Date(vt_date)]
 cmh_adm[, cmh_team := cmh_recode(team)]
 cmh_adm[like(team, "Health Home"), cmh_team := "Health Home"]
 cmh_adm[, dob := as.Date(dob)]
-cmh_adm[, cur_age := as.num(round((Sys.Date() - dob)/365.25, 4))]
 # # create secondary team for possibly comparison with Jessica's work
 # cmh_adm[like(team, "PBHCI"), secondary_team := "SAMHSA PBHCI"]
 # cmh_adm[like(team, "Health Home"), secondary_team := "Health Home"]
@@ -32,13 +31,12 @@ modify$date_cols <-
 for (j in modify$date_cols) {
   set(cmh_adm, j = j, value = as.Date(cmh_adm[[j]]))
 }
-cmh_adm[, cur_age := round(as.int(Sys.Date()-as.Date(dob))/365.25, 4)]
 
 # cmh core teams only ---------------------------------------------------------
 modify$cmh_core <-
   cmh_adm[cmh_team %in% Cs(Child, DD, Access, ACT, MI, "Child HB"),
     unique(.SD), .SDcols = Cs(case_no, cmh_effdt, cmh_expdt,
-  team_effdt, team_expdt, cmh_team, dob, cur_age)]
+  team_effdt, team_expdt, cmh_team, dob)]
 # blanks in expdt cause problems
 modify$cmh_core[is.na(cmh_expdt), cmh_expdt := Sys.Date() + 999]
 modify$cmh_core[is.na(team_expdt), team_expdt := Sys.Date() + 999]
@@ -47,32 +45,50 @@ modify$cmh_core[is.na(team_expdt), team_expdt := Sys.Date() + 999]
 modify$cmh_core <- modify$cmh_core[cmh_effdt <= cmh_expdt]
 modify$cmh_core <- modify$cmh_core[team_effdt <= team_expdt]
 
-# # fixes MOST but not all record
-# b1 <- Sys.time()
-# overlap_fix_dt(overlap_dt = copy(modify$cmh_core),
-#                id_cols = c("case_no", "cmh_effdt", "cmh_team"),
-#                start_col = "team_effdt", expire_col = "team_expdt",
-#                disc_col = "team_expdt",
-#                overlap_int = 1L, range_class = "Date")
-# b2 <- Sys.time()
-# b2 - b1 # 2.9 mins
-# # fixes ALL records
-
-a1 <- Sys.time()
+a1 <- proc.time()
 modify$cmh_core[cmh_priority_dt, priority := i.priority, on = c(cmh_team = "team")]
-modify$cmh_core <- overlap_combine(overlap_dt = modify$cmh_core,
-                id_cols = c("case_no", "cmh_effdt"), team_col = "cmh_team",
+modify$cmh_core <-
+  priority_overlap(data = modify$cmh_core,
+                group_cols = c("case_no", "cmh_effdt"), priority_col = "cmh_team",
                 start_col = "team_effdt", end_col = "team_expdt",
-                overlap_int = 1L, replace_blanks = Sys.Date()+999,
-                priority_col = "priority")
-a2 <- Sys.time()
+                overlap_int = 1L, analysis_date = Sys.Date()+999,
+                priority_value = "priority")
+a2 <- proc.time()
 a2 - a1 # 17.5-19 secs
+rm(a1, a2)
 
-# find HH consumers open for a year or more -----------------------------------
+# remove known bad records (temporarily) ---
+if (Sys.Date() == "2016-4-4") {
+modify$cmh_core <-
+modify$cmh_core[!(case_no==220766 & cmh_effdt == as.Date("2012-11-17"))]
+modify$cmh_core <-
+  modify$cmh_core[!(case_no==1144969 & cmh_effdt == as.Date("2015-03-13"))]
+}
+
+# find any bad records, fix temporarily and then on front end permanently
+setorder(modify$cmh_core, case_no, cmh_effdt, team_effdt)
+modify$cmh_core[, shift_exp := shift(team_expdt), by = case_no]
+modify$adm_error <- modify$cmh_core[between(shift_exp, team_effdt, team_expdt)]
+if (nrow(modify$adm_error) > 0) {
+  p_stop("modify$adm_error show these consumers have admission record
+         inconsistencies which need to be fixed on the front end:",
+         modify$adm_error)
+}
+modify$cmh_core[, shift_exp := NULL]
+modify$adm_error <- NULL
+
+modify$cmh_core[, days_cmh :=
+  as.integer(pmin(cmh_expdt, input$end_date) - cmh_effdt)]
+modify$cmh_core[, cmh_error := NA_character_]
+modify$cmh_core[days_cmh < input$days_req_cmh,
+  cmh_error := aux$cat_error(old = cmh_error,
+    new = paste("days_cmh_req <", input$days_req_cmh))]
+
+# Health Home admission processing --------------------------------------------
 modify$hh_teams <-
   cmh_adm[cmh_team %in% c("Health Home"), unique(.SD),
   .SDcols = Cs(case_no, cmh_effdt, cmh_expdt, team_effdt,
-               team_expdt, cmh_team, dob, cur_age)]
+               team_expdt, cmh_team, dob)]
 # blanks in expdt cause problems
 modify$hh_teams[is.na(cmh_expdt), cmh_expdt := Sys.Date() + 999]
 modify$hh_teams[is.na(team_expdt), team_expdt := Sys.Date() + 999]
@@ -81,86 +97,143 @@ modify$hh_teams[is.na(team_expdt), team_expdt := Sys.Date() + 999]
 modify$hh_teams <- modify$hh_teams[cmh_effdt <= cmh_expdt]
 modify$hh_teams <- modify$hh_teams[team_effdt <= team_expdt]
 
-# there are 5 cases that admitted, discharged, then readmitted to CMH & HH
-# NOTE: I add 999 to NA discharges to fix ovrlp; future expdt are due to that
-# Q: Should we add total HH days/person if disc+readmit CMH/HH (i.e. 5 mon gap)
-# A: No, per LH and BH, early March 2016
+modify$hh_teams <-
+  overlap_combine(data = modify$hh_teams,
+                   group_cols = c("case_no", "cmh_effdt"),
+                   start_col = "team_effdt", end_col = "team_expdt",
+                   overlap_int = 1L, analysis_date = Sys.Date()+999)
+
+# find any bad records, fix temporarily and then on front end permanently
+setorder(modify$hh_teams, case_no, start_date, end_date)
+modify$hh_teams[, shift_exp := shift(end_date), by = case_no]
+modify$adm_error <- modify$hh_teams[between(shift_exp, start_date, end_date)]
+if (nrow(modify$adm_error) > 0) {
+  p_stop("modify$adm_error show these consumers have admission record
+         inconsistencies which need to be fixed on the front end:",
+         modify$adm_error)
+}
+modify$hh_teams[, shift_exp := NULL]
+modify$adm_error <- NULL
 
 modify$hh_teams[, days_cmh :=
-  as.int(pmin(cmh_expdt, input$end_date) - cmh_effdt)]
+  as.integer(pmin(cmh_expdt, input$end_date) - cmh_effdt)]
 modify$hh_teams[, days_hh :=
-  as.int(pmin(team_expdt, input$end_date) - team_effdt)]
+  as.integer(pmin(end_date, input$end_date) - start_date)]
 # requiring people to be X days open CMH/HH
 modify$hh_teams[, error := NA_character_]
 modify$hh_teams[days_cmh < input$days_req_cmh,
-  error := aux$cat_error(old = error, new = "cmh_days_req not met")]
+  error := aux$cat_error(old = error,
+  new = paste("days_cmh_req <", input$days_req_cmh))]
 modify$hh_teams[days_hh < input$days_req_hh, error :=
-  aux$cat_error(old = error, new = "hh_days_req not met")]
+  aux$cat_error(old = error, new = paste("hh_days <", input$days_req_hh))]
+modify$hh_teams[, cur_age := floor(as.integer(input$end_date-dob)/365)]
 modify$hh_teams[cur_age < 18, error := aux$cat_error(error, "age < 18")]
 modify$hh$eligible <- modify$hh_teams[is.na(error), length(unique(case_no))]
 modify$hh$ineligible <- modify$hh_teams[!is.na(error), length(unique(case_no))]
 saved$hh_summary <-
   data.table(hh_eliglible = modify$hh$eligible,
              hh_ineligible = modify$hh$ineligible)
+modify$hh_teams[, Cs(cur_age, dob, end_col, days_cmh) := NULL]
+setnames(modify$hh_teams,
+         Cs(cmh_team, start_date, end_date, error),
+         Cs(hh_team, hh_start, hh_end, hh_error))
+modify$hh_nurse
+# Health Home Levels ----------------------------------------------------------
+modify$hh_levels <-
+  cmh_adm[cmh_team %in% c("Health Home") & assigned_staff %in%
+      modify$hh_nurse & staff_type == "SAMHSA Staff", unique(.SD),
+    .SDcols = Cs(case_no, staff_eff, staff_exp)]
+setnames(modify$hh_levels, Cs(staff_eff, staff_exp), Cs(L3_start, L3_end))
+
+modify$hh_levels <-
+  overlap_combine(data = modify$hh_levels, group_cols = "case_no",
+  start_col = "L3_start", end_col = "L3_end", analysis_date = Sys.Date() + 999)
+setnames(modify$hh_levels, Cs(start_date, end_date), Cs(L3_start, L3_end))
+modify$hh_levels[is.na(L3_end), L3_end := end_col]
+
+# Eligible CMH/HH table -------------------------------------------------------
+modify$eligibility <- copy(modify$cmh_core)
+modify$eligibility <- modify$eligibility[cmh_effdt >= input$cmh_exp_after |
+                                           cmh_expdt >= input$cmh_exp_after]
+modify$eligibility[, cur_age := floor(as.integer(input$end_date-dob)/365)]
+modify$eligibility[cur_age < 18, cmh_error := aux$cat_error(cmh_error, "cur_age < 18")]
+setkey(modify$hh_teams, case_no, hh_start, hh_end)
+modify$eligibility <- foverlaps(modify$eligibility,
+          modify$hh_teams[, .SD, .SDcols = Cs(case_no, hh_start, hh_end, hh_error)],
+          by.x = Cs(case_no, team_effdt, team_expdt),
+          by.y = Cs(case_no, hh_start, hh_end))
+setkey(modify$hh_levels, case_no, L3_start, L3_end)
+modify$eligibility <- foverlaps(modify$eligibility,
+  modify$hh_levels[, .SD, .SDcols = Cs(case_no, L3_start, L3_end)],
+  by.x = Cs(case_no, team_effdt, team_expdt),
+  by.y = Cs(case_no, L3_start, L3_end))
+modify$eligibility[, e_status :=
+  ifelse(is.na(cmh_error) & is.na(hh_error), "eligible", "ineligible")]
+modify$eligibility[, hh_status := ifelse(is.na(hh_start), "CMH only", "HH")]
+modify$eligibility[, hh_lev_status := "CMH only"]
+modify$eligibility[!is.na(hh_start) & is.na(L3_start),
+                   hh_lev_status := "HH no nurse"]
+modify$eligibility[!is.na(hh_start) & !is.na(L3_start),
+                   hh_lev_status := "HH nurse"]
+saved$eligibility <- copy(modify$eligibility)
+modify$eligibility[, Cs(L3_start, L3_end, hh_start, hh_end, dob, priority,
+  days_cmh, cmh_error, hh_error, cur_age) := NULL]
 
 # BMI -------------------------------------------------------------------------
 modify$bmi <- vitals[!is.na(weight) | !is.na(height_feet) |
   !is.na(height_inches), unique(.SD),
   .SDcols = Cs(case_no, vt_date, weight, height_feet, height_inches)]
 modify$bmi[cmh_adm,
-           vt_age := floor(as.int(vt_date - i.dob)/365.25), on = "case_no"]
+           vt_age := floor(as.integer(vt_date - i.dob)/365.25), on = "case_no"]
 # remove blanks without losing information
 # i.e. weight/height were recorded same day, separately
 modify$bmi[, Cs(weight, height_feet, height_inches) :=
-             list(as.int(median(weight, na.rm = TRUE)),
-                  as.int(median(height_feet, na.rm = TRUE)),
-                  as.int(median(height_inches, na.rm = TRUE))),
+             list(as.integer(median(weight, na.rm = TRUE)),
+                  as.integer(median(height_feet, na.rm = TRUE)),
+                  as.integer(median(height_inches, na.rm = TRUE))),
            by = list(case_no, vt_date)]
 modify$bmi <- unique(modify$bmi)
-
-
-## LEFT OFF HERE --------------------------------------------------------------
-
-setkey(╬, case_no, team_effdt, team_expdt)
+# add cmh_core columns
+setkey(modify$cmh_core, case_no, team_effdt, team_expdt)
 modify$bmi[, vt_date2 := vt_date]
 modify$bmi <-
   foverlaps(modify$bmi,
-            modify$cmh_core2[, unique(.SD),
-                            .SDc = Cs(case_no, cmh_team, team_effdt, team_expdt)],
-            by.x = c("case_no", "vt_date", "vt_date2"),
-            by.y = c("case_no", "team_effdt", "team_expdt"))
+    modify$cmh_core[, unique(.SD),
+      .SDc = Cs(case_no, cmh_effdt, cmh_expdt, cmh_team, team_effdt,
+                team_expdt, days_cmh, cmh_error)],
+    by.x = c("case_no", "vt_date", "vt_date2"),
+    by.y = c("case_no", "team_effdt", "team_expdt"))
+setkey(modify$hh_teams, case_no, hh_start, hh_end)
+# add hh_team columns
+modify$bmi <-
+  foverlaps(modify$bmi,
+    modify$hh_teams[, unique(.SD),
+      .SDc = Cs(case_no, hh_team, hh_start, hh_end, days_hh, hh_error)],
+    by.x = c("case_no", "vt_date", "vt_date2"),
+    by.y = c("case_no", "hh_start", "hh_end"))
+# add hh_level (nurse vs no nurse)
+setkey(modify$hh_levels, case_no, L3_start, L3_end)
+modify$bmi <-
+  foverlaps(modify$bmi,
+    modify$hh_levels[, unique(.SD),
+      .SDc = Cs(case_no, L3_start, L3_end)],
+    by.x = c("case_no", "vt_date", "vt_date2"),
+    by.y = c("case_no", "L3_start", "L3_end"))
 modify$bmi[, vt_date2 := NULL]
 
-modify$bmi[cmh_priority_dt, cmh_priority := i.priority, on = c(cmh_team = "team")]
-modify$bmi[, min_priority := as.int(min(cmh_priority, na.rm = TRUE)), by = list(case_no, vt_date)]
-modify$bmi <- modify$bmi[min_priority == cmh_priority | is.na(min_priority)]
+# combine errors ---
+modify$bmi[, bmi_error := NA_character_]
+modify$bmi[!is.na(cmh_error),
+           bmi_error := aux$cat_error(old = bmi_error, new = cmh_error)]
+modify$bmi[!is.na(hh_error),
+           bmi_error := aux$cat_error(old = bmi_error, new = hh_error)]
+modify$bmi[vt_age < 18 & is.na(bmi_error),
+  bmi_error := aux$cat_error(bmi_error, "vital age < 18")]
 
-modify$bmi[, rec_id := .GRP, by = list(case_no, vt_date)]
-modify$bmi[rec_id == 4299]
-modify$bmi[duplicated(rec_id)]
-modify$bmi[, unique(.SD), .SDcols = Cs(case_no, vt_date)]
-
-cmh_adm[case_no == 11660, unique(.SD), .SDcols =
-  Cs(case_no, cmh_effdt, cmh_expdt, team_effdt, team_expdt, cmh_team)]
-
-modify$cmh_core2[case_no == 11660]
-
-
-modify$bmi[cmh_priority != min_priority]
-modify$bmi[case_no == 11091 & vt_date == as.Date("2015-12-8")]
-
-modify$bmi[modify$last_core,
-  Cs(last_cmh_team, days_core_team, days_cmh, cmh_effdt, cmh_expdt) :=
-  list(i.cmh_team, i.days_core_team, i.days_cmh, i.cmh_effdt,
-       i.cmh_expdt), on = c("case_no")]
-
-modify$bmi[, error := NA_character_]
-modify$bmi[age_at_vt < 18 | is.na(age_at_vt), error :=
-  aux$cat_error(error, "age_at_vt < 18")]
 # combine inchest/feet
 modify$bmi[, med_in :=
-             as.int(median(height_inches, na.rm = TRUE)), by = list(case_no)]
-modify$bmi[, med_ft:= as.int(median(height_feet, na.rm = TRUE)), by = case_no]
+             as.integer(median(height_inches, na.rm = TRUE)), by = list(case_no)]
+modify$bmi[, med_ft:= as.integer(median(height_feet, na.rm = TRUE)), by = case_no]
 
 # one possible way to deal with bad heights
 modify$bmi[med_ft > 8, med_ft := NA]
@@ -174,129 +247,76 @@ modify$bmi[, calc_bmi := aux$calc_bmi(lb = weight, inches = med_ht)]
 # how many days have passed between vt_dates?
 setorder(modify$bmi, case_no, vt_date)
 modify$bmi[, days_since_vt_date :=
-  as.int(vt_date-shift(vt_date)), by = list(case_no)]
+  as.integer(vt_date-shift(vt_date)), by = list(case_no)]
 # for data verification later
-modify$bmi[is.na(calc_bmi), error :=
-           aux$cat_error(error, "bmi not calculable")]
+modify$bmi[is.na(calc_bmi), bmi_error :=
+           aux$cat_error(bmi_error, "bmi not calculable")]
 modify$bmi[cmh_expdt < input$cmh_exp_after,
-  error := aux$cat_error(error, paste("bmi <", input$cmh_exp_after))]
-modify$bmi[days_cmh < input$days_req_cmh,
-  error := aux$cat_error(error, paste("days_cmh_req <", input$cmh_exp_after))]
-modify$bmi[is.na(last_cmh_team), last_cmh_team := "never core CMH"]
-modify$bmi[, vt_date2 := vt_date]
-setkey(modify$bmi, case_no, vt_date, vt_date2)
-setkey(modify$hh_teams, case_no, hh_effdt, hh_expdt)
-
-modify$bmi <-
-  foverlaps(modify$bmi,
-            modify$hh_teams[, unique(.SD),
-              .SDc = Cs(case_no, hh_effdt, hh_expdt, days_hh)],
-          by.x = c("case_no", "vt_date", "vt_date2"),
-          by.y = c("case_no", "hh_effdt", "hh_expdt"))
-modify$bmi[, vt_date2 := NULL]
-modify$bmi[calc_bmi < 10, error := aux$cat_error(error,
+  bmi_error := aux$cat_error(bmi_error, paste("cmh_exp prior to ", input$cmh_exp_after))]
+modify$bmi[calc_bmi < 10, bmi_error := aux$cat_error(bmi_error,
   "BMI suspiciously low due to weight or height error")]
-modify$bmi[calc_bmi > 95]
-modify$bmi[, Cs(med_ht, weight, height_feet, height_inches,
-                cur_age, age_at_vt) := NULL]
+# modify$bmi[calc_bmi > 95]
+modify$bmi[, Cs(med_ht, weight, height_feet, height_inches, vt_age) := NULL]
 modify$bmi[, num_bmi := .N, by = case_no]
-modify$bmi[is.na(error), num_bmi_no_error := .N, by = case_no]
+modify$bmi[is.na(bmi_error), num_bmi_no_error := .N, by = case_no]
+modify$bmi[is.na(num_bmi_no_error), num_bmi_no_error := 0]
+modify$bmi[num_bmi_no_error < 2,
+           bmi_error := aux$cat_error(bmi_error, "BMI's error-free < 2")]
 # saving copy of pre-analysis data for review
 saved$bmi <- copy(modify$bmi)
-# remove all errors
-modify$bmi <- modify$bmi[is.na(error)]
-# at least 2 BMI's required
-modify$bmi <- modify$bmi[num_bmi_no_error > 1]
-modify$bmi[, Cs(num_bmi, num_bmi_no_error, days_hh, cmh_effdt, cmh_expdt, error) := NULL]
-modify$bmi[is.na(hh_effdt) & hh_ever == "Y"]
-modify$bmi[, hh_diff_vt := as.int(vt_date - hh_effdt)]
-modify$bmi[, hh_min_diff := min(hh_diff_vt, na.rm = TRUE)]
-modify$bmi[hh_min_diff == hh_diff_vt, hh_min_vt := vt_date]
-modify$bmi[, Cs(hh_diff_vt, hh_min_diff) := NULL]
-if (length(modify$bmi[!is.na(hh_effdt), unique(.SD), .SDcols = Cs(case_no, hh_effdt)][
-  duplicated(case_no)][, length(case_no)]) > 10 ){
-  p_warn("FYI: there are now 11+ cases that were HH and disc. then readmitted.")
-}
-# PRE/POST BMI ----------------------------------------------------------------
-modify$bmi_pre_post <-
-  rbindlist(list(
-    modify$bmi[!is.na(hh_effdt),
-               list(group = "HH",
-                    min_vt = min(vt_date, na.rm = TRUE),
-                    max_vt = max(vt_date, na.rm = TRUE)),
-               by = case_no],
-    modify$bmi[is.na(hh_effdt),
-               list(group = "non-HH",
-                    min_vt = min(vt_date, na.rm = TRUE),
-                    max_vt = max(vt_date, na.rm = TRUE)),
-               by = case_no]), use.names = TRUE)
-
-modify$bmi_pre_post[modify$bmi, Cs(pre_bmi) := list(i.calc_bmi),
-                    on = c(case_no = "case_no", min_vt = "vt_date")]
-modify$bmi_pre_post[modify$bmi,
-  Cs(post_bmi, last_cmh_team) := list(i.calc_bmi, i.last_cmh_team),
-  on = c(case_no = "case_no", max_vt = "vt_date")]
-modify$bmi_cases$dist_req_fail <-
-  modify$bmi_pre_post[max_vt - min_vt < input$record_dist_req, unique(case_no)]
-modify$bmi_pre_post <-
-  modify$bmi_pre_post[max_vt - min_vt >= input$record_dist_req]
-saved$bmi[case_no %in% modify$bmi_cases$dist_req_fail,
-  Cs(error, num_bmi_no_error) := list(aux$cat_error(error,
-  paste("bmi pre/post <", input$record_dist_req)),
-  as.int(pmax(num_bmi_no_error-1, 0)))]
-
-# IMPROVEMENT #1: post_bmi > pre_bmi
-modify$bmi_pre_post[post_bmi-pre_bmi>0 & pre_bmi >= 18.5, imp1 := "worsened"]
-modify$bmi_pre_post[post_bmi-pre_bmi>0 & pre_bmi < 18.5, imp1 := "improved"]
-modify$bmi_pre_post[post_bmi-pre_bmi==0, imp1 := "maintained"]
-modify$bmi_pre_post[post_bmi-pre_bmi<0 & pre_bmi >= 18.5, imp1 := "improved"]
-modify$bmi_pre_post[post_bmi-pre_bmi<0 & pre_bmi < 18.5, imp1 := "worsened"]
-# IMPROVEMENT #2: less than 2% diff. = maintain
-modify$bmi_pre_post[abs((post_bmi - pre_bmi)/pre_bmi) <= 0.02,
-                    imp2 := "maintained"]
-modify$bmi_pre_post[((post_bmi - pre_bmi)/pre_bmi) > 0.02 & pre_bmi >= 18.5,
-                    imp2 := "worsened"]
-modify$bmi_pre_post[((post_bmi - pre_bmi)/pre_bmi) < -0.02 & pre_bmi >= 18.5,
-                    imp2 := "improved"]
-modify$bmi_pre_post[((post_bmi - pre_bmi)/pre_bmi) > 0.02 & pre_bmi < 18.5,
-                    imp2 := "improved"]
-modify$bmi_pre_post[((post_bmi - pre_bmi)/pre_bmi) < -0.02 & pre_bmi < 18.5,
-                    imp2 := "worsened"]
-# IMPROVEMENT #3: less than 0.5 BMI diff. = maintain
-modify$bmi_pre_post[abs(post_bmi - pre_bmi) <= 0.5,
-                    imp3 := "maintained"]
-modify$bmi_pre_post[post_bmi - pre_bmi > 0.5 & pre_bmi >= 18.5,
-                    imp3 := "worsened"]
-modify$bmi_pre_post[post_bmi - pre_bmi < -0.5 & pre_bmi >= 18.5,
-                    imp3 := "improved"]
-modify$bmi_pre_post[post_bmi - pre_bmi > 0.5 & pre_bmi < 18.5,
-                    imp3 := "improved"]
-modify$bmi_pre_post[post_bmi - pre_bmi < -0.5 & pre_bmi < 18.5,
-                    imp3 := "worsened"]
-
-modify$bmi_imp1 <- rbindlist(list(
-  modify$bmi_pre_post[,
-    list(cases_imp1 = length(unique(case_no))), keyby = list(group, imp1)],
-  data.table(group = "HH", imp1 = "hh_eligible", cases_imp1 = modify$hh$eligible)),
-  use.names = TRUE)
-modify$bmi_imp2 <- rbindlist(list(
-  modify$bmi_pre_post[,
-                      list(cases_imp2 = length(unique(case_no))), keyby = list(group, imp2)],
-  data.table(group = "HH", imp2 = "hh_eligible", cases_imp2 = modify$hh$eligible)),
-  use.names = TRUE)
-modify$bmi_imp3 <- rbindlist(list(
-  modify$bmi_pre_post[,
-                      list(cases_imp3 = length(unique(case_no))), keyby = list(group, imp3)],
-  data.table(group = "HH", imp3 = "hh_eligible", cases_imp3 = modify$hh$eligible)),
-  use.names = TRUE)
-setnames(modify$bmi_imp1, "imp1", "status")
-setnames(modify$bmi_imp2, "imp2", "status")
-setnames(modify$bmi_imp3, "imp3", "status")
-saved$bmi_imp <-
-  mmerge(modify$bmi_imp1, modify$bmi_imp2, modify$bmi_imp3, by = c("group", "status"), all = TRUE)
+# remove all errors; at least 2 BMI's required
+modify$bmi <- modify$bmi[num_bmi_no_error >= 2]
+modify$bmi[, Cs(num_bmi, num_bmi_no_error, cmh_effdt, cmh_expdt, hh_error,
+                cmh_error, bmi_error) := NULL]
+modify$bmi <- modify$bmi[!is.na(cmh_team)]
 
 # wellness note: overall health -----------------------------------------------
-# wn <- copy(sql$output$wn)
+modify$wn <- copy(wn)
+modify$wn <- modify$wn[!is.na(ovr_health) | !is.na(pain)]
+modify$wn[, wn_date2 := wn_date]
+# add cmh_core columns
+setkey(modify$cmh_core, case_no, team_effdt, team_expdt)
+modify$wn <-
+  foverlaps(modify$wn,
+            modify$cmh_core[, unique(.SD),
+                            .SDc = Cs(case_no, cmh_effdt, cmh_expdt, cmh_team, team_effdt,
+                                      team_expdt, days_cmh, cmh_error)],
+            by.x = c("case_no", "wn_date", "wn_date2"),
+            by.y = c("case_no", "team_effdt", "team_expdt"))
+setkey(modify$hh_teams, case_no, hh_start, hh_end)
+# add hh_team columns
+modify$wn <-
+  foverlaps(modify$wn,
+            modify$hh_teams[, unique(.SD),
+                            .SDc = Cs(case_no, hh_team, hh_start, hh_end, days_hh, hh_error)],
+            by.x = c("case_no", "wn_date", "wn_date2"),
+            by.y = c("case_no", "hh_start", "hh_end"))
+# add hh_level (nurse vs no nurse)
+setkey(modify$hh_levels, case_no, L3_start, L3_end)
+modify$wn <-
+  foverlaps(modify$wn,
+            modify$hh_levels[, unique(.SD),
+                             .SDc = Cs(case_no, L3_start, L3_end)],
+            by.x = c("case_no", "wn_date", "wn_date2"),
+            by.y = c("case_no", "L3_start", "L3_end"))
+modify$wn[, wn_date2 := NULL]
+
+# error handling ---
+
+modify$wn_oh <- copy(modify$wn[!is.na(ovr_health)])[, pain := NULL]
+modify$wn_pain <- copy(modify$wn[!is.na(pain)])[, ovr_health := NULL]
+
+# LEFT OFF HERE ----- james 4/4/2016 6:15pm
+modify$wn_oh
+modify$wn_pain
+
+
+
+wn[ovr_health=="No Response" & is.na(pain)]
+wn[, unique(.SD), .SDc = Cs(ovr_health, pain)]
+
+
+
 wn[modify$last_core, Cs(cmh_team, cmh_effdt, cmh_expdt, team_effdt,
   team_expdt, days_cmh) := list(i.cmh_team, i.cmh_effdt,
   i.cmh_expdt, i.team_effdt, i.team_expdt, i.days_cmh), on = "case_no"]
@@ -316,7 +336,7 @@ wn[, wn_date2 := NULL]
 wn[days_hh < input$days_req_hh, error :=
   aux$cat_error(error, paste("days_hh < ", input$days_req_hh))]
 wn[, wn_date := as.Date(wn_date)]
-wn[, age_at_wn := cur_age - as.int(Sys.Date()-wn_date)/365.25]
+wn[, age_at_wn := cur_age - as.integer(Sys.Date()-wn_date)/365.25]
 wn[age_at_wn < 18, error := aux$cat_error(error, "age_at_wn < 18")]
 wn[wn_date < input$cmh_exp_after, error :=
   aux$cat_error(error, paste("wn_date <", input$cmh_exp_after))]
@@ -432,7 +452,7 @@ bp <- foverlaps(bp,
 bp[, vt_date2 := NULL]
 
 bp[cmh_adm, vt_age :=
-               round(as.int(vt_date-i.dob)/365.25, 4), on = "case_no"]
+               round(as.integer(vt_date-i.dob)/365.25, 4), on = "case_no"]
 bp[modify$last_core, Cs(cmh_team, days_cmh) :=
                list(i.cmh_team, i.days_cmh), on = "case_no"]
 bp[days_cmh < input$days_req_cmh, error :=
