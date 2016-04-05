@@ -6,7 +6,7 @@ options(repos = c(CRAN="https://cran.mtu.edu/"),
 aux <- new.env(parent = .GlobalEnv)
 
 aux$packages <- c("xtable", "knitr", "data.table", "ggplot2", "zoo", "xlsx",
-  "RODBC")
+  "RODBC", "reshape")
 
 # lapply(X = aux$packages, FUN = function(x) require(x, character.only = TRUE))
 pkg_loader(packages = aux$packages)

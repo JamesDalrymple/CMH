@@ -272,23 +272,24 @@ modify$bmi <- modify$bmi[!is.na(cmh_team)]
 
 # wellness note: overall health -----------------------------------------------
 modify$wn <- copy(wn)
+modify$wn[, wn_date := as.Date(wn_date)]
 modify$wn <- modify$wn[!is.na(ovr_health) | !is.na(pain)]
 modify$wn[, wn_date2 := wn_date]
 # add cmh_core columns
-setkey(modify$cmh_core, case_no, team_effdt, team_expdt)
+setkeyv(modify$cmh_core, c("case_no", "team_effdt", "team_expdt"))
 modify$wn <-
   foverlaps(modify$wn,
             modify$cmh_core[, unique(.SD),
                             .SDc = Cs(case_no, cmh_effdt, cmh_expdt, cmh_team, team_effdt,
-                                      team_expdt, days_cmh, cmh_error)],
+                                      team_expdt, days_cmh, cmh_error, dob)],
             by.x = c("case_no", "wn_date", "wn_date2"),
             by.y = c("case_no", "team_effdt", "team_expdt"))
-setkey(modify$hh_teams, case_no, hh_start, hh_end)
 # add hh_team columns
+setkeyv(modify$hh_teams, c("case_no", "hh_start", "hh_end"))
 modify$wn <-
   foverlaps(modify$wn,
-            modify$hh_teams[, unique(.SD),
-                            .SDc = Cs(case_no, hh_team, hh_start, hh_end, days_hh, hh_error)],
+    modify$hh_teams[, unique(.SD),
+    .SDc = Cs(case_no, hh_team, hh_start, hh_end, days_hh, hh_error)],
             by.x = c("case_no", "wn_date", "wn_date2"),
             by.y = c("case_no", "hh_start", "hh_end"))
 # add hh_level (nurse vs no nurse)
@@ -300,189 +301,95 @@ modify$wn <-
             by.x = c("case_no", "wn_date", "wn_date2"),
             by.y = c("case_no", "L3_start", "L3_end"))
 modify$wn[, wn_date2 := NULL]
-
-# error handling ---
-
+modify$wn[, wn_age := floor(as.integer(wn_date - dob)/365.25)]
+# oh = overall health
 modify$wn_oh <- copy(modify$wn[!is.na(ovr_health)])[, pain := NULL]
+# pain
 modify$wn_pain <- copy(modify$wn[!is.na(pain)])[, ovr_health := NULL]
 
-# LEFT OFF HERE ----- james 4/4/2016 6:15pm
-modify$wn_oh
-modify$wn_pain
+# error handling ---
+# overall health error handling
+modify$wn_oh[, oh_error := NA_character_]
+modify$wn_oh[!is.na(cmh_error), oh_error := aux$cat_error(oh_error, cmh_error)]
+modify$wn_oh[!is.na(hh_error), oh_error := aux$cat_error(oh_error, hh_error)]
+modify$wn_oh[ovr_health == "No Response",
+             oh_error := aux$cat_error(oh_error, "ovr_health 'no response'")]
+modify$wn_oh[wn_age < 18, oh_error := aux$cat_error(oh_error, "wn_age < 18")]
+modify$wn_oh[wn_date < input$cmh_exp_after, oh_error :=
+               aux$cat_error(oh_error, paste("wn_date <", input$cmh_exp_after))]
+modify$wn_oh[!is.na(ovr_health), ovr_N := .N, by = case_no]
+modify$wn_oh[ovr_N < 2 | is.na(ovr_N),
+  oh_error := aux$cat_error(oh_error, "less than 2 ovr_health")]
+saved$wn_oh <- copy(modify$wn_oh)
+modify$wn_oh[, unique(oh_error)]
+modify$wn_oh <- modify$wn_oh[is.na(oh_error)]
+modify$wn_oh[, Cs(cmh_error, dob, oh_error, cmh_effdt, cmh_expdt, team_effdt,
+  team_expdt):= NULL]
+# pain error handling
+modify$wn_pain[, pain_error := NA_character_]
+modify$wn_pain[!is.na(cmh_error), pain_error := aux$cat_error(oh_error, cmh_error)]
+modify$wn_pain[!is.na(hh_error), pain_error := aux$cat_error(oh_error, hh_error)]
+modify$wn_pain[wn_age < 18, oh_error := aux$cat_error(oh_error, "wn__age < 18")]
+modify$wn_pain[wn_date < input$cmh_exp_after, pain_error :=
+               aux$cat_error(pain_error, paste("wn_date <", input$cmh_exp_after))]
+modify$wn_pain[!is.na(pain), pain_N := .N, by = case_no]
+modify$wn_pain[pain_N < 2 | is.na(pain_N),
+  pain_error := aux$cat_error(pain_error, "less than 2 ovr_health")]
+saved$wn_pain <- copy(modify$wn_pain)
+modify$wn_pain <- modify$wn_pain[is.na(pain_error)]
+modify$wn_pain[, Cs(cmh_error, dob, pain_error, cmh_effdt, cmh_expdt,
+                    team_effdt, team_expdt):= NULL]
 
-
-
-wn[ovr_health=="No Response" & is.na(pain)]
-wn[, unique(.SD), .SDc = Cs(ovr_health, pain)]
-
-
-
-wn[modify$last_core, Cs(cmh_team, cmh_effdt, cmh_expdt, team_effdt,
-  team_expdt, days_cmh) := list(i.cmh_team, i.cmh_effdt,
-  i.cmh_expdt, i.team_effdt, i.team_expdt, i.days_cmh), on = "case_no"]
-wn[cmh_adm, cur_age := i.cur_age, on = "case_no"]
-wn[, error := NA_character_]
-wn[days_cmh < input$days_req_cmh, error :=
-  aux$cat_error(error, paste("days_cmh < ", input$days_req_cmh))]
-wn[, wn_date := as.Date(wn_date)]
-wn[, wn_date2 := wn_date]
-setkey(modify$hh_teams, case_no, hh_effdt, hh_expdt)
-wn <- foverlaps(wn,
-          modify$hh_teams[, unique(.SD),
-                          .SDc = Cs(case_no, hh_effdt, hh_expdt, days_hh)],
-          by.x = c("case_no", "wn_date", "wn_date2"),
-          by.y = c("case_no", "hh_effdt", "hh_expdt"))
-wn[, wn_date2 := NULL]
-wn[days_hh < input$days_req_hh, error :=
-  aux$cat_error(error, paste("days_hh < ", input$days_req_hh))]
-wn[, wn_date := as.Date(wn_date)]
-wn[, age_at_wn := cur_age - as.integer(Sys.Date()-wn_date)/365.25]
-wn[age_at_wn < 18, error := aux$cat_error(error, "age_at_wn < 18")]
-wn[wn_date < input$cmh_exp_after, error :=
-  aux$cat_error(error, paste("wn_date <", input$cmh_exp_after))]
-wn[ovr_health == "No Response", ovr_health := NA_character_]
-wn[!is.na(ovr_health), ovr_N := .N, by = case_no]
-wn[!is.na(pain), pain_N := .N, by = case_no]
-wn[, ovr_error := NA_character_]
-wn[, pain_error := NA_character_]
-wn[ovr_N < 2 | is.na(ovr_N),
-   ovr_error := aux$cat_error(ovr_error, "less than 2 ovr_health")]
-wn[pain_N < 2 | is.na(pain_N),
-   pain_error := aux$cat_error(pain_error, "less than 2 ovr_health")]
-# save copy for data validation/verification
-saved$wn <- copy(wn)
-wn <- wn[is.na(error)]
-wn <- wn[is.na(pain_error) | is.na(ovr_error)]
-wn[, setdiff(names(wn), Cs(case_no, wn_date, ovr_health,
-  pain, cmh_team, hh_effdt, hh_expdt)) := NULL]
-# wn[case_no %in% modify$hh_teams[, unique(case_no)], hh_ever := "Y"]
-modify$wn_ovr <- wn[!is.na(ovr_health)]
-modify$wn_pain <- wn[!is.na(pain)]
-
-# PRE/POST WN: OVR HEALTH -----------------------------------------------------
-modify$wn_pre_post_ovr <-
-  rbindlist(list(
-    modify$wn_ovr[!is.na(hh_effdt),
-               list(group = "HH",
-                    min_wn_ovr = min(wn_date, na.rm = TRUE),
-                    max_wn_ovr = max(wn_date, na.rm = TRUE)),
-               by = case_no],
-    modify$wn_ovr[is.na(hh_effdt),
-               list(group = "non-HH",
-                    min_wn_ovr = min(wn_date, na.rm = TRUE),
-                    max_wn_ovr = max(wn_date, na.rm = TRUE)),
-               by = case_no]), use.names = TRUE)
-modify$wn_pre_post_pain <-
-  rbindlist(list(
-    modify$wn_pain[!is.na(hh_effdt),
-                  list(group = "HH",
-                       min_wn_pain = min(wn_date, na.rm = TRUE),
-                       max_wn_pain = max(wn_date, na.rm = TRUE)),
-                  by = case_no],
-    modify$wn_pain[is.na(hh_effdt),
-                  list(group = "non-HH",
-                       min_wn_pain = min(wn_date, na.rm = TRUE),
-                       max_wn_pain = max(wn_date, na.rm = TRUE)),
-                  by = case_no]), use.names = TRUE)
-modify$wn_pre_post <- merge(modify$wn_pre_post_ovr, modify$wn_pre_post_pain,
-  all = TRUE, by = c("case_no", "group"))
-
-modify$wn_pre_post[wn, pre_ovr := i.ovr_health,
-                   on = c(case_no = "case_no", min_wn_ovr = "wn_date")]
-modify$wn_pre_post[wn, post_ovr := i.ovr_health,
-                   on = c(case_no = "case_no", max_wn_ovr = "wn_date")]
-modify$wn_pre_post[wn, pre_pain := i.pain,
-                   on = c(case_no = "case_no", min_wn_pain = "wn_date")]
-modify$wn_pre_post[wn, post_pain := i.pain,
-                   on = c(case_no = "case_no", max_wn_pain = "wn_date")]
-
-modify$wn_ovr_cases <-
-  modify$wn_pre_post[max_wn_ovr - min_wn_ovr < input$record_dist_req,
-                     unique(case_no)]
-modify$wn_pain_cases <-
-  modify$wn_pre_post[max_wn_pain - min_wn_pain < input$record_dist_req,
-                     unique(case_no)]
-saved$wn[case_no %in% modify$wn_ovr_cases, ovr_error :=
-  aux$cat_error(ovr_error, paste("wn pre/post <", input$record_dist_req))]
-saved$wn[case_no %in% modify$wn_pain_cases, pain_error :=
-  aux$cat_error(pain_error, paste("wn pre/post <", input$record_dist_req))]
-
-modify$wn_pre_post[max_wn_ovr - min_wn_ovr < input$record_dist_req,
-                   Cs(pre_ovr, post_ovr) := list(NA, NA)]
-modify$wn_pre_post[max_wn_pain - min_wn_pain < input$record_dist_req,
-                   Cs(pre_pain, post_pain) := list(NA, NA)]
-modify$wn_pre_post <- modify$wn_pre_post[!is.na(pre_ovr) | !is.na(post_ovr) |
-  !is.na(pre_pain) | !is.na(post_pain)]
-modify$wn_pre_post[, change_ovr := aux$health_compare(pre_ovr, post_ovr)]
-modify$wn_pre_post[, change_pain := aux$pain_compare(pre_pain, post_pain)]
-
-modify$health_imp <-
-  modify$wn_pre_post[!is.na(change_ovr), list(cases_ovr = length(unique(case_no))),
-                     by = list(change_ovr, group)]
-modify$pain_imp <-
-  modify$wn_pre_post[!is.na(change_pain), list(cases_pain = length(unique(case_no))),
-                     by = list(change_pain, group)]
-setnames(modify$health_imp, "change_ovr", "status")
-setnames(modify$pain_imp, "change_pain", "status")
-saved$health_imp <- merge(modify$health_imp, modify$pain_imp,
-                          by = c("status", "group"), all = TRUE)
 # blood pressure --------------------------------------------------------------
-bp <- copy(vitals[, unique(.SD),
+modify$bp <- copy(vitals[, unique(.SD),
                   .SDcols = Cs(case_no, vt_date, diastolic, systolic)])
-bp <- bp[vt_date >= input$cmh_exp_after]
-bp[, error := NA_character_]
-bp[!is.na(diastolic) & is.na(systolic),
-   error := aux$cat_error(error, "missing systolic with known diastolic")]
-bp[is.na(diastolic) & !is.na(systolic),
-   error := aux$cat_error(error, "missing diastolic with known systolic")]
+modify$bp <- modify$bp[vt_date >= input$cmh_exp_after]
+modify$bp[, bp_error := NA_character_]
+modify$bp[is.na(diastolic) & is.na(systolic),
+  bp_error := aux$cat_error(bp_error, "missing both vp values")]
+modify$bp[!is.na(diastolic) & is.na(systolic),
+  bp_error := aux$cat_error(bp_error, "missing systolic with known diastolic")]
+modify$bp[is.na(diastolic) & !is.na(systolic),
+  bp_error := aux$cat_error(bp_error, "missing diastolic with known systolic")]
+modify$bp[!is.na(diastolic) & !is.na(systolic), N_bp := .N, by = case_no]
+modify$bp[N_bp < 2, bp_error :=
+            aux$cat_error(bp_error, "less than 2 BP vt_dates")]
+# bp[, N_bp := NULL]
 
-bp[is.na(diastolic) & is.na(systolic),
-   error := aux$cat_error(error, "missing both vp values")]
-bp[!is.na(diastolic) & !is.na(systolic), N_bp := .N, by = case_no]
-bp[N_bp < 2, error := aux$cat_error(error, "less than 2 BP vt_dates")]
-bp[, N_bp := NULL]
+modify$bp[, vt_date2 := vt_date]
+# add cmh_core cols
+setkeyv(modify$cmh_core, c("case_no", "team_effdt", "team_expdt"))
+modify$bp <- foverlaps(modify$bp,
+        modify$cmh_core[, unique(.SD),
+        .SDc = Cs(case_no, cmh_effdt, cmh_expdt, cmh_team, team_effdt,
+                  team_expdt, days_cmh, cmh_error, dob)],
+        by.x = c("case_no", "vt_date", "vt_date2"),
+        by.y = c("case_no", "team_effdt", "team_expdt"))
+# add hh_teams columns
+setkey(modify$hh_teams, case_no, hh_start, hh_end)
+modify$bp <- foverlaps(modify$bp,
+        modify$hh_teams[, unique(.SD),
+        .SDc = Cs(case_no, hh_team, hh_start, hh_end, days_hh, hh_error)],
+        by.x = c("case_no", "vt_date", "vt_date2"),
+        by.y = c("case_no", "hh_start", "hh_end"))
+# add hh_level (nurse vs no nurse)
+setkey(modify$hh_levels, case_no, L3_start, L3_end)
+modify$bp <-
+  foverlaps(modify$bp,
+            modify$hh_levels[, unique(.SD),
+                             .SDc = Cs(case_no, L3_start, L3_end)],
+            by.x = c("case_no", "vt_date", "vt_date2"),
+            by.y = c("case_no", "L3_start", "L3_end"))
+modify$bp[, vt_date2 := NULL]
+modify$bp[, vt_age :=
+  floor(as.integer(vt_date-dob)/365.25), on = "case_no"]
+modify$bp[vt_age < 18, bp_error := aux$cat_error(bp_error, "vt_age < 18")]
+saved$bp <- copy(modify$bp)
+modify$bp <- modify$bp[is.na(bp_error)]
+modify$bp[, Cs(cmh_effdt, cmh_expdt, hh_start, hh_end, cmh_error,
+               hh_error, dob) := NULL]
 
-bp[, vt_date2 := vt_date]
-setkey(modify$hh_teams, case_no, hh_effdt, hh_expdt)
-bp <- foverlaps(bp,
-                modify$hh_teams[, unique(.SD),
-                                .SDc = Cs(case_no, hh_effdt, hh_expdt, days_hh)],
-                by.x = c("case_no", "vt_date", "vt_date2"),
-                by.y = c("case_no", "hh_effdt", "hh_expdt"))
-bp[, vt_date2 := NULL]
-
-bp[cmh_adm, vt_age :=
-               round(as.integer(vt_date-i.dob)/365.25, 4), on = "case_no"]
-bp[modify$last_core, Cs(cmh_team, days_cmh) :=
-               list(i.cmh_team, i.days_cmh), on = "case_no"]
-bp[days_cmh < input$days_req_cmh, error :=
-  aux$cat_error(error, paste("days_cmh <", input$days_req_cmh))]
-bp[days_cmh < input$days_req_cmh][days_hh >= input$days_req_hh]
-
-
-
-saved$bp <- copy(bp)
-bp <- bp[is.na(error)]
-
-modify$bp_pp <-
-  bp[, list(min_vt = min(vt_date, na.rm = TRUE),
-          max_vt = max(vt_date, na.rm = TRUE)),
-   by = case_no]
-# move out cases with min/max too close
-modify$bp_cases <-
-  modify$bp_pp[max_vt - min_vt < input$record_dist_req, unique(case_no)]
-saved$bp[case_no %in% modify$bp_cases, error :=
-  aux$cat_error(error, paste("min/max diff <", input$record_dist_req))]
-modify$bp_pp <- modify$bp_pp[case_no %nin% modify$bp_cases]
-modify$bp_pp[bp, Cs(min_sys, min_dia) := list(i.systolic, i.diastolic),
-             on = c(case_no = "case_no", min_vt = "vt_date")]
-modify$bp_pp[bp, Cs(max_sys, max_dia) := list(i.systolic, i.diastolic),
-             on = c(case_no = "case_no", max_vt = "vt_date")]
-
-modify$bp_pp
-
-
-# pulse ----------------_v-------------------------------------------------------
+# pulse -----------------------------------------------------------------------
 pulse <- copy(vitals[, unique(.SD), .SDcols = Cs(case_no, vt_date, pulse)])
 # respiration -----------------------------------------------------------------
 resp <- copy(vitals[, unique(.SD),

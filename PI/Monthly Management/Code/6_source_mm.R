@@ -10,9 +10,9 @@ base_wd <- switch(Sys.info()["nodename"],
                   "WSHSQLGP" = "C:/Users/dalrymplej" # county PC
 )
 input <- list(
-  current_month = "February",
+  current_month = "March",
   current_fy = "2016",
-  run_date = "3/1/2016",
+  run_date = "4/5/2016",
   github_wd = file.path(base_wd,
                         "Documents/GitHub/CMH/PI/Monthly Management"),
   dropbox_wd = file.path(base_wd,

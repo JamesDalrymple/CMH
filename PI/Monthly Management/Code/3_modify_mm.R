@@ -12,6 +12,7 @@ state_hosp <- copy(sql$output$state_hosp)
 # state hosp - filter these people out of all reports -------------------------
 modify$state_hosp_cases <- state_hosp[, unique(case_no)]
 # team levels -----------------------------------------------------------------
+# cmh_recode seems to be broken???
 team_levels[, team := cmh_recode(team)]
 setnames(team_levels, "entered_by", "author")
 modify$team_only <- team_levels[author == "all"]
