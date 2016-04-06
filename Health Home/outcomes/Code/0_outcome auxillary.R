@@ -95,6 +95,17 @@ aux$health_compare <- function(pre, post) {
   return(as.chr(comp_lab))
 }
 
+aux$wn_oh_cat <- function(pre_oh, post_oh){
+  pre_oh <- factor(pre_oh, levels = c("Poor", "Fair", "Good", "Excellent"))
+  post_oh <- factor(post_oh, levels = c("Poor", "Fair", "Good", "Excellent"))
+  pre_oh <- as.integer(pre_oh)
+  post_oh <- as.integer(post_oh)
+  diff_oh <- post_oh - pre_oh
+  result <- cut(diff_oh, breaks = c(-Inf, -.1, 0.1, Inf),
+                labels = c("regressed", "maintained", "improved"))
+  return(result)
+}
+
 aux$pain_num <- function(x) {
   x[is.na(x)] <- "No Response"
   as.int(factor(x,
@@ -114,6 +125,27 @@ aux$pain_compare <- function(pre, post) {
 # aux$pain_compare(pre = c(Cs(Mild, Rarely, Chronic, Moderate, Chronic, Severe)),
 #                  post = c(Cs(None, Rarely, Mild, Moderate, Chronic, Severe)))
 
+aux$ovr_health_reduce <- function(x) { # grab worst condition on given day
+  x_fac <- factor(x, levels = c("Poor", "Fair", "Good", "Excellent"), ordered = TRUE)
+  worst_cond <- sort(x_fac)[1]
+  return(as.character(worst_cond))
+}
+# x <- c("Good", "Fair")
+# x <- c("Poor", "Fair", "Good", "Excellent")
+# aux$ovr_health_reduce(x)
+
+# BMI categorization based on 2% rule (per Brandie 4/5/2016)
+aux$bmi_cat <- function(pre_bmi, post_bmi){
+  pp_dt <- data.table(pre_bmi, post_bmi)
+  pp_dt[, bmi_class := ifelse(pre_bmi < 18.5, "bmi < 18.5", "bmi >= 18.5")]
+  pp_dt[, delta_bmi := (post_bmi-pre_bmi)/pre_bmi]
+  pp_dt[abs(delta_bmi) < 0.02, status := "maintained"]
+  pp_dt[delta_bmi < -0.02 & pre_bmi >= 18.5, status := "improved"]
+  pp_dt[delta_bmi < -0.02 & pre_bmi < 18.5, status := "regressed"]
+  pp_dt[delta_bmi > 0.02 & pre_bmi >= 18.5, status := "regressed"]
+  pp_dt[delta_bmi > 0.02 & pre_bmi < 18.5, status := "improved"]
+  return(pp_dt[, status])
+}
 
 aux$outcome_colors <- c("lightcyan1", "lightskyblue")
 aux$my_theme <- theme(legend.position = "top",

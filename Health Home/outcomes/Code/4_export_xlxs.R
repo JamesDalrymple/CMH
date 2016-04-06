@@ -97,6 +97,13 @@
 # writeDoc(hh_doc, file = file.path(project_wd$results,
 #   paste0("outcomes run ", format(input$run_date, "%m_%d_%y"), ".docx")))
 
+### create information about the file to share with end-users ###
+about_file <- data.table(data_source = "E2 report 2281: E2_HH_vs_non_HH_Vital",
+                         date_range = "7/1/14 to date_ran",
+                         date_ran = input$run_date,
+                         last_updated = input$run_date,
+                         project_location = project_wd$project)
+
 # create workbook -------------------------------------------------------------
 wb <- createWorkbook()
 # bold option and underline

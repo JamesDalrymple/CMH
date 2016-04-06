@@ -44,7 +44,8 @@ where county = 'Washtenaw'"
 
 # lab values ---
 sql$query$labs <-
-"select case_no, lab_name, lab_value, lab_result_date as lab_date
+"select distinct
+  case_no, lab_name, lab_value, lab_result_date as lab_date
 from tblE2_Consumers_Lab_Result_Both
 where county = 'Washtenaw'"
 

@@ -1,3 +1,5 @@
+pp <- new.env(parent = .GlobalEnv) # pre-post environment
+
 # Eligibility Summary ---------------------------------------------------------
 # health home vs non-health home ---
 saved$eligible$hh <- modify$eligibility[, .(adm_records = length(case_no),
@@ -5,6 +7,7 @@ saved$eligible$hh <- modify$eligibility[, .(adm_records = length(case_no),
 # non-health home vs health home L1/L2 vs health home L3 ---
 saved$eligible$hh_lev <- modify$eligibility[, .(adm_records = length(case_no),
   consumers = length(unique(case_no))), by = .(e_status, hh_lev_status)]
+
 # health home vs non-health home, by team ---
 saved$eligible$hh_cmh <- modify$eligibility[, .(adm_records = length(case_no),
   consumers = length(unique(case_no))), by = .(e_status, cmh_team, hh_status)]
@@ -13,167 +16,106 @@ saved$eligible$hh_lev_cmh <-
   modify$eligibility[, .(adm_records = length(case_no),
                          consumers = length(unique(case_no))),
                      by = .(e_status, hh_lev_status, cmh_team)]
+
 # PRE/POST BMI ----------------------------------------------------------------
 # health home vs non-health home ---
+pp$bmi$hh <- modify$bmi[, .(pre_dt  = min(vt_date),
+               post_dt = max(vt_date),
+               n_recs = .N),
+           by = .(case_no, adm_pk, hh_pk)]
+pp$bmi$hh[post_dt - pre_dt < input$record_dist_req,
+          error := paste("rec. dist. <", input$record_dist_req)]
+pp$bmi$hh[modify$bmi, pre_bmi := calc_bmi,
+          on = c(case_no = "case_no", pre_dt = "vt_date")]
+pp$bmi$hh[modify$bmi, post_bmi := calc_bmi,
+          on = c(case_no = "case_no", post_dt = "vt_date")]
+saved$pp$bmi$hh  <- copy(pp$bmi$hh)
+pp$bmi$hh <- pp$bmi$hh[is.na(error)]
+pp$bmi$hh[, status := aux$bmi_cat(pre_bmi, post_bmi)]
+pp$bmi$hh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
+pp$bmi$hh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3 ---
+pp$bmi$hh_lev <- modify$bmi[, .(pre_dt  = min(vt_date),
+                               post_dt = max(vt_date),
+                               n_recs = .N),
+           by = .(case_no, adm_pk, hh_pk, L3_pk)]
+pp$bmi$hh_lev[post_dt - pre_dt < input$record_dist_req,
+              error := paste("rec. dist. <", input$record_dist_req)]
+pp$bmi$hh_lev[modify$bmi, pre_bmi := calc_bmi,
+          on = c(case_no = "case_no", pre_dt = "vt_date")]
+pp$bmi$hh_lev[modify$bmi, post_bmi := calc_bmi,
+          on = c(case_no = "case_no", post_dt = "vt_date")]
+saved$pp$bmi$hh_lev  <- copy(pp$bmi$hh_lev)
+pp$bmi$hh_lev <- pp$bmi$hh_lev[is.na(error)]
+pp$bmi$hh_lev[, error := NULL]
+pp$bmi$hh_lev[, status := aux$bmi_cat(pre_bmi, post_bmi)]
+pp$bmi$hh_lev[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
+pp$bmi$hh_lev[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
+pp$bmi$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$bmi$hh_lev[, Cs(adm_pk, hh_pk, L3_pk, pre_dt, post_dt) := NULL]
 # health home vs non-health home, by team ---
+pp$bmi$hh_cmh <- modify$bmi[, .(pre_dt  = min(vt_date),
+                                post_dt = max(vt_date),
+                                n_recs = .N),
+           by = .(case_no, adm_pk, hh_pk, cmh_team)]
+pp$bmi$hh_cmh[post_dt - pre_dt < input$record_dist_req,
+              error := paste("rec. dist. <", input$record_dist_req)]
+pp$bmi$hh_cmh[modify$bmi, pre_bmi := calc_bmi,
+              on = c(case_no = "case_no", pre_dt = "vt_date")]
+pp$bmi$hh_cmh[modify$bmi, post_bmi := calc_bmi,
+              on = c(case_no = "case_no", post_dt = "vt_date")]
+saved$pp$bmi$hh_cmh  <- copy(pp$bmi$hh_cmh)
+pp$bmi$hh_cmh <- pp$bmi$hh_cmh[is.na(error)]
+pp$bmi$hh_cmh[, error := NULL]
+pp$bmi$hh_cmh[, status := aux$bmi_cat(pre_bmi, post_bmi)]
+pp$bmi$hh_cmh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
+pp$bmi$hh_cmh[, Cs(adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3, by team ---
-
-
-
-
-modify$bmi_pre_post <-
-  rbindlist(list(
-    modify$bmi[!is.na(hh_effdt),
-               list(group = "HH",
-                    min_vt = min(vt_date, na.rm = TRUE),
-                    max_vt = max(vt_date, na.rm = TRUE)),
-               by = case_no],
-    modify$bmi[is.na(hh_effdt),
-               list(group = "non-HH",
-                    min_vt = min(vt_date, na.rm = TRUE),
-                    max_vt = max(vt_date, na.rm = TRUE)),
-               by = case_no]), use.names = TRUE)
-
-modify$bmi_pre_post[modify$bmi, Cs(pre_bmi) := list(i.calc_bmi),
-                    on = c(case_no = "case_no", min_vt = "vt_date")]
-modify$bmi_pre_post[modify$bmi,
-                    Cs(post_bmi, last_cmh_team) := list(i.calc_bmi, i.last_cmh_team),
-                    on = c(case_no = "case_no", max_vt = "vt_date")]
-modify$bmi_cases$dist_req_fail <-
-  modify$bmi_pre_post[max_vt - min_vt < input$record_dist_req, unique(case_no)]
-modify$bmi_pre_post <-
-  modify$bmi_pre_post[max_vt - min_vt >= input$record_dist_req]
-saved$bmi[case_no %in% modify$bmi_cases$dist_req_fail,
-          Cs(error, num_bmi_no_error) := list(aux$cat_error(error,
-                                                            paste("bmi pre/post <", input$record_dist_req)),
-                                              as.integer(pmax(num_bmi_no_error-1, 0)))]
-
-# IMPROVEMENT #1: post_bmi > pre_bmi
-modify$bmi_pre_post[post_bmi-pre_bmi>0 & pre_bmi >= 18.5, imp1 := "worsened"]
-modify$bmi_pre_post[post_bmi-pre_bmi>0 & pre_bmi < 18.5, imp1 := "improved"]
-modify$bmi_pre_post[post_bmi-pre_bmi==0, imp1 := "maintained"]
-modify$bmi_pre_post[post_bmi-pre_bmi<0 & pre_bmi >= 18.5, imp1 := "improved"]
-modify$bmi_pre_post[post_bmi-pre_bmi<0 & pre_bmi < 18.5, imp1 := "worsened"]
-# IMPROVEMENT #2: less than 2% diff. = maintain
-modify$bmi_pre_post[abs((post_bmi - pre_bmi)/pre_bmi) <= 0.02,
-                    imp2 := "maintained"]
-modify$bmi_pre_post[((post_bmi - pre_bmi)/pre_bmi) > 0.02 & pre_bmi >= 18.5,
-                    imp2 := "worsened"]
-modify$bmi_pre_post[((post_bmi - pre_bmi)/pre_bmi) < -0.02 & pre_bmi >= 18.5,
-                    imp2 := "improved"]
-modify$bmi_pre_post[((post_bmi - pre_bmi)/pre_bmi) > 0.02 & pre_bmi < 18.5,
-                    imp2 := "improved"]
-modify$bmi_pre_post[((post_bmi - pre_bmi)/pre_bmi) < -0.02 & pre_bmi < 18.5,
-                    imp2 := "worsened"]
-# IMPROVEMENT #3: less than 0.5 BMI diff. = maintain
-modify$bmi_pre_post[abs(post_bmi - pre_bmi) <= 0.5,
-                    imp3 := "maintained"]
-modify$bmi_pre_post[post_bmi - pre_bmi > 0.5 & pre_bmi >= 18.5,
-                    imp3 := "worsened"]
-modify$bmi_pre_post[post_bmi - pre_bmi < -0.5 & pre_bmi >= 18.5,
-                    imp3 := "improved"]
-modify$bmi_pre_post[post_bmi - pre_bmi > 0.5 & pre_bmi < 18.5,
-                    imp3 := "improved"]
-modify$bmi_pre_post[post_bmi - pre_bmi < -0.5 & pre_bmi < 18.5,
-                    imp3 := "worsened"]
-
-modify$bmi_imp1 <- rbindlist(list(
-  modify$bmi_pre_post[,
-                      list(cases_imp1 = length(unique(case_no))), keyby = list(group, imp1)],
-  data.table(group = "HH", imp1 = "hh_eligible", cases_imp1 = modify$hh$eligible)),
-  use.names = TRUE)
-modify$bmi_imp2 <- rbindlist(list(
-  modify$bmi_pre_post[,
-                      list(cases_imp2 = length(unique(case_no))), keyby = list(group, imp2)],
-  data.table(group = "HH", imp2 = "hh_eligible", cases_imp2 = modify$hh$eligible)),
-  use.names = TRUE)
-modify$bmi_imp3 <- rbindlist(list(
-  modify$bmi_pre_post[,
-                      list(cases_imp3 = length(unique(case_no))), keyby = list(group, imp3)],
-  data.table(group = "HH", imp3 = "hh_eligible", cases_imp3 = modify$hh$eligible)),
-  use.names = TRUE)
-setnames(modify$bmi_imp1, "imp1", "status")
-setnames(modify$bmi_imp2, "imp2", "status")
-setnames(modify$bmi_imp3, "imp3", "status")
-saved$bmi_imp <-
-  mmerge(modify$bmi_imp1, modify$bmi_imp2, modify$bmi_imp3, by = c("group", "status"), all = TRUE)
-
-
+pp$bmi$hh_lev_cmh <- modify$bmi[, .(pre_dt  = min(vt_date),
+                                    post_dt = max(vt_date),
+                                    n_recs = .N),
+           by = .(case_no, adm_pk, hh_pk, L3_pk, cmh_team)]
+pp$bmi$hh_lev_cmh[post_dt - pre_dt < input$record_dist_req,
+                  error := paste("rec. dist. <", input$record_dist_req)]
+pp$bmi$hh_lev_cmh[modify$bmi, pre_bmi := calc_bmi,
+              on = c(case_no = "case_no", pre_dt = "vt_date")]
+pp$bmi$hh_lev_cmh[modify$bmi, post_bmi := calc_bmi,
+              on = c(case_no = "case_no", post_dt = "vt_date")]
+saved$pp$bmi$hh_lev_cmh  <- copy(pp$bmi$hh_lev_cmh)
+pp$bmi$hh_lev_cmh <- pp$bmi$hh_lev_cmh[is.na(error)]
+pp$bmi$hh_lev_cmh[, error := NULL]
+pp$bmi$hh_lev_cmh[, status := aux$bmi_cat(pre_bmi, post_bmi)]
+pp$bmi$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
+pp$bmi$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
+pp$bmi$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$bmi$hh_lev_cmh[, Cs(adm_pk, hh_pk, L3_pk, pre_dt, post_dt) := NULL]
 
 # PRE/POST Wellness note overall health ---------------------------------------
 # health home vs non-health home ---
+pp$wn$oh$hh <- modify$wn_oh[, .(pre_dt  = min(wn_date),
+                            post_dt = max(wn_date),
+                            n_recs = .N),
+                        by = .(case_no, adm_pk, hh_pk)]
+pp$wn$oh$hh[post_dt - pre_dt < input$record_dist_req,
+         error := paste("rec. dist. <", input$record_dist_req)]
+pp$wn$oh$hh[modify$wn_oh, pre_oh := ovr_health,
+          on = c(case_no = "case_no", pre_dt = "wn_date")]
+pp$wn$oh$hh[modify$wn_oh, post_oh := ovr_health,
+          on = c(case_no = "case_no", post_dt = "wn_date")]
+saved$pp$wn$oh$hh  <- copy(pp$wn$oh$hh)
+pp$wn$oh$hh <- pp$wn$oh$hh[is.na(error)]
+pp$wn$oh$hh[, status := aux$wn_oh_cat(pre_oh, post_oh)]
+pp$wn$oh$hh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
+pp$wn$oh$hh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
+
+# 4/6/2016 4:34
+
 # non-health home vs health home L1/L2 vs health home L3 ---
 # health home vs non-health home, by team ---
 # non-health home vs health home L1/L2 vs health home L3, by team ---
 
 # PRE/POST WN: OVR HEALTH -----------------------------------------------------
-modify$wn_pre_post_ovr <-
-  rbindlist(list(
-    modify$wn_ovr[!is.na(hh_effdt),
-                  list(group = "HH",
-                       min_wn_ovr = min(wn_date, na.rm = TRUE),
-                       max_wn_ovr = max(wn_date, na.rm = TRUE)),
-                  by = case_no],
-    modify$wn_ovr[is.na(hh_effdt),
-                  list(group = "non-HH",
-                       min_wn_ovr = min(wn_date, na.rm = TRUE),
-                       max_wn_ovr = max(wn_date, na.rm = TRUE)),
-                  by = case_no]), use.names = TRUE)
-modify$wn_pre_post_pain <-
-  rbindlist(list(
-    modify$wn_pain[!is.na(hh_effdt),
-                   list(group = "HH",
-                        min_wn_pain = min(wn_date, na.rm = TRUE),
-                        max_wn_pain = max(wn_date, na.rm = TRUE)),
-                   by = case_no],
-    modify$wn_pain[is.na(hh_effdt),
-                   list(group = "non-HH",
-                        min_wn_pain = min(wn_date, na.rm = TRUE),
-                        max_wn_pain = max(wn_date, na.rm = TRUE)),
-                   by = case_no]), use.names = TRUE)
-modify$wn_pre_post <- merge(modify$wn_pre_post_ovr, modify$wn_pre_post_pain,
-                            all = TRUE, by = c("case_no", "group"))
 
-modify$wn_pre_post[wn, pre_ovr := i.ovr_health,
-                   on = c(case_no = "case_no", min_wn_ovr = "wn_date")]
-modify$wn_pre_post[wn, post_ovr := i.ovr_health,
-                   on = c(case_no = "case_no", max_wn_ovr = "wn_date")]
-modify$wn_pre_post[wn, pre_pain := i.pain,
-                   on = c(case_no = "case_no", min_wn_pain = "wn_date")]
-modify$wn_pre_post[wn, post_pain := i.pain,
-                   on = c(case_no = "case_no", max_wn_pain = "wn_date")]
-
-modify$wn_ovr_cases <-
-  modify$wn_pre_post[max_wn_ovr - min_wn_ovr < input$record_dist_req,
-                     unique(case_no)]
-modify$wn_pain_cases <-
-  modify$wn_pre_post[max_wn_pain - min_wn_pain < input$record_dist_req,
-                     unique(case_no)]
-saved$wn[case_no %in% modify$wn_ovr_cases, ovr_error :=
-           aux$cat_error(ovr_error, paste("wn pre/post <", input$record_dist_req))]
-saved$wn[case_no %in% modify$wn_pain_cases, pain_error :=
-           aux$cat_error(pain_error, paste("wn pre/post <", input$record_dist_req))]
-
-modify$wn_pre_post[max_wn_ovr - min_wn_ovr < input$record_dist_req,
-                   Cs(pre_ovr, post_ovr) := list(NA, NA)]
-modify$wn_pre_post[max_wn_pain - min_wn_pain < input$record_dist_req,
-                   Cs(pre_pain, post_pain) := list(NA, NA)]
-modify$wn_pre_post <- modify$wn_pre_post[!is.na(pre_ovr) | !is.na(post_ovr) |
-                                           !is.na(pre_pain) | !is.na(post_pain)]
-modify$wn_pre_post[, change_ovr := aux$health_compare(pre_ovr, post_ovr)]
-modify$wn_pre_post[, change_pain := aux$pain_compare(pre_pain, post_pain)]
-
-modify$health_imp <-
-  modify$wn_pre_post[!is.na(change_ovr), list(cases_ovr = length(unique(case_no))),
-                     by = list(change_ovr, group)]
-modify$pain_imp <-
-  modify$wn_pre_post[!is.na(change_pain), list(cases_pain = length(unique(case_no))),
-                     by = list(change_pain, group)]
-setnames(modify$health_imp, "change_ovr", "status")
-setnames(modify$pain_imp, "change_pain", "status")
-saved$health_imp <- merge(modify$health_imp, modify$pain_imp,
-                          by = c("status", "group"), all = TRUE)
 
 
 # PRE/POST blood pressure
@@ -198,12 +140,28 @@ modify$bp_pp[bp, Cs(max_sys, max_dia) := list(i.systolic, i.diastolic),
 
 modify$bp_pp
 
+# improvement ---
+modify$output$bp[, c("jama_sys_status", "jama_dia_status") :=
+                   list(aux$jama_eval(sys_jama1, sys_jama2),
+                        aux$jama_eval(dia_jama1, dia_jama2))]
 
 
 
 
-# PRE/POST Lab Values ---------------------------------------------------------
+# PRE/POST Lab Values: Cholesterol --------------------------------------------
 # health home vs non-health home ---
+pp$labs$chol<- modify$labs$chol[, .(pre_dt = min(lab_date),
+                                    post_dt = max(lab_date)),
+                                by = .(case_no, lab_name, adm_pk, hh_pk)]
+pp$labs$chol[modify$labs$chol, pre_value := lab_value,
+             on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$chol[modify$labs$chol, post_value := lab_value,
+             on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$chol[post_dt-pre_dt < input$record_dist_req,
+             error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$chol <- modify$labs$chol[is.na(error)][, error := NULL]
+
+
 # non-health home vs health home L1/L2 vs health home L3 ---
 # health home vs non-health home, by team ---
 # non-health home vs health home L1/L2 vs health home L3, by team ---
