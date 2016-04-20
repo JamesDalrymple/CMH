@@ -163,25 +163,28 @@ aux$health_home_nurse <- c("Achatz, Charles", "Byrd, Kelicia", "Toader, Andreea"
 health_home_staff <- c("Hershberger, Merton", "Rama, Linda")
 
 # cholestoral
+
+
+aux$chol_guide <- data.table(init = c(0, 200, 240), end = c(200, 240, Inf),
+  b_init = c(TRUE, TRUE, FALSE), b_end = c(FALSE, TRUE, FALSE),
+  cat = c("best", "borderline", "poor"))
+
 aux$chol_cut <- function(x) {
   closure_cut(x, breaks = c(i=0, ei = 200, ie = 240, e = Inf),
               label_vec = Cs(best, borderline, poor))
 }
-# glucose (FBS - fasting blood sugar)
-aux$gluc_cut <- function(x) {
-  closure_cut(x, breaks = c(i=0, ei = 70, ei = 100, ei = 125, e = Inf),
-              label_vec = c("low: risky", "acceptable", "high: risky", "very high: risky"))
-}
-aux$gluc_cut(1)
+aux$chol_cut(x = c(199.999, 200))
 
+# glucose (FBS - fasting blood sugar)
 aux$gluc_guide <- data.table(
   init = c(0, 70, 100, 125),
   end = c(70, 100, 125, Inf),
   b_init = rep(TRUE, 4), b_end = rep(FALSE, 4),
   cat = c("too low", "normal", "prediabetes", "diabetes"))
 
+# LEFT OFF HERE
 closure_cut(100, breaks = c(i = 0, ie = 70, ie = 100, ie = 125, e = Inf),
-            label_vec = c("too low", "normal", "prediabetes", "diabetes"))
+            labels = c("too low", "normal", "prediabetes", "diabetes"))
 
 
 
