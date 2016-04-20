@@ -142,15 +142,20 @@ setnames(modify$hh_teams,
 modify$hh_levels <-
   cmh_adm[cmh_team %in% c("Health Home") & assigned_staff %in%
       modify$hh_nurse & staff_type == "SAMHSA Staff", unique(.SD),
-    .SDcols = Cs(case_no, staff_eff, staff_exp)]
+    .SDcols = Cs(case_no, staff_eff, staff_exp, team_effdt, team_expdt)]
 setnames(modify$hh_levels, Cs(staff_eff, staff_exp), Cs(L3_start, L3_end))
-
+modify$hh_levels <- modify$hh_levels[L3_end >= team_effdt | is.na(L3_end)]
+modify$hh_levels[L3_end < team_effdt]
+modify$hh_levels[L3_start < team_effdt, L3_start := team_effdt]
+modify$hh_levels[, Cs(team_effdt, team_expdt) := NULL]
 modify$hh_levels <-
   overlap_combine(data = modify$hh_levels, group_cols = "case_no",
-  start_col = "L3_start", end_col = "L3_end", analysis_date = Sys.Date() + 999)
+  overlap_int = 1L,  start_col = "L3_start", end_col = "L3_end",
+  analysis_date = Sys.Date() + 999)
 setnames(modify$hh_levels, Cs(start_date, end_date), Cs(L3_start, L3_end))
 modify$hh_levels[is.na(L3_end), L3_end := end_col]
 modify$hh_levels[, L3_pk := .GRP, by = .(case_no, L3_start)]
+
 # Eligible CMH/HH table -------------------------------------------------------
 modify$eligibility <- copy(modify$cmh_core)
 modify$eligibility <- modify$eligibility[cmh_effdt >= input$cmh_exp_after |
@@ -356,9 +361,16 @@ if (nrow(modify$wn_pain[duplicated(days_idx)]) > 0) {
 modify$bp <- copy(vitals[, unique(.SD),
                   .SDcols = Cs(case_no, vt_date, diastolic, systolic)])
 modify$bp <- modify$bp[vt_date >= input$cmh_exp_after]
+modify$bp[!is.na(diastolic) | !is.na(systolic),
+  `:=`(diastolic = as.integer(round(mean(diastolic, na.rm = TRUE))),
+       systolic  = as.integer(round(mean(systolic,  na.rm = TRUE)))),
+  by = .(case_no, vt_date)]
+modify$bp <- unique(modify$bp)
 modify$bp[, bp_error := NA_character_]
 modify$bp[is.na(diastolic) & is.na(systolic),
   bp_error := aux$cat_error(bp_error, "missing both vp values")]
+modify$bp[diastolic == 0 & systolic == 0,
+          bp_error := aux$cat_error(bp_error, "missing both vp values")]
 modify$bp[!is.na(diastolic) & is.na(systolic),
   bp_error := aux$cat_error(bp_error, "missing systolic with known diastolic")]
 modify$bp[is.na(diastolic) & !is.na(systolic),
@@ -374,6 +386,11 @@ modify$bp[, `:=`(diastolic = as.integer(round(mean(diastolic))),
    systolic = as.integer(round(mean(systolic)))), by = .(case_no, vt_date)]
 modify$bp <- unique(modify$bp)
 modify$bp[, vt_date2 := vt_date]
+
+modify$bp[case_no == 265717 & systolic == 128 ]
+modify$bp[case_no == 263649 & systolic == 120]
+modify$bp[case_no == 263649 & vt_date == as.Date("2015-03-18")]
+
 # add cmh_core cols
 setkeyv(modify$cmh_core, c("case_no", "team_effdt", "team_expdt"))
 modify$bp <- foverlaps(modify$bp,

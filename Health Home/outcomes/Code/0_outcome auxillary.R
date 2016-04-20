@@ -4,8 +4,10 @@ pkg_loader(packages = c("gdata", "data.table", "zoo", "xlsx", "RODBC",
 
 aux <- new.env(parent = .GlobalEnv)
 
+# used to check if all NA's in vector x ---
 aux$all_na <- function(x) all(is.na(x))
 
+# combine old and new error; new cannot be NA ---
 aux$cat_error <- function(old, new) {
   old[is.na(old)] <- ""
   if (any(is.na(new))) p_stop("new cannot be NA.")
@@ -16,14 +18,17 @@ aux$cat_error <- function(old, new) {
 # new = c("bad2", "bad2", "bad3")
 # aux$cat_error(old, new)
 
+# bmi formula
 aux$calc_bmi <- function(lb, inches) {
   result <- 703*lb/inches^2
   return(result)
 }
-aux$new_bmi <- function(lb, inches) {
-  result <- 5734*lb/inches^2.5
-  return(result)
-}
+
+# a better way to calculate BMI, but not mainstream so not using, per MH ---
+# aux$new_bmi <- function(lb, inches) {
+#   result <- 5734*lb/inches^2.5
+#   return(result)
+# }
 
 # journal of american medical association (JAMA), plus hybrid for missing data
 aux$bp_jama <-
@@ -33,6 +38,7 @@ aux$bp_jama <-
     diastolic = c("0-33", "34-59", "60-89", "90-100", "101+"),
     category = c("emergency hypotension", "hypotension", "normal",
                  "hypertension", "hypotension emergency"))
+
 aux$sys_jama <- function(age, systolic) {
   breaks_under_60 <- c(0, 50, 89, 139, 179, Inf)
   breaks_60_plus <- c(0, 50, 89, 149, 179, Inf)
@@ -55,45 +61,33 @@ aux$dia_jama <- function(age, diastolic) {
   return(dt_dia[, dia_cat])
 }
 
-aux$jama_eval <- function(x1, x2) {
-  jama_cats <- c("emergency hypotension", "hypotension", "normal",
-          "hypertension", "emergency hypertension")
-  jama_dt <-
-    data.table(jama_cats = jama_cats,
-               id = seq_along(jama_cats)-median(seq_along(jama_cats)))
-  input_dt <- data.table(before = x1, after = x2)
-  input_dt[jama_dt, before_id :=  id, on = c(before = "jama_cats")]
-  input_dt[jama_dt, after_id :=  id, on = c(after = "jama_cats")]
-  # categorization
-  input_dt[before_id == after_id, category := "maintained"]
-  input_dt[before_id < 0 & before_id < after_id, category := "improved"]
-  input_dt[before_id < 0 & before_id > after_id, category := "regressed"]
-  input_dt[before_id >= 0 & before_id < after_id, category := "regressed"]
-  input_dt[before_id >= 0 & after_id >= 0 & before_id > after_id,
-           category := "improved"]
-  input_dt[before_id >= 0 & after_id < 0 & before_id > after_id,
-           category := "regressed"]
-  # perhaps this case is a data error? only one case, 12317, 12/10/15
-  input_dt[abs(before_id) == abs(after_id) &
-             (before!=after), category := "maintained"]
-  return(input_dt[, category])
+aux$bp_cat <- function(pre, post) {
+  cat_class = c("emergency hypotension", "hypotension", "normal",
+                "hypertension", "emergency hypertension")
+  cat_diff <- abs(as.int(factor(post, levels = cat_class, labels = -2:2))) -
+    abs(as.int(factor(pre, levels = cat_class, labels = -2:2)))
+  result <- cut(cat_diff, breaks = c(-Inf, -.01, .01, Inf),
+                labels = c("regressed", "maintained", "improved"))
+  return(as.character(result))
 }
 
-aux$health_num <- function(x) {
-  x[is.na(x)] <- "No Response"
-  as.int(factor(x, levels = Cs("No Response", Poor, Fair, Good, Excellent),
-                labels = as.chr(c(9, 1:4))))
-}
+# no longer used ---
+# aux$health_num <- function(x) {
+#   x[is.na(x)] <- "No Response"
+#   as.int(factor(x, levels = Cs("No Response", Poor, Fair, Good, Excellent),
+#                 labels = as.chr(c(9, 1:4))))
+# }
 
-aux$health_compare <- function(pre, post) {
-  post <- aux$health_num(post)
-  pre <- aux$health_num(pre)
-  post[post==9] <- NA
-  pre[pre==9] <- NA
-  comp_lab <- cut(post-pre, breaks = c(-Inf, -.1, 0.1, Inf),
-                  labels = c("worsened", "maintained", "improved"))
-  return(as.chr(comp_lab))
-}
+# no longer used ---
+# aux$health_compare <- function(pre, post) {
+#   post <- aux$health_num(post)
+#   pre <- aux$health_num(pre)
+#   post[post==9] <- NA
+#   pre[pre==9] <- NA
+#   comp_lab <- cut(post-pre, breaks = c(-Inf, -.1, 0.1, Inf),
+#                   labels = c("worsened", "maintained", "improved"))
+#   return(as.chr(comp_lab))
+# }
 
 aux$wn_oh_cat <- function(pre_oh, post_oh){
   pre_oh <- factor(pre_oh, levels = c("Poor", "Fair", "Good", "Excellent"))
@@ -109,11 +103,16 @@ aux$wn_oh_cat <- function(pre_oh, post_oh){
 aux$pain_num <- function(x) {
   x[is.na(x)] <- "No Response"
   as.int(factor(x,
-  levels = Cs("No Response", None, Rarely, Mild, Moderate, Chronic, Severe),
+  levels = Cs("No Response", None, Rarely, Mild, Moderate, Severe, Chronic),
   labels = as.chr(c(9, 6:1))))
 }
 
-aux$pain_compare <- function(pre, post) {
+# x <- c("None", "Moderate", "Chronic", "Mild", "Rarely", "Severe")
+# aux$pain_num(x)
+# aux$pain_cat(pre = "Chronic", post = "Chronic")
+# aux$pain_cat(pre = "Severe", post = "Moderate")
+
+aux$wn_pain_cat <- function(pre, post) {
   post <- aux$pain_num(post)
   pre <- aux$pain_num(pre)
   post[post==9] <- NA
@@ -122,6 +121,7 @@ aux$pain_compare <- function(pre, post) {
                   labels = c("worsened", "maintained", "improved"))
   return(as.chr(comp_lab))
 }
+
 # aux$pain_compare(pre = c(Cs(Mild, Rarely, Chronic, Moderate, Chronic, Severe)),
 #                  post = c(Cs(None, Rarely, Mild, Moderate, Chronic, Severe)))
 
@@ -161,3 +161,72 @@ aux$my_theme <- theme(legend.position = "top",
 aux$health_home_nurse <- c("Achatz, Charles", "Byrd, Kelicia", "Toader, Andreea",
   "Lewis, Destiny", "VanHoeck, Marie", "Fellabaum, Kathleen")
 health_home_staff <- c("Hershberger, Merton", "Rama, Linda")
+
+# cholestoral
+
+
+aux$chol_guide <- data.table(init = c(0, 200, 240), end = c(200, 240, Inf),
+  b_init = c(TRUE, TRUE, FALSE), b_end = c(FALSE, TRUE, FALSE),
+  cat = c("best", "borderline", "poor"))
+
+aux$chol_cut <- function(x) {
+  closure_cut(x, breaks = c(i=0, ei = 200, ie = 240, e = Inf),
+              label_vec = Cs(best, borderline, poor))
+}
+aux$chol_cut(x = c(199.999, 200))
+
+# glucose (FBS - fasting blood sugar)
+aux$gluc_guide <- data.table(
+  init = c(0, 70, 100, 125),
+  end = c(70, 100, 125, Inf),
+  b_init = rep(TRUE, 4), b_end = rep(FALSE, 4),
+  cat = c("too low", "normal", "prediabetes", "diabetes"))
+
+# LEFT OFF HERE
+closure_cut(100, breaks = c(i = 0, ie = 70, ie = 100, ie = 125, e = Inf),
+            labels = c("too low", "normal", "prediabetes", "diabetes"))
+
+
+
+# triglycerides
+aux$trig_guide <- data.table(
+  init = c(0, 150, 200),
+  end = c(150, 200, Inf),
+  b_init = c(TRUE, TRUE, FALSE), b_end = c(FALSE, TRUE, FALSE),
+  cat = Cs(best, borderline, poor))
+# A1C
+aux$a1c_guide <- data.table(
+  init = c(0, 6, 6.5),
+  end = c(6, 6.5, Inf),
+  b_init = rep(TRUE, 3),
+  b_end = rep(FALSE, 3),
+  cat = Cs(normal, prediabetes, diabetes)
+)
+# HDL
+aux$hdl_guide <- data.table(
+  init = c(0, 40, 60),
+  end = c(40, 60, Inf),
+  b_init = c(TRUE, TRUE, FALSE),
+  b_end = c(FALSE, TRUE, FALSE),
+  cat = Cs(poor, borderline, best)
+)
+# LDL
+aux$ldl_guide <- data.table(
+  init = c(0, 100, 160),
+  end = c(100, 160, Inf),
+  b_init = c(TRUE, TRUE, FALSE),
+  b_end = c(FALSE, TRUE, FALSE),
+  cat = Cs(best, borderline, poor)
+)
+
+aux$status <- function(change){
+  ifelse(change > 0, "improved",
+         ifelse(change < 0, "regressed", "maintained"))
+}
+aux$chol_change <- function(pre, post){
+  chol_levels <- c("poor", "borderline", "best")
+  change <-
+    as.integer(factor(post, levels = chol_levels)) -
+    as.integer(factor(pre, levels = chol_levels))
+  aux$status(change)
+}
