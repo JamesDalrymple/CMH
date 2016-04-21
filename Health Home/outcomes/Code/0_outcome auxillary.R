@@ -162,71 +162,97 @@ aux$health_home_nurse <- c("Achatz, Charles", "Byrd, Kelicia", "Toader, Andreea"
   "Lewis, Destiny", "VanHoeck, Marie", "Fellabaum, Kathleen")
 health_home_staff <- c("Hershberger, Merton", "Rama, Linda")
 
-# cholestoral
-
-
-aux$chol_guide <- data.table(init = c(0, 200, 240), end = c(200, 240, Inf),
-  b_init = c(TRUE, TRUE, FALSE), b_end = c(FALSE, TRUE, FALSE),
-  cat = c("best", "borderline", "poor"))
-
+# cholestoral ---
 aux$chol_cut <- function(x) {
   closure_cut(x, breaks = c(i=0, ei = 200, ie = 240, e = Inf),
               label_vec = Cs(best, borderline, poor))
 }
-aux$chol_cut(x = c(199.999, 200))
+# aux$chol_cut(0, 200, 240, 300)
 
-# glucose (FBS - fasting blood sugar)
-aux$gluc_guide <- data.table(
-  init = c(0, 70, 100, 125),
-  end = c(70, 100, 125, Inf),
-  b_init = rep(TRUE, 4), b_end = rep(FALSE, 4),
-  cat = c("too low", "normal", "prediabetes", "diabetes"))
+# glucose (FBS - fasting blood sugar) ---
+aux$gluc_cut <- function(x) {
+  closure_cut(x, breaks = c(i=0, ei = 70, ei = 100, ei = 125, e = Inf),
+              label_vec = c("risky-", "acceptable", "risky+", "very risky+"))
+}
+# aux$gluc_cut(c(0, 70, 100, 125, 300))
 
-# LEFT OFF HERE
-closure_cut(100, breaks = c(i = 0, ie = 70, ie = 100, ie = 125, e = Inf),
-            labels = c("too low", "normal", "prediabetes", "diabetes"))
+# triglycerides ---
+aux$trig_cut <- function(x) {
+  closure_cut(x, breaks = c(i=0, ei = 150, ie = 200, e = Inf),
+              label_vec = Cs(best, borderline, poor))
+}
+# aux$trig_cut(c(0, 150, 200, 220))
 
+# A1-C ---
+aux$a1c_cut <- function(x) {
+  closure_cut(x, breaks = c(i=0, ei = 6, ei = 6.5, e = Inf),
+              label_vec = Cs(normal, risky, "very risky"))
+}
+# aux$a1c_cut(c(0,6,6.5,7))
 
+# HDL ---
+aux$hdl_cut <- function(x) {
+  closure_cut(x, breaks = c(i=0, ei = 40, ie = 60, e = Inf),
+              label_vec = Cs(poor, borderline, best))
+}
+# aux$hdl_cut(c(0, 40, 60, 100))
 
-# triglycerides
-aux$trig_guide <- data.table(
-  init = c(0, 150, 200),
-  end = c(150, 200, Inf),
-  b_init = c(TRUE, TRUE, FALSE), b_end = c(FALSE, TRUE, FALSE),
-  cat = Cs(best, borderline, poor))
-# A1C
-aux$a1c_guide <- data.table(
-  init = c(0, 6, 6.5),
-  end = c(6, 6.5, Inf),
-  b_init = rep(TRUE, 3),
-  b_end = rep(FALSE, 3),
-  cat = Cs(normal, prediabetes, diabetes)
-)
-# HDL
-aux$hdl_guide <- data.table(
-  init = c(0, 40, 60),
-  end = c(40, 60, Inf),
-  b_init = c(TRUE, TRUE, FALSE),
-  b_end = c(FALSE, TRUE, FALSE),
-  cat = Cs(poor, borderline, best)
-)
-# LDL
-aux$ldl_guide <- data.table(
-  init = c(0, 100, 160),
-  end = c(100, 160, Inf),
-  b_init = c(TRUE, TRUE, FALSE),
-  b_end = c(FALSE, TRUE, FALSE),
-  cat = Cs(best, borderline, poor)
-)
+# LDL ---
+aux$ldl_cut <- function(x) {
+  closure_cut(x, breaks = c(i=0, ei=100, ie=160, e = Inf),
+              label_vec = Cs(poor, borderline, best))
+}
+# aux$ldl_cut(c(0,100,160,999))
 
 aux$status <- function(change){
   ifelse(change > 0, "improved",
          ifelse(change < 0, "regressed", "maintained"))
 }
+
 aux$chol_change <- function(pre, post){
   chol_levels <- c("poor", "borderline", "best")
   change <-
     as.integer(factor(post, levels = chol_levels)) -
     as.integer(factor(pre, levels = chol_levels))
+  aux$status(change)
+}
+
+aux$gluc_change <- function(pre, post){
+  gluc_levels <- c("risky-", "acceptable", "risky+", "very risky+")
+  change <-
+    as.integer(factor(post, levels = gluc_levels)) -
+    as.integer(factor(pre, levels = gluc_levels))
+  aux$status(change)
+}
+
+aux$trig_change <- function(pre, post){
+  trig_levels <- c("poor", "borderline", "best")
+  change <-
+    as.integer(factor(post, levels = trig_levels)) -
+    as.integer(factor(pre, levels = trig_levels))
+  aux$status(change)
+}
+
+aux$a1c_change <- function(pre, post){
+  a1c_levels <- Cs(normal, risky, "very risky")
+  change <-
+    as.integer(factor(post, levels = a1c_levels)) -
+    as.integer(factor(pre, levels = a1c_levels))
+  aux$status(change)
+}
+
+aux$hdl_change <- function(pre, post){
+  hdl_levels <- c("poor", "borderline", "best")
+  change <-
+    as.integer(factor(post, levels = hdl_levels)) -
+    as.integer(factor(pre, levels = hdl_levels))
+  aux$status(change)
+}
+
+aux$ldl_change <- function(pre, post){
+  ldl_levels <- c("poor", "borderline", "best")
+  change <-
+    as.integer(factor(post, levels = ldl_levels)) -
+    as.integer(factor(pre, levels = ldl_levels))
   aux$status(change)
 }

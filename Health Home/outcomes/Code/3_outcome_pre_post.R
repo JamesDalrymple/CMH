@@ -332,27 +332,332 @@ pp$bp$hh_lev_cmh[, grep("pre|post|pk|error",
 
 # PRE/POST Lab Values: Cholesterol --------------------------------------------
 # health home vs non-health home ---
-pp$labs$chol<- modify$labs$chol[, .(pre_dt = min(lab_date),
+pp$labs$chol$hh <- modify$labs$chol[, .(pre_dt = min(lab_date),
                                     post_dt = max(lab_date)),
                                 by = .(case_no, lab_name, adm_pk, hh_pk)]
-pp$labs$chol[modify$labs$chol, pre_value := lab_value,
+pp$labs$chol$hh[modify$labs$chol, pre_value := lab_value,
              on = c(case_no = "case_no", pre_dt = "lab_date")]
-pp$labs$chol[modify$labs$chol, post_value := lab_value,
+pp$labs$chol$hh[modify$labs$chol, post_value := lab_value,
              on = c(case_no = "case_no", post_dt = "lab_date")]
-pp$labs$chol[post_dt-pre_dt < input$record_dist_req,
-             error := paste("rec. dist. <", input$record_dist_req)]
-pp$labs$chol <- pp$labs$chol[is.na(error)][, error := NULL]
-pp$labs$chol[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
-setf(pp$labs$chol, j = Cs(pre_cat, post_cat),
-  value = interval_cut, ., guide_dt = aux$chol_guide,
-  closure = aux$chol_guide[, as.matrix(.SD), .SDcols = Cs(b_init, b_end)],
-  category = "cat", interval_names = c("init", "end"), type = "R")
-pp$labs$chol[, status :=
+pp$labs$chol$hh[post_dt-pre_dt < input$record_dist_req,
+  error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$chol$hh <- pp$labs$chol$hh[is.na(error)][, error := NULL]
+pp$labs$chol$hh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$chol$hh, j = Cs(pre_cat, post_cat),
+  value = aux$chol_cut)
+pp$labs$chol$hh[, status :=
   aux$chol_change(pre_cat, post_cat)]
-
 # non-health home vs health home L1/L2 vs health home L3 ---
+pp$labs$chol$hh_lev <- modify$labs$chol[, .(pre_dt = min(lab_date),
+                                    post_dt = max(lab_date)),
+  by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk)]
+pp$labs$chol$hh_lev[modify$labs$chol, pre_value := lab_value,
+             on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$chol$hh_lev[modify$labs$chol, post_value := lab_value,
+             on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$chol$hh_lev[post_dt-pre_dt < input$record_dist_req,
+             error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$chol$hh_lev <- pp$labs$chol$hh_lev[is.na(error)]
+pp$labs$chol$hh_lev[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$chol$hh_lev, j = Cs(pre_cat, post_cat),
+     value = aux$chol_cut)
+pp$labs$chol$hh_lev[, status :=
+               aux$chol_change(pre_cat, post_cat)]
 # health home vs non-health home, by team ---
+pp$labs$chol$hh_cmh <- modify$labs$chol[, .(pre_dt = min(lab_date),
+                                            post_dt = max(lab_date)),
+  by = .(case_no, lab_name, adm_pk, hh_pk, cmh_team)]
+pp$labs$chol$hh_cmh[modify$labs$chol, pre_value := lab_value,
+                    on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$chol$hh_cmh[modify$labs$chol, post_value := lab_value,
+                    on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$chol$hh_cmh[post_dt-pre_dt < input$record_dist_req,
+                    error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$chol$hh_cmh <- pp$labs$chol$hh_lev[is.na(error)]
+pp$labs$chol$hh_cmh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$chol$hh_cmh, j = Cs(pre_cat, post_cat),
+     value = aux$chol_cut)
+pp$labs$chol$hh_cmh[, status :=
+                      aux$chol_change(pre_cat, post_cat)]
 # non-health home vs health home L1/L2 vs health home L3, by team ---
+pp$labs$chol$hh_lev_cmh <- modify$labs$chol[, .(pre_dt = min(lab_date),
+                                            post_dt = max(lab_date)),
+  by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk, cmh_team)]
+pp$labs$chol$hh_lev_cmh[modify$labs$chol, pre_value := lab_value,
+                    on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$chol$hh_lev_cmh[modify$labs$chol, post_value := lab_value,
+                    on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$chol$hh_lev_cmh[post_dt-pre_dt < input$record_dist_req,
+                    error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$chol$hh_lev_cmh <- pp$labs$chol$hh_lev[is.na(error)]
+pp$labs$chol$hh_lev_cmh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$chol$hh_lev_cmh, j = Cs(pre_cat, post_cat),
+     value = aux$chol_cut)
+pp$labs$chol$hh_lev_cmh[, status :=
+                          aux$chol_change(pre_cat, post_cat)]
+# PRE/POST Lab Values: triglycerides ------------------------------------------
+# health home vs non-health home ---
+pp$labs$trig$hh <- modify$labs$trig[, .(pre_dt = min(lab_date),
+                                        post_dt = max(lab_date)),
+                                    by = .(case_no, lab_name, adm_pk, hh_pk)]
+pp$labs$trig$hh[modify$labs$trig, pre_value := lab_value,
+                on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$trig$hh[modify$labs$trig, post_value := lab_value,
+                on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$trig$hh[post_dt-pre_dt < input$record_dist_req,
+                error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$trig$hh <- pp$labs$trig$hh[is.na(error)][, error := NULL]
+pp$labs$trig$hh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$trig$hh, j = Cs(pre_cat, post_cat),
+     value = aux$trig_cut)
+pp$labs$trig$hh[, status :=
+                  aux$trig_change(pre_cat, post_cat)]
+# non-health home vs health home L1/L2 vs health home L3 ---
+pp$labs$trig$hh_lev <- modify$labs$trig[, .(pre_dt = min(lab_date),
+                                            post_dt = max(lab_date)),
+                                        by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk)]
+pp$labs$trig$hh_lev[modify$labs$trig, pre_value := lab_value,
+                    on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$trig$hh_lev[modify$labs$trig, post_value := lab_value,
+                    on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$trig$hh_lev[post_dt-pre_dt < input$record_dist_req,
+                    error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$trig$hh_lev <- pp$labs$trig$hh_lev[is.na(error)]
+pp$labs$trig$hh_lev[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$trig$hh_lev, j = Cs(pre_cat, post_cat),
+     value = aux$trig_cut)
+pp$labs$trig$hh_lev[, status :=
+                      aux$trig_change(pre_cat, post_cat)]
+# health home vs non-health home, by team ---
+pp$labs$trig$hh_cmh <- modify$labs$trig[, .(pre_dt = min(lab_date),
+                                            post_dt = max(lab_date)),
+                                        by = .(case_no, lab_name, adm_pk, hh_pk, cmh_team)]
+pp$labs$trig$hh_cmh[modify$labs$trig, pre_value := lab_value,
+                    on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$trig$hh_cmh[modify$labs$trig, post_value := lab_value,
+                    on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$trig$hh_cmh[post_dt-pre_dt < input$record_dist_req,
+                    error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$trig$hh_cmh <- pp$labs$trig$hh_lev[is.na(error)]
+pp$labs$trig$hh_cmh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$trig$hh_cmh, j = Cs(pre_cat, post_cat),
+     value = aux$trig_cut)
+pp$labs$trig$hh_cmh[, status :=
+                      aux$trig_change(pre_cat, post_cat)]
+# non-health home vs health home L1/L2 vs health home L3, by team ---
+pp$labs$trig$hh_lev_cmh <- modify$labs$trig[, .(pre_dt = min(lab_date),
+                                                post_dt = max(lab_date)),
+                                            by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk, cmh_team)]
+pp$labs$trig$hh_lev_cmh[modify$labs$trig, pre_value := lab_value,
+                        on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$trig$hh_lev_cmh[modify$labs$trig, post_value := lab_value,
+                        on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$trig$hh_lev_cmh[post_dt-pre_dt < input$record_dist_req,
+                        error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$trig$hh_lev_cmh <- pp$labs$trig$hh_lev[is.na(error)]
+pp$labs$trig$hh_lev_cmh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$trig$hh_lev_cmh, j = Cs(pre_cat, post_cat),
+     value = aux$trig_cut)
+pp$labs$trig$hh_lev_cmh[, status :=
+                          aux$trig_change(pre_cat, post_cat)]
+# PRE/POST Lab Values: a1c --------------------------------------------
+# health home vs non-health home ---
+pp$labs$a1c$hh <- modify$labs$a1c[, .(pre_dt = min(lab_date),
+                                        post_dt = max(lab_date)),
+                                    by = .(case_no, lab_name, adm_pk, hh_pk)]
+pp$labs$a1c$hh[modify$labs$a1c, pre_value := lab_value,
+                on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$a1c$hh[modify$labs$a1c, post_value := lab_value,
+                on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$a1c$hh[post_dt-pre_dt < input$record_dist_req,
+                error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$a1c$hh <- pp$labs$a1c$hh[is.na(error)][, error := NULL]
+pp$labs$a1c$hh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$a1c$hh, j = Cs(pre_cat, post_cat),
+     value = aux$a1c_cut)
+pp$labs$a1c$hh[, status :=
+                  aux$a1c_change(pre_cat, post_cat)]
+# non-health home vs health home L1/L2 vs health home L3 ---
+pp$labs$a1c$hh_lev <- modify$labs$a1c[, .(pre_dt = min(lab_date),
+                                            post_dt = max(lab_date)),
+                                        by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk)]
+pp$labs$a1c$hh_lev[modify$labs$a1c, pre_value := lab_value,
+                    on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$a1c$hh_lev[modify$labs$a1c, post_value := lab_value,
+                    on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$a1c$hh_lev[post_dt-pre_dt < input$record_dist_req,
+                    error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$a1c$hh_lev <- pp$labs$a1c$hh_lev[is.na(error)]
+pp$labs$a1c$hh_lev[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$a1c$hh_lev, j = Cs(pre_cat, post_cat),
+     value = aux$a1c_cut)
+pp$labs$a1c$hh_lev[, status :=
+                      aux$a1c_change(pre_cat, post_cat)]
+# health home vs non-health home, by team ---
+pp$labs$a1c$hh_cmh <- modify$labs$a1c[, .(pre_dt = min(lab_date),
+                                            post_dt = max(lab_date)),
+                                        by = .(case_no, lab_name, adm_pk, hh_pk, cmh_team)]
+pp$labs$a1c$hh_cmh[modify$labs$a1c, pre_value := lab_value,
+                    on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$a1c$hh_cmh[modify$labs$a1c, post_value := lab_value,
+                    on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$a1c$hh_cmh[post_dt-pre_dt < input$record_dist_req,
+                    error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$a1c$hh_cmh <- pp$labs$a1c$hh_lev[is.na(error)]
+pp$labs$a1c$hh_cmh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$a1c$hh_cmh, j = Cs(pre_cat, post_cat),
+     value = aux$a1c_cut)
+pp$labs$a1c$hh_cmh[, status :=
+                      aux$a1c_change(pre_cat, post_cat)]
+# non-health home vs health home L1/L2 vs health home L3, by team ---
+pp$labs$a1c$hh_lev_cmh <- modify$labs$a1c[, .(pre_dt = min(lab_date),
+                                                post_dt = max(lab_date)),
+                                            by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk, cmh_team)]
+pp$labs$a1c$hh_lev_cmh[modify$labs$a1c, pre_value := lab_value,
+                        on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$a1c$hh_lev_cmh[modify$labs$a1c, post_value := lab_value,
+                        on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$a1c$hh_lev_cmh[post_dt-pre_dt < input$record_dist_req,
+                        error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$a1c$hh_lev_cmh <- pp$labs$a1c$hh_lev[is.na(error)]
+pp$labs$a1c$hh_lev_cmh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$a1c$hh_lev_cmh, j = Cs(pre_cat, post_cat),
+     value = aux$a1c_cut)
+pp$labs$a1c$hh_lev_cmh[, status :=
+                          aux$a1c_change(pre_cat, post_cat)]
+# PRE/POST Lab Values: hdl ----------------------------------------------------
+# health home vs non-health home ---
+pp$labs$hdl$hh <- modify$labs$hdl[, .(pre_dt = min(lab_date),
+                                      post_dt = max(lab_date)),
+                                  by = .(case_no, lab_name, adm_pk, hh_pk)]
+pp$labs$hdl$hh[modify$labs$hdl, pre_value := lab_value,
+               on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$hdl$hh[modify$labs$hdl, post_value := lab_value,
+               on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$hdl$hh[post_dt-pre_dt < input$record_dist_req,
+               error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$hdl$hh <- pp$labs$hdl$hh[is.na(error)][, error := NULL]
+pp$labs$hdl$hh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$hdl$hh, j = Cs(pre_cat, post_cat),
+     value = aux$hdl_cut)
+pp$labs$hdl$hh[, status :=
+                 aux$hdl_change(pre_cat, post_cat)]
+# non-health home vs health home L1/L2 vs health home L3 ---
+pp$labs$hdl$hh_lev <- modify$labs$hdl[, .(pre_dt = min(lab_date),
+                                          post_dt = max(lab_date)),
+                                      by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk)]
+pp$labs$hdl$hh_lev[modify$labs$hdl, pre_value := lab_value,
+                   on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$hdl$hh_lev[modify$labs$hdl, post_value := lab_value,
+                   on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$hdl$hh_lev[post_dt-pre_dt < input$record_dist_req,
+                   error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$hdl$hh_lev <- pp$labs$hdl$hh_lev[is.na(error)]
+pp$labs$hdl$hh_lev[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$hdl$hh_lev, j = Cs(pre_cat, post_cat),
+     value = aux$hdl_cut)
+pp$labs$hdl$hh_lev[, status :=
+                     aux$hdl_change(pre_cat, post_cat)]
+# health home vs non-health home, by team ---
+pp$labs$hdl$hh_cmh <- modify$labs$hdl[, .(pre_dt = min(lab_date),
+                                          post_dt = max(lab_date)),
+                                      by = .(case_no, lab_name, adm_pk, hh_pk, cmh_team)]
+pp$labs$hdl$hh_cmh[modify$labs$hdl, pre_value := lab_value,
+                   on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$hdl$hh_cmh[modify$labs$hdl, post_value := lab_value,
+                   on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$hdl$hh_cmh[post_dt-pre_dt < input$record_dist_req,
+                   error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$hdl$hh_cmh <- pp$labs$hdl$hh_lev[is.na(error)]
+pp$labs$hdl$hh_cmh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$hdl$hh_cmh, j = Cs(pre_cat, post_cat),
+     value = aux$hdl_cut)
+pp$labs$hdl$hh_cmh[, status :=
+                     aux$hdl_change(pre_cat, post_cat)]
+# non-health home vs health home L1/L2 vs health home L3, by team ---
+pp$labs$hdl$hh_lev_cmh <- modify$labs$hdl[, .(pre_dt = min(lab_date),
+                                              post_dt = max(lab_date)),
+                                          by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk, cmh_team)]
+pp$labs$hdl$hh_lev_cmh[modify$labs$hdl, pre_value := lab_value,
+                       on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$hdl$hh_lev_cmh[modify$labs$hdl, post_value := lab_value,
+                       on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$hdl$hh_lev_cmh[post_dt-pre_dt < input$record_dist_req,
+                       error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$hdl$hh_lev_cmh <- pp$labs$hdl$hh_lev[is.na(error)]
+pp$labs$hdl$hh_lev_cmh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$hdl$hh_lev_cmh, j = Cs(pre_cat, post_cat),
+     value = aux$hdl_cut)
+pp$labs$hdl$hh_lev_cmh[, status :=
+                         aux$hdl_change(pre_cat, post_cat)]
+# PRE/POST Lab Values: ldl ----------------------------------------------------
+# health home vs non-health home ---
+pp$labs$ldl$hh <- modify$labs$ldl[, .(pre_dt = min(lab_date),
+                                      post_dt = max(lab_date)),
+                                  by = .(case_no, lab_name, adm_pk, hh_pk)]
+pp$labs$ldl$hh[modify$labs$ldl, pre_value := lab_value,
+               on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$ldl$hh[modify$labs$ldl, post_value := lab_value,
+               on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$ldl$hh[post_dt-pre_dt < input$record_dist_req,
+               error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$ldl$hh <- pp$labs$ldl$hh[is.na(error)][, error := NULL]
+pp$labs$ldl$hh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$ldl$hh, j = Cs(pre_cat, post_cat),
+     value = aux$ldl_cut)
+pp$labs$ldl$hh[, status :=
+                 aux$ldl_change(pre_cat, post_cat)]
+# non-health home vs health home L1/L2 vs health home L3 ---
+pp$labs$ldl$hh_lev <- modify$labs$ldl[, .(pre_dt = min(lab_date),
+                                          post_dt = max(lab_date)),
+                                      by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk)]
+pp$labs$ldl$hh_lev[modify$labs$ldl, pre_value := lab_value,
+                   on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$ldl$hh_lev[modify$labs$ldl, post_value := lab_value,
+                   on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$ldl$hh_lev[post_dt-pre_dt < input$record_dist_req,
+                   error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$ldl$hh_lev <- pp$labs$ldl$hh_lev[is.na(error)]
+pp$labs$ldl$hh_lev[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$ldl$hh_lev, j = Cs(pre_cat, post_cat),
+     value = aux$ldl_cut)
+pp$labs$ldl$hh_lev[, status :=
+                     aux$ldl_change(pre_cat, post_cat)]
+# health home vs non-health home, by team ---
+pp$labs$ldl$hh_cmh <- modify$labs$ldl[, .(pre_dt = min(lab_date),
+                                          post_dt = max(lab_date)),
+                                      by = .(case_no, lab_name, adm_pk, hh_pk, cmh_team)]
+pp$labs$ldl$hh_cmh[modify$labs$ldl, pre_value := lab_value,
+                   on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$ldl$hh_cmh[modify$labs$ldl, post_value := lab_value,
+                   on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$ldl$hh_cmh[post_dt-pre_dt < input$record_dist_req,
+                   error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$ldl$hh_cmh <- pp$labs$ldl$hh_lev[is.na(error)]
+pp$labs$ldl$hh_cmh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$ldl$hh_cmh, j = Cs(pre_cat, post_cat),
+     value = aux$ldl_cut)
+pp$labs$ldl$hh_cmh[, status :=
+                     aux$ldl_change(pre_cat, post_cat)]
+# non-health home vs health home L1/L2 vs health home L3, by team ---
+pp$labs$ldl$hh_lev_cmh <- modify$labs$ldl[, .(pre_dt = min(lab_date),
+                                              post_dt = max(lab_date)),
+                                          by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk, cmh_team)]
+pp$labs$ldl$hh_lev_cmh[modify$labs$ldl, pre_value := lab_value,
+                       on = c(case_no = "case_no", pre_dt = "lab_date")]
+pp$labs$ldl$hh_lev_cmh[modify$labs$ldl, post_value := lab_value,
+                       on = c(case_no = "case_no", post_dt = "lab_date")]
+pp$labs$ldl$hh_lev_cmh[post_dt-pre_dt < input$record_dist_req,
+                       error := paste("rec. dist. <", input$record_dist_req)]
+pp$labs$ldl$hh_lev_cmh <- pp$labs$ldl$hh_lev[is.na(error)]
+pp$labs$ldl$hh_lev_cmh[, Cs(pre_cat, post_cat) := list(pre_value, post_value)]
+setf(pp$labs$ldl$hh_lev_cmh, j = Cs(pre_cat, post_cat),
+     value = aux$ldl_cut)
+pp$labs$ldl$hh_lev_cmh[, status :=
+                         aux$ldl_change(pre_cat, post_cat)]
+
+
+
 
 # PRE/POST ER visits ----------------------------------------------------------
 # health home vs non-health home ---
