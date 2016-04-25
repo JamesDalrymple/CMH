@@ -573,7 +573,7 @@ labs <- labs[!is.na(cmh_team)]
 # cholesterol
 modify$labs$chol <- labs[lab_name == "CHOL"]
 # glucose
-modify$labs$glu <- labs[lab_name == "GLU"]
+modify$labs$gluc <- labs[lab_name == "GLU"]
 # triglycerides
 modify$labs$trig <- labs[lab_name == "TRIG"]
 # A1C

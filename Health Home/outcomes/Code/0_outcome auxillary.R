@@ -217,13 +217,8 @@ aux$chol_change <- function(pre, post){
   aux$status(change)
 }
 
-aux$gluc_change <- function(pre, post){
-  gluc_levels <- c("risky-", "acceptable", "risky+", "very risky+")
-  change <-
-    as.integer(factor(post, levels = gluc_levels)) -
-    as.integer(factor(pre, levels = gluc_levels))
-  aux$status(change)
-}
+### glucose needs special coding/rules for 'jumpers' ---
+aux$gluc_levels <- c("risky-", "acceptable", "risky+", "very risky+")
 
 aux$trig_change <- function(pre, post){
   trig_levels <- c("poor", "borderline", "best")
