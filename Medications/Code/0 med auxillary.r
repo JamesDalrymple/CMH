@@ -1,6 +1,6 @@
 aux <- new.env(parent = .GlobalEnv)
 
-pkg_loader(c("xlsx"))
+pkg_loader(c("xlsx", "RODBC"))
 
 # search function
 aux$mySearch <- function(x, pattern, ignore.case = TRUE, value=TRUE) {
@@ -123,7 +123,7 @@ aux$aTypical = function(data) {
     AAPclass = c(AAPclass, rep(paste0("AAP",i), length( get(paste0("aap",i) ))))
     aapList = c(aapList, get(paste0("aap", i)))
   }
-  aapDT = data.table(AAPclass=AAPclass, Drug=aapList)
+  aapDT = data.table(AAPclass=AAPclass, drug=aapList)
   return(aapDT)
   }
 
