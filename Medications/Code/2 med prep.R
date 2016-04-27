@@ -37,3 +37,21 @@ prep$adm[, setdiff(names(prep$adm), Cs(case_no, cmh_effdt, cmh_expdt)) := NULL]
 prep$adm <- unique(prep$adm)
 
 # missed meds ir --------------------------------------------------------------
+# missed med ir ---
+prep$ir[, discovery_date := as.Date(discovery_date)]
+prep$ir[, fy := my_fy(discovery_date)]
+prep$ir[, qtr := my_qtr(discovery_date)]
+prep$ir[, short_ven := aux$shortVendor(vendor)]
+prep$ir_full <- copy(prep$ir)
+prep$ir[, setdiff(names(prep$ir),
+  Cs(case_no, short_ven, IR_number, discovery_date, fy, qtr)) := NULL]
+setnames(prep$ir, "short_ven", "vendor")
+# vendor authorizations ---
+prep$vendor_auth[, vendor := aux$shortVendor(vendor)]
+prep$vendor_auth <- setkey(prep$vendor_auth, vendor)[prep$ir[, unique(vendor)], nomatch = 0]
+setf(prep$vendor_auth, j = Cs(auth_eff, auth_exp), as.Date)
+setkey(prep$vendor_auth, auth_eff, auth_exp)
+prep$vendor_auth <-
+  foverlaps(aux$span_dt, prep$vendor_auth,
+          by.x = Cs(span_start, span_end),
+          by.y = Cs(auth_eff, auth_exp))

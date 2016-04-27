@@ -9,8 +9,9 @@ aux$shortVendor <- function(x) {recode_string(x, recode_key =
   list(
     CHS = c("CHS Group LLC.", "CHS"),
     JOAK = c("JOAK", "JOAK American Homes"),
-    INI = c("INI", "INI GROUP LLC (Formerly Micholdings)"),
-    Synod = c("Synod Community Services", "Synod"),
+    INI = c("INI", "INI GROUP LLC (Formerly Micholdings)", "INI GROUP LLC"),
+    Synod = c("Synod Community Services", "Synod",
+              "Synod Residential Services"),
     PPA = c("Partners In Personal Assistance", "PPA"),
     PRS = c("Progressive Residential Services, Inc.", "PRS"),
     Renassance = c("Renaissance House, Inc.", "Renaissance Community Homes Inc",
@@ -26,6 +27,8 @@ aux$shortVendor <- function(x) {recode_string(x, recode_key =
     CRC = c("Community Residence Corp.", "CRC"),
     Spectrum = c("Spectrum Community Services", "Spectrum"),
     `T.Leaf` = c("TURNING LEAF REHABILITATION SERVICES, INC", "T.Leaf"),
+    `Wash CMH` = c("Wash CMH", "Washtenaw County Community Mental Health",
+                   "Washtenaw County Community Mental Health-External"),
     `Comp Svc: DD` =
       c("Comprehensive Services for the Developmentally Disabled",
         "Comp Svc: DD")))

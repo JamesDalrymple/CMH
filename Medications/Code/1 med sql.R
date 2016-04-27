@@ -20,9 +20,9 @@ from encompass.dbo.tblE2_IRs as ir
 left join encompass.dbo.E2_fn_Contracted_Providers('Washtenaw', '%1$s', '%2$s') as prov on
 ir.provider = prov.provider
 where ir.county = 'Washtenaw'
-  and ir.discovery_Date between @startdate and @enddate
+  and ir.discovery_Date between '%1$s' and '%2$s'
   and ir.classification = 'Missed Meds'
-  and ir.Provider_Type not in ( 'SUD Treatment Agency' , 'Vendor' )
+  and ir.Provider_Type not in ( 'SUD Treatment Agency' , 'Vendor')
   and ir.Exclude_from_Reporting is null
 union
 select distinct

@@ -70,3 +70,33 @@ agg$cur_med$results <- data.table(group = c("Benzos", "Stimulants", "Benzo & Sti
                      CMH_consumers = agg$num_con,
                      pct = c(agg$benzo$pct, agg$stim$pct, agg$benzo_stim$pct, agg$anti_psych$pct, agg$anti_depress$pct))
 agg$cur_med$results[, pct := round(pct*100, 2) ]
+
+
+# missed medicaition IRs ------------------------------------------------------
+agg$mm_ir$ven_auth <- prep$vendor_auth[, list(con_auth = length(unique(case_no))),
+                                    by = list(vendor, span_label, span_type)]
+agg$mm_ir$ven_fy <- prep$ir[, list(consumers = length(unique(case_no)),
+                               num_IRs = length(unique(IR_number))),
+                        by = list(vendor, fy)]
+agg$mm_ir$ven_qtr <- prep$ir[, list(consumers = length(unique(case_no)),
+                                num_IRs = length(unique(IR_number))),
+                         by = list(vendor, qtr)]
+agg$mm_ir$ven_comb <- rbindlist(list(
+  agg$mm_ir$ven_fy[agg$mm_ir$ven_auth[span_type == "fy"],
+               on = c("vendor" = "vendor", "fy" = "span_label")],
+  agg$mm_ir$ven_qtr[agg$mm_ir$ven_auth[span_type == "qtr"],
+                on = c("vendor" = "vendor", "qtr" = "span_label")]))
+setnames(agg$mm_ir$ven_comb, "fy", "span_label")
+agg$mm_ir$ven_comb[, span_type := ifelse(grepl("Q", span_label), "qtr", "fy")]
+agg$mm_ir$ven_comb[is.na(consumers), consumers := 0]
+agg$mm_ir$ven_comb[, pct_mm_ir := round(consumers/con_auth*100, 0)]
+agg$mm_ir$ven_comb[, gg_lab :=
+  sprintf("%1$s%% (%2$s/%3$s)", pct_mm_ir, consumers, con_auth)]
+
+agg$mm_ir$con_fy <-prep$ir[, list(num_IRs = length(unique(IR_number))),
+                           by = list(case_no, vendor, fy)]
+agg$mm_ir$con_qtr <- prep$ir[, list(num_IRs = length(unique(IR_number))),
+                             by = list(case_no, vendor, qtr)]
+agg$mm_ir$con_comb <- rbindlist(list(agg$mm_ir$con_fy, agg$mm_ir$con_qtr))
+setnames(agg$mm_ir$con_comb, "fy", "span_label")
+agg$mm_ir$con_comb[, span_type := ifelse(grepl("Q", span_label), "qtr", "fy")]
