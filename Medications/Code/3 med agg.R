@@ -37,26 +37,36 @@ agg$anti_depress$pct <-
   length(agg$anti_depress$cons)/agg$num_con
 agg$anti_depress$drug_dt <-
   prep$cur_meds[antidepress == "Y", list(number_prescribed = .N), by=drug]
+# summary by prescriber ---
+# benzo
+agg$benzo$provider <-
+  prep$cur_meds[!is.na(provider) & (benzo=="Y"), list(
+    num_Benzo_prescribed = length(case_no)), by=list(provider)]
+agg$benzo$provider[, provider := factor(provider,
+  levels = agg$benzo$provider[order(num_Benzo_prescribed), provider] )]
+setorder(agg$benzo$provider, -num_Benzo_prescribed)
+# stimulant
+agg$stim$provider <-
+  prep$cur_meds[!is.na(provider) & (stim=="Y"), list(
+    num_Stimulants_prescribed = length(case_no)), by=list(provider)]
+agg$stim$provider[, provider := factor(provider,
+  levels = agg$stim$provider[order(num_Stimulants_prescribed), provider] )]
+setorder(agg$stim$provider, -num_Stimulants_prescribed)
+# number of benzo's and stimulants per prescriber
+agg$benzo_stim$provider <-
+  setkey(prep$cur_meds, case_no)[J(intersect(agg$benzo$cons, agg$stim$cons)),
+    list(num_benzo_stim_prescribed = length(case_no)), by=list(provider)]
+agg$benzo_stim$provider <- agg$benzo_stim$provider[!is.na(provider)]
+agg$benzo_stim$provider[, provider := factor(provider,
+  levels = agg$benzo_stim$provider[order(num_benzo_stim_prescribed), provider])]
+setorder(agg$benzo_stim$provider, -num_benzo_stim_prescribed)
 
-
-
-### summary by prescriber ###
-### number of benzo's per prescriber ###
-agg_Provider_Benzo <- prep$cur_meds[Provider!="" & (benzo=="Y"), list(num_Benzo_prescribed = length(Case_no)), by=list(Provider)]
-# factor levels
-agg_Provider_Benzo[, Provider := factor(Provider, levels=agg_Provider_Benzo[order(num_Benzo_prescribed), Provider] )]
-# order dataset
-agg_Provider_Benzo <- agg_Provider_Benzo[order(-num_Benzo_prescribed)]
-### number of stimulants per prescriber ###
-agg_Provider_Stim <- prep$cur_meds[Provider!="" & (stimulant=="Y"), list(num_Stimulants_prescribed = length(Case_no)), by=list(Provider)]
-# factor levels
-agg_Provider_Stim[, Provider := factor(Provider, levels=agg_Provider_Stim[order(num_Stimulants_prescribed), Provider] )]
-# order dataset
-agg_Provider_Stim <- agg_Provider_Stim[order(-num_Stimulants_prescribed)]
-### number of benzo's and stimulants per prescriber ###
-agg_benzo_stim <- setkey(prep$cur_meds, Case_no)[J(intersect(benzoCons, stimCons)),  list(num_benzo_stim_prescribed = length(Case_no)), by=list(Provider)]
-agg_benzo_stim <- agg_benzo_stim[Provider!=""]
-# factor levels
-agg_benzo_stim[, Provider := factor(Provider, levels=agg_benzo_stim[order(num_benzo_stim_prescribed), Provider] )]
-# order dataset
-agg_benzo_stim <- agg_benzo_stim[order(-num_benzo_stim_prescribed)]
+# combine aggregated results
+# sleeping AAPs per Pat Cowan on 6/19/2014
+agg$cur_med$results <- data.table(group = c("Benzos", "Stimulants", "Benzo & Stimulants",
+                               "antipysch 2 or more", "antidepress 2 or more"),
+                     consumers = c(length(agg$benzo$cons), length(agg$stim$cons), length(agg$benzo_stim$cons),
+                                   length(agg$anti_psych$con), length(agg$anti_depress$con)),
+                     CMH_consumers = agg$num_con,
+                     pct = c(agg$benzo$pct, agg$stim$pct, agg$benzo_stim$pct, agg$anti_psych$pct, agg$anti_depress$pct))
+agg$cur_med$results[, pct := round(pct*100, 2) ]

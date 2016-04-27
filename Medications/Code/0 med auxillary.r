@@ -1,6 +1,36 @@
 aux <- new.env(parent = .GlobalEnv)
 
-pkg_loader(c("xlsx", "RODBC"))
+pkg_loader(c("xlsx", "gridExtra", "RODBC", "ReporteRs"))
+
+
+aux$span_dt <- date_expansion(start = input$start_dt, end = input$end_dt,
+                              type = c("qtr", "fy"))
+aux$shortVendor <- function(x) {recode_string(x, recode_key =
+  list(
+    CHS = c("CHS Group LLC.", "CHS"),
+    JOAK = c("JOAK", "JOAK American Homes"),
+    INI = c("INI", "INI GROUP LLC (Formerly Micholdings)"),
+    Synod = c("Synod Community Services", "Synod"),
+    PPA = c("Partners In Personal Assistance", "PPA"),
+    PRS = c("Progressive Residential Services, Inc.", "PRS"),
+    Renassance = c("Renaissance House, Inc.", "Renaissance Community Homes Inc",
+                   "Renaissance"),
+    CSS = c("Catholic Social Services of Washtenaw Co", "CSS"),
+    Quest = c("QUEST INC", "Quest"),
+    ALS = c("Adult Learning Systems- Master", "ALS"),
+    CSI = c("CONSUMER SERVICES, INC", "CSI"),
+    Real = c("Real Life Living Services, Inc.", "Real"),
+    HEIOTS = c("His Eye is on the Sparrow", "HEIOTS"),
+    Macomb = c("Macomb Residential Opportunities - Master", "Macomb"),
+    CRC = c("Community Residence Corp.", "CRC"),
+    Spectrum = c("Spectrum Community Services", "Spectrum"),
+    `T.Leaf` = c("TURNING LEAF REHABILITATION SERVICES, INC", "T.Leaf"),
+    `Comp Svc: DD` =
+      c("Comprehensive Services for the Developmentally Disabled",
+        "Comp Svc: DD")))
+}
+
+aux$shortVendor("CHS Group LLC.")
 
 # search function
 aux$mySearch <- function(x, pattern, ignore.case = TRUE, value=TRUE) {
