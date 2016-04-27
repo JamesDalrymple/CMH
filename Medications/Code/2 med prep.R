@@ -2,9 +2,8 @@ prep <- new.env(parent = .GlobalEnv)
 
 prep$adm <- copy(sql$output$cmh_adm)
 prep$ir <- copy(sql$output$ir)
+prep$vendor_auth <- copy(sql$output$vendor_auth)
 prep$cur_meds <- copy(sql$output$cur_meds)
-prep$ir_detail <- copy(sql$output$ir_detail)
-prep$ir_full <- copy(sql$output$ir_full)
 
 # current medications ---------------------------------------------------------
 prep$cur_meds[, drug := tolower(drug)] #lowercase
@@ -38,14 +37,3 @@ prep$adm[, setdiff(names(prep$adm), Cs(case_no, cmh_effdt, cmh_expdt)) := NULL]
 prep$adm <- unique(prep$adm)
 
 # missed meds ir --------------------------------------------------------------
-# intialize datasets to hold entire fiscal year data
-prep$fy_summary_red <- prep$fy_summary_full <-
-  data.table(vendor_short = character(), num_authorized = integer(),
-             num_ir_cases = integer(), num_IRs = integer(),
-             pct_con_IRs = numeric(), qtr = character())
-prep$for_review <- data.table(auth_case_no = numeric(), vendor_short = character(),
-                         mm_ir_cases = integer(), num_IRs = integer(),
-                         qtr = character(), vendor_name = character())
-prep$mm_plots <- NULL
-prep$v_names <- data.table(vendor_name = character(), vendor_short = character())
-

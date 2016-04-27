@@ -14,11 +14,46 @@ where county = 'Washtenaw'"
 
 # IR report 2076 ---
 sql$query$ir <- sprintf("select distinct
-CodeCategory as code_cat, classification as classify, ir_number as ir_num,
-discovery_Date as disc_dt, occurrence_Date as occ_dt, case_no,
-ir_status, provider, consumer_role, team_at_service, primary_staff, author
-from encompass..E2_Fn_Incident_Report_by_Reviewers('Washtenaw', '%1$s', '@%2$s')",
+	ir.case_no, isNULL(prov.vendor, ir.provider) as vendor,
+  ir.IR_number, ir.discovery_date, ir.begintime, ir.endtime, ir.whathappened
+from encompass.dbo.tblE2_IRs as ir
+left join encompass.dbo.E2_fn_Contracted_Providers('Washtenaw', '%1$s', '%2$s') as prov on
+ir.provider = prov.provider
+where ir.county = 'Washtenaw'
+  and ir.discovery_Date between @startdate and @enddate
+  and ir.classification = 'Missed Meds'
+  and ir.Provider_Type not in ( 'SUD Treatment Agency' , 'Vendor' )
+  and ir.Exclude_from_Reporting is null
+union
+select distinct
+  ir.case_no, ir.provider as vendor, ir.IR_number, ir.discovery_date,
+  ir.begintime, ir.endtime, ir.whathappened
+from encompass.dbo.tblE2_IRs as ir
+where ir.county = 'Washtenaw'
+  and ir.discovery_date between '%1$s' and '%2$s'
+  and ir.classification = 'Missed Meds'
+  and ir.provider_type = 'Vendor' and ir.Exclude_from_Reporting is null",
         input$start_dt, input$end_dt)
+
+sql$query$vendor_auth <- sprintf("select distinct
+	auth.auth_eff, auth.auth_exp,
+	isNull(prov.vendor, auth.pr_name) as vendor, auth.case_no
+from encompass.dbo.tblE2_Auth_Approved as auth
+left join encompass.dbo.E2_fn_Contracted_Providers('Washtenaw', '%1$s', '%2$s')
+  as prov	on auth.pr_name = prov.provider
+where
+	auth.Provider_Type in ('Contracted Service Location', 'Hospital') and
+	auth.county = 'Washtenaw' and (auth.auth_eff <= '%2$s' and
+  auth.auth_exp >= '%1$s')
+union
+select distinct
+	cls.ca_effdt as auth_eff, cls.ca_expdt as auth_exp,
+	isNull(prov.vendor, cls.service_provider) as vendor, cls.case_no
+from encompass.dbo.tblE2_CLS_Consumers_Auth_E2 as cls
+left join encompass.dbo.E2_fn_Contracted_Providers('Washtenaw', '%1$s', '%2$s')
+  as prov	on cls.Service_Provider = prov.provider
+where cls.county = 'Washtenaw' and cls.CA_EFFDT <= '%2$s' and
+  cls.CA_EXPDT > '%1$s'", input$start_dt, input$end_dt)
 
 # current medications
 sql$query$cur_meds <-
@@ -30,14 +65,6 @@ from tblE2_CMH_Open_Consumers_w_OBRA CMH
 left join tblE2_Consumer_Current_Medications_HIT Med on Med.Case_No = CMH.Case_No
 left join tblE2_Consumer_Ins_Current2 INS on CMH.Case_No = INS.Case_No
 where cmh.County = 'Washtenaw'"
-
-sql$query$ir_detail <-
-  sprintf("select * from james_csts.dbo.jd_ir_detail('%1$s', '%2$s')",
-          input$start_dt, input$end_dt)
-# full detail for personal review and drilldown
-sql$query$ir_full <-
-  sprintf("select * from james_csts.dbo.jd_ir_full_detail('%1$s', '%2$s')",
-          input$start_dt, input$end_dt)
 
 sql$output <- sapply(
   names(sql$query),

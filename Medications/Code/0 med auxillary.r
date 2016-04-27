@@ -20,7 +20,8 @@ aux$shortVendor <- function(x) {recode_string(x, recode_key =
     ALS = c("Adult Learning Systems- Master", "ALS"),
     CSI = c("CONSUMER SERVICES, INC", "CSI"),
     Real = c("Real Life Living Services, Inc.", "Real"),
-    HEIOTS = c("His Eye is on the Sparrow", "HEIOTS"),
+    HEIOTS = c("His Eye is on the Sparrow", "HEIOTS",
+               'His Eye is on the Sparrow- Marblewood'),
     Macomb = c("Macomb Residential Opportunities - Master", "Macomb"),
     CRC = c("Community Residence Corp.", "CRC"),
     Spectrum = c("Spectrum Community Services", "Spectrum"),
@@ -29,8 +30,6 @@ aux$shortVendor <- function(x) {recode_string(x, recode_key =
       c("Comprehensive Services for the Developmentally Disabled",
         "Comp Svc: DD")))
 }
-
-aux$shortVendor("CHS Group LLC.")
 
 # search function
 aux$mySearch <- function(x, pattern, ignore.case = TRUE, value=TRUE) {

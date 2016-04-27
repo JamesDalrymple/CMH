@@ -15,7 +15,7 @@ excel$cs_cur <-
   CellStyle(excel$wb_cur) + Font(excel$wb_cur, isBold = TRUE) + Border()
 # create current medication detail sheet ---
 excel$sheet$med <- createSheet(excel$wb_cur, sheetName = "current med detail")
-addDataFrame(x = prep$cur_meds, sheet = med_sheet, showNA = FALSE,
+addDataFrame(x = prep$cur_meds, sheet = excel$sheet$med, showNA = FALSE,
   row.names = FALSE, startRow = 1, startColumn = 1,
   colnamesStyle = excel$cs_cur)
 # create aggregated data ---
