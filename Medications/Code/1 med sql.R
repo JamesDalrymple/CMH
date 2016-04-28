@@ -5,33 +5,37 @@ sql <- list(
 
 # CMH admissions ---
 sql$query$cmh_adm <-
-  "select distinct
+  sprintf("select distinct
 case_no, team2 as team, cmh_effdt, cmh_expdt, team_effdt, team_expdt
 from encompass.dbo.tblE2_CMH_Adm_Consumers_w_OBRA
-where county = 'Washtenaw'"
+where county = 'Washtenaw' and cmh_effdt <= '%2$s' and (cmh_expdt >= '%1$s' or cmh_expdt is null)",
+          input$start_dt, input$end_dt)
 # staff_eff, staff_exp, assigned_staff, staff_type, supervisor as current_sup
 
 
 # IR report 2076 ---
 sql$query$ir <- sprintf("select distinct
 	ir.case_no, isNULL(prov.vendor, ir.provider) as vendor,
-  ir.IR_number, ir.discovery_date, ir.begintime, ir.endtime, ir.whathappened
+  ir.IR_number, ir.discovery_date, ir.begintime, ir.endtime, ir.classification,
+  ir.whathappened
 from encompass.dbo.tblE2_IRs as ir
 left join encompass.dbo.E2_fn_Contracted_Providers('Washtenaw', '%1$s', '%2$s') as prov on
 ir.provider = prov.provider
 where ir.county = 'Washtenaw'
   and ir.discovery_Date between '%1$s' and '%2$s'
-  and ir.classification = 'Missed Meds'
+  and ir.classification in ('Missed Meds', 'Pharmacy error', 'Refused Meds',
+    'Wrong dose', 'Wrong med', 'Double dose')
   and ir.Provider_Type not in ( 'SUD Treatment Agency' , 'Vendor')
   and ir.Exclude_from_Reporting is null
 union
 select distinct
   ir.case_no, ir.provider as vendor, ir.IR_number, ir.discovery_date,
-  ir.begintime, ir.endtime, ir.whathappened
+  ir.begintime, ir.endtime, ir.classification, ir.whathappened
 from encompass.dbo.tblE2_IRs as ir
 where ir.county = 'Washtenaw'
   and ir.discovery_date between '%1$s' and '%2$s'
-  and ir.classification = 'Missed Meds'
+  and ir.classification in ('Missed Meds', 'Pharmacy error', 'Refused Meds',
+    'Wrong dose', 'Wrong med', 'Double dose')
   and ir.provider_type = 'Vendor' and ir.Exclude_from_Reporting is null",
         input$start_dt, input$end_dt)
 
