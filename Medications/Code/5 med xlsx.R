@@ -13,6 +13,10 @@ excel$wb <- createWorkbook()
 # bold option and underline
 excel$cs <-
   CellStyle(excel$wb) + Font(excel$wb, isBold = TRUE) + Border()
+# medication incidents
+excel$sheet$med_inc <- createSheet(excel$wb, sheetName = "med incidents")
+addDataFrame(x = agg$med_inc$comb, sheet = excel$sheet$med_inc, showNA = FALSE,
+  row.names = FALSE, startRow = 1, startColumn = 1, colnamesStyle = excel$cs)
 # create missed medication IR vendor sheet ---
 excel$sheet$mm_ir$vendor <- createSheet(excel$wb, sheetName = "missed med IR vendor")
 addDataFrame(x = agg$mm_ir$ven_comb, sheet = excel$sheet$mm_ir$vendor, showNA = FALSE,
@@ -95,6 +99,11 @@ excel$sheet$info <- createSheet(excel$wb, sheetName = "data info")
 addDataFrame(x = excel$aboutFile, sheet = excel$sheet$info, showNA = FALSE,
   row.names = TRUE, col.names = FALSE, startRow = 1, startColumn = 1,
   rownamesStyle = excel$cs)
+# saving document
+if (!dir.exists(proj_wd$results)) {
+  dir.create(proj_wd$results)
+  p_msg("directory created", proj_wd$results)
+}
 # save workbook ---
-saveWorkbook(wb = excel$wb, file = file.path(proj_wd$cur_res,
+saveWorkbook(wb = excel$wb, file = file.path(proj_wd$results,
   paste("current medicines ", input$today, ".xlsx", sep="")))

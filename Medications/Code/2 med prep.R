@@ -31,7 +31,6 @@ setkey(prep$cur_meds, drug)[J(prep$cur_antipysch ), antiPysch := "Y"]
 prep$cur_antidepress <- aux$mySearch(x = prep$all_meds,
                                      pattern = aux$antidepressList)
 setkey(prep$cur_meds, drug)[J(prep$cur_antidepress), antidepress := "Y"]
-
 # open consumers --------------------------------------------------------------
 # prep$adm[, setdiff(names(prep$adm), Cs(case_no, cmh_effdt, cmh_expdt)) := NULL]
 prep$adm[, team := cmh_recode(team)]
@@ -43,7 +42,6 @@ setkey(prep$adm, cmh_effdt, cmh_expdt)
 prep$adm <- foverlaps(aux$span_dt, prep$adm,
           by.x = Cs(span_start, span_end),
           by.y = Cs(cmh_effdt, cmh_expdt))
-
 # missed meds ir and medication incidents -------------------------------------
 # missed med ir ---
 prep$ir[, discovery_date := as.Date(discovery_date)]

@@ -1,6 +1,6 @@
 aux <- new.env(parent = .GlobalEnv)
 
-pkg_loader(c("xlsx", "gridExtra", "RODBC", "ReporteRs"))
+pkg_loader(c("xlsx", "gridExtra", "RODBC", "ReporteRs", "RColorBrewer"))
 
 
 aux$span_dt <- date_expansion(start = input$start_dt, end = input$end_dt,
@@ -33,6 +33,9 @@ aux$shortVendor <- function(x) {recode_string(x, recode_key =
       c("Comprehensive Services for the Developmentally Disabled",
         "Comp Svc: DD")))
 }
+
+aux$colors <- RColorBrewer::brewer.pal(4, "Blues")
+
 
 # search function
 aux$mySearch <- function(x, pattern, ignore.case = TRUE, value=TRUE) {

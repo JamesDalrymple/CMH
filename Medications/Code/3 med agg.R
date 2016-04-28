@@ -108,10 +108,17 @@ setnames(agg$mm_ir$con_comb, "fy", "span_label")
 agg$mm_ir$con_comb[, span_type := ifelse(grepl("Q", span_label), "qtr", "fy")]
 
 # medication incidents (medication related IRs) -------------------------------
-agg$med_incidents <- rbindlist(list(
+
+
+agg$med_inc$comb <- rbindlist(list(
   prep$ir[, list(cases = length(unique(case_no)),
                  incidents = length(unique(IR_number))),
           by = .(qtr, classification)],
   prep$ir[, list(cases = length(unique(case_no)),
                  incidents = length(unique(IR_number))),
           by = .(fy, classification)]))
+setnames(agg$med_inc$comb, "qtr", "span_label")
+agg$med_inc$comb <- agg$med_inc$comb[agg$num_con, on = c("span_label")]
+agg$med_inc$comb[, pct_incidents := cases/consumers]
+agg$med_inc$qtr <- agg$med_inc$comb[span_type == "qtr"]
+agg$med_inc$fy <- agg$med_inc$comb[span_type == "fy"]
