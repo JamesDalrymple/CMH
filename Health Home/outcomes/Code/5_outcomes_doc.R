@@ -10,25 +10,25 @@ hh_doc <- addPageBreak(hh_doc)
 # Graphs ----------------------------------------------------------------------
 hh_doc <- addTitle(hh_doc, value = "HH vs CMH only", level = 3)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-                  fun = function() print(cmg$graphs$hh), width = 6.5, height = 8.5)
+                  fun = function() print(cmg$graphs$hh), width = 6.75, height = 8.5)
 hh_doc <- addPageBreak(hh_doc)
 hh_doc <- addTitle(hh_doc, value = "HH with Levels vs CMH only", level = 3)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-                  fun = function() print(cmg$graphs$hh_lev), width = 6.5, height = 8.5)
+                  fun = function() print(cmg$graphs$hh_lev), width = 6.75, height = 8.5)
 hh_doc <- addPageBreak(hh_doc)
 hh_doc <- addTitle(hh_doc, value = "HH with Levels vs CMH only by Team", level = 3)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(cmg$graphs$hh_lev_cmh$MI), width = 6.5, height = 8.5)
+  fun = function() print(cmg$graphs$hh_lev_cmh$MI), width = 6.75, height = 8.5)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(cmg$graphs$hh_lev_cmh$ACT), width = 6.5, height = 8.5)
+  fun = function() print(cmg$graphs$hh_lev_cmh$ACT), width = 6.75, height = 8.5)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(cmg$graphs$hh_lev_cmh$Child), width = 6.5, height = 8.5)
+  fun = function() print(cmg$graphs$hh_lev_cmh$Child), width = 6.75, height = 8.5)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(cmg$graphs$hh_lev_cmh$`Child HB`), width = 6.5, height = 8.5)
+  fun = function() print(cmg$graphs$hh_lev_cmh$`Child HB`), width = 6.75, height = 8.5)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(cmg$graphs$hh_lev_cmh$DD), width = 6.5, height = 8.5)
+  fun = function() print(cmg$graphs$hh_lev_cmh$DD), width = 6.75, height = 8.5)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(cmg$graphs$hh_lev_cmh$Access), width = 6.5, height = 8.5)
+  fun = function() print(cmg$graphs$hh_lev_cmh$Access), width = 6.75, height = 8.5)
 hh_doc <- addPageBreak(hh_doc)
 # save document ---------------------------------------------------------------
 writeDoc(hh_doc, file = file.path(project_wd$results,

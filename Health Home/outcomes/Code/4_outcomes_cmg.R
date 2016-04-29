@@ -147,10 +147,10 @@ cmg$meltc[cat == "hh", ggplot(data = .SD,
   aes(x = imp_status, y = cases, fill = hh_cat, ymax = 1.2*cases))+
     geom_bar(stat = "identity", position = position_dodge(0.5), width = 0.5,
              color = "black")+
-    theme_light()+
+    theme_light()+theme(legend.position = "top")+
     facet_wrap(~ var, as.table = FALSE, ncol = 3)+
     geom_text(aes(x = imp_status, y = cases, fill = hh_cat, label = cases, hjust = 0.5),
-              position = position_dodge(0.5), hjust = -0.5, size = 2.5)+
+              position = position_dodge(0.5), hjust = -0.5, size = 3)+
     coord_flip()+
     scale_fill_manual(name = NULL, values = aux$colors[c(1:4)])+
     labs(x = NULL, y = "number of consumers",
@@ -161,23 +161,14 @@ cmg$graphs[['hh_lev']] <-
                                 aes(x = imp_status, y = cases, fill = hh_cat, ymax = 1.2*cases))+
               geom_bar(stat = "identity", position = position_dodge(0.5), width = 0.5,
                        color = "black")+
-              theme_light()+
+              theme_light()+theme(legend.position = "top")+
               facet_wrap(~ var, as.table = FALSE, ncol = 3)+
               geom_text(aes(x = imp_status, y = cases, fill = hh_cat, label = cases, hjust = 0.5),
-                        position = position_dodge(0.5), hjust = -0.5, size = 2.5)+
+                        position = position_dodge(0.5), hjust = -0.5, size = 3)+
               coord_flip()+
               scale_fill_manual(name = NULL, values = aux$colors[c(1:4)])+
               labs(x = NULL, y = "number of consumers",
                    title = "Health Home w/ Levels vs CMH")]
-
-make_plot <- function(dat, grp.name) {
-  print(
-    ggplot(dat, aes(x=x, y=y)) +
-      geom_point() + labs(title=paste0("Group: ", grp.name$grp))
-  )
-  NULL
-}
-DT[, make_plot(.SD, .BY), by=grp]
 
 aux$cmh_teams <- c("ACT", "Access", "Child", "Child HB", "DD", "MI")
 # hh_cmh graphs by team
@@ -188,11 +179,11 @@ cmg$graphs[['hh_cmh']] <-
            aes(x = imp_status, y = cases, fill = hh_cat, ymax = 1.2*cases))+
       geom_bar(stat = "identity", position = position_dodge(0.5), width = 0.5,
                color = "black")+
-      theme_light()+
+      theme_light()+theme(legend.position = "top")+
       facet_wrap(~ var, as.table = FALSE, ncol = 3)+
       geom_text(aes(x = imp_status, y = cases, fill = hh_cat,
                     label = cases, hjust = 0.5),
-                position = position_dodge(0.5), hjust = -0.5, size = 2.5)+
+                position = position_dodge(0.5), hjust = -0.5, size = 3)+
       coord_flip()+
       scale_fill_manual(name = NULL, values = aux$colors[c(1:4)])+
       labs(x = NULL, y = "number of consumers",
@@ -207,11 +198,11 @@ cmg$graphs[['hh_lev_cmh']] <-
                   aes(x = imp_status, y = cases, fill = hh_cat, ymax = 1.2*cases))+
              geom_bar(stat = "identity", position = position_dodge(0.5), width = 0.5,
                       color = "black")+
-             theme_light()+
+             theme_light()+theme(legend.position = "top")+
              facet_wrap(~ var, as.table = FALSE, ncol = 3)+
              geom_text(aes(x = imp_status, y = cases, fill = hh_cat,
                            label = cases, hjust = 0.5),
-                       position = position_dodge(0.5), hjust = -0.5, size = 2.5)+
+                       position = position_dodge(0.5), hjust = -0.5, size = 3)+
              coord_flip()+
              scale_fill_manual(name = NULL, values = aux$colors[c(1:4)])+
              labs(x = NULL, y = "number of consumers",
