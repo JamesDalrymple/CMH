@@ -1,8 +1,10 @@
 ### fund only auxillary ###
 pkg_loader(packages = c("gdata", "data.table", "zoo", "xlsx", "RODBC",
-  "ReporteRs", "ggplot2"), repos = "https://cran.mtu.edu/")
+  "ReporteRs", "ggplot2", "plyr", "RColorBrewer"), repos = "https://cran.mtu.edu/")
 
 aux <- new.env(parent = .GlobalEnv)
+
+aux$colors <- RColorBrewer::brewer.pal(4, "Blues")
 
 # used to check if all NA's in vector x ---
 aux$all_na <- function(x) all(is.na(x))
