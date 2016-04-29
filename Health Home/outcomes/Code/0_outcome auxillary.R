@@ -4,6 +4,22 @@ pkg_loader(packages = c("gdata", "data.table", "zoo", "xlsx", "RODBC",
 
 aux <- new.env(parent = .GlobalEnv)
 
+
+project_wd$results <- file.path(project_wd$results,
+                                format(input$run_date, "%b_%d_%Y"))
+# for folder
+project_wd$data <- file.path(project_wd$data,
+                             gsub(
+                               x = input$run_date,
+                               pattern = "/",
+                               replace = "_"
+                             ))
+if (!dir.exists(project_wd$results)) {
+  dir.create(project_wd$results)
+  p_msg("directory created:", project_wd$results)
+}
+
+
 aux$colors <- RColorBrewer::brewer.pal(4, "Blues")
 
 # used to check if all NA's in vector x ---

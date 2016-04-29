@@ -31,13 +31,7 @@ input <- list(
   cmh_exp_after = wccmh::date_convert("7/1/2014"),
   record_dist_req = 14 # at least X days between pre/post values
 )
- # for folder
-project_wd$data <- file.path(project_wd$data,
-                             gsub(
-                               x = input$run_date,
-                               pattern = "/",
-                               replace = "_"
-                             ))
+
 # load packages, source files -------------------------------------------------
 library(wccmh)
 source(file.path(project_wd$code, "0_outcome auxillary.R"))
@@ -45,5 +39,5 @@ source(file.path(project_wd$code, "1_outcome_sql.R"))
 source(file.path(project_wd$code, "2_outcome_base.R"))
 source(file.path(project_wd$code, "3_outcome_pre_post.R"))
 source(file.path(project_wd$code, "4_outcomes_cmg.R"))
-# source(file.path(project_wd$code, "5_outcome_melt.R"))
-# source(file.path(project_wd$code, "5_export_xlxs.R"))
+source(file.path(project_wd$code, "5_outcomes_doc.R"))
+# source(file.path(project_wd$code, "6_export_excel.R"))
