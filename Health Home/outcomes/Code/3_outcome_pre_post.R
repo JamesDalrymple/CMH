@@ -333,7 +333,8 @@ pp$bp$hh_lev_cmh[, grep("pre|post|pk|error",
 # PRE/POST Lab Values: Cholesterol --------------------------------------------
 # health home vs non-health home ---
 pp$labs$chol$hh <- modify$labs$chol[, .(pre_dt = min(lab_date),
-                                    post_dt = max(lab_date)),
+                                    post_dt = max(lab_date),
+                                    n_recs = .N),
                                 by = .(case_no, lab_name, adm_pk, hh_pk)]
 pp$labs$chol$hh[modify$labs$chol, pre_value := lab_value,
              on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -352,7 +353,8 @@ pp$labs$chol$hh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
 pp$labs$chol$hh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3 ---
 pp$labs$chol$hh_lev <- modify$labs$chol[, .(pre_dt = min(lab_date),
-                                    post_dt = max(lab_date)),
+                                    post_dt = max(lab_date),
+                                    n_recs = .N),
   by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk)]
 pp$labs$chol$hh_lev[modify$labs$chol, pre_value := lab_value,
              on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -373,7 +375,8 @@ pp$labs$chol$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
 pp$labs$chol$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # health home vs non-health home, by team ---
 pp$labs$chol$hh_cmh <- modify$labs$chol[, .(pre_dt = min(lab_date),
-                                            post_dt = max(lab_date)),
+                                            post_dt = max(lab_date),
+                                            n_recs = .N),
   by = .(case_no, lab_name, adm_pk, hh_pk, cmh_team)]
 pp$labs$chol$hh_cmh[modify$labs$chol, pre_value := lab_value,
                     on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -392,7 +395,8 @@ pp$labs$chol$hh_cmh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
 pp$labs$chol$hh_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3, by team ---
 pp$labs$chol$hh_lev_cmh <- modify$labs$chol[, .(pre_dt = min(lab_date),
-                                            post_dt = max(lab_date)),
+                                            post_dt = max(lab_date),
+                                            n_recs = .N),
   by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk, cmh_team)]
 pp$labs$chol$hh_lev_cmh[modify$labs$chol, pre_value := lab_value,
                     on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -415,7 +419,8 @@ pp$labs$chol$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NU
 # PRE/POST Lab Values: Glucose ------------------------------------------------
 # health home vs non-health home ---
 pp$labs$gluc$hh <- modify$labs$gluc[, .(pre_dt = min(lab_date),
-                                        post_dt = max(lab_date)),
+                                        post_dt = max(lab_date),
+                                        n_recs = .N),
                                     by = .(case_no, lab_name, adm_pk, hh_pk)]
 pp$labs$gluc$hh[modify$labs$gluc, pre_value := lab_value,
                 on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -446,7 +451,8 @@ pp$labs$gluc$hh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
 pp$labs$gluc$hh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3 ---
 pp$labs$gluc$hh_lev <- modify$labs$gluc[, .(pre_dt = min(lab_date),
-                                            post_dt = max(lab_date)),
+                                            post_dt = max(lab_date),
+                                            n_recs = .N),
   by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk)]
 pp$labs$gluc$hh_lev[modify$labs$gluc, pre_value := lab_value,
                     on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -479,7 +485,8 @@ pp$labs$gluc$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, jump,
                      abs_post, abs_pre) := NULL]
 # health home vs non-health home, by team ---
 pp$labs$gluc$hh_cmh <- modify$labs$gluc[, .(pre_dt = min(lab_date),
-                                            post_dt = max(lab_date)),
+                                            post_dt = max(lab_date),
+                                            n_recs = .N),
                                         by = .(case_no, lab_name, adm_pk, hh_pk, cmh_team)]
 pp$labs$gluc$hh_cmh[modify$labs$gluc, pre_value := lab_value,
                     on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -510,7 +517,8 @@ pp$labs$gluc$hh_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, jump,
                          abs_post, abs_pre) := NULL]
 # non-health home vs health home L1/L2 vs health home L3, by team ---
 pp$labs$gluc$hh_lev_cmh <- modify$labs$gluc[, .(pre_dt = min(lab_date),
-                                                post_dt = max(lab_date)),
+                                                post_dt = max(lab_date),
+                                                n_recs = .N),
   by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk, cmh_team)]
 pp$labs$gluc$hh_lev_cmh[modify$labs$gluc, pre_value := lab_value,
                         on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -545,7 +553,8 @@ pp$labs$gluc$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, L3_pk, pre_dt, post_dt, jump,
 # PRE/POST Lab Values: triglycerides ------------------------------------------
 # health home vs non-health home ---
 pp$labs$trig$hh <- modify$labs$trig[, .(pre_dt = min(lab_date),
-                                        post_dt = max(lab_date)),
+                                        post_dt = max(lab_date),
+                                        n_recs = .N),
                                     by = .(case_no, lab_name, adm_pk, hh_pk)]
 pp$labs$trig$hh[modify$labs$trig, pre_value := lab_value,
                 on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -564,7 +573,8 @@ pp$labs$trig$hh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
 pp$labs$trig$hh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3 ---
 pp$labs$trig$hh_lev <- modify$labs$trig[, .(pre_dt = min(lab_date),
-                                            post_dt = max(lab_date)),
+                                            post_dt = max(lab_date),
+                                            n_recs = .N),
                                         by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk)]
 pp$labs$trig$hh_lev[modify$labs$trig, pre_value := lab_value,
                     on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -585,7 +595,8 @@ pp$labs$trig$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
 pp$labs$trig$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # health home vs non-health home, by team ---
 pp$labs$trig$hh_cmh <- modify$labs$trig[, .(pre_dt = min(lab_date),
-                                            post_dt = max(lab_date)),
+                                            post_dt = max(lab_date),
+                                            n_recs = .N),
                                         by = .(case_no, lab_name, adm_pk, hh_pk, cmh_team)]
 pp$labs$trig$hh_cmh[modify$labs$trig, pre_value := lab_value,
                     on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -604,7 +615,8 @@ pp$labs$trig$hh_cmh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
 pp$labs$trig$hh_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3, by team ---
 pp$labs$trig$hh_lev_cmh <- modify$labs$trig[, .(pre_dt = min(lab_date),
-                                                post_dt = max(lab_date)),
+                                                post_dt = max(lab_date),
+                                                n_recs = .N),
   by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk, cmh_team)]
 pp$labs$trig$hh_lev_cmh[modify$labs$trig, pre_value := lab_value,
                         on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -627,7 +639,8 @@ pp$labs$trig$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NU
 # PRE/POST Lab Values: a1c --------------------------------------------
 # health home vs non-health home ---
 pp$labs$a1c$hh <- modify$labs$a1c[, .(pre_dt = min(lab_date),
-                                        post_dt = max(lab_date)),
+                                      post_dt = max(lab_date),
+                                      n_recs = .N),
                                     by = .(case_no, lab_name, adm_pk, hh_pk)]
 pp$labs$a1c$hh[modify$labs$a1c, pre_value := lab_value,
                 on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -646,7 +659,8 @@ pp$labs$a1c$hh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
 pp$labs$a1c$hh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3 ---
 pp$labs$a1c$hh_lev <- modify$labs$a1c[, .(pre_dt = min(lab_date),
-                                            post_dt = max(lab_date)),
+                                          post_dt = max(lab_date),
+                                          n_recs = .N),
                                         by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk)]
 pp$labs$a1c$hh_lev[modify$labs$a1c, pre_value := lab_value,
                     on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -667,7 +681,8 @@ pp$labs$a1c$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
 pp$labs$a1c$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # health home vs non-health home, by team ---
 pp$labs$a1c$hh_cmh <- modify$labs$a1c[, .(pre_dt = min(lab_date),
-                                            post_dt = max(lab_date)),
+                                          post_dt = max(lab_date),
+                                          n_recs = .N),
                                         by = .(case_no, lab_name, adm_pk, hh_pk, cmh_team)]
 pp$labs$a1c$hh_cmh[modify$labs$a1c, pre_value := lab_value,
                     on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -686,7 +701,8 @@ pp$labs$a1c$hh_cmh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
 pp$labs$a1c$hh_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3, by team ---
 pp$labs$a1c$hh_lev_cmh <- modify$labs$a1c[, .(pre_dt = min(lab_date),
-                                                post_dt = max(lab_date)),
+                                              post_dt = max(lab_date),
+                                              n_recs = .N),
                                             by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk, cmh_team)]
 pp$labs$a1c$hh_lev_cmh[modify$labs$a1c, pre_value := lab_value,
                         on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -708,7 +724,8 @@ pp$labs$a1c$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NUL
 # PRE/POST Lab Values: hdl ----------------------------------------------------
 # health home vs non-health home ---
 pp$labs$hdl$hh <- modify$labs$hdl[, .(pre_dt = min(lab_date),
-                                      post_dt = max(lab_date)),
+                                      post_dt = max(lab_date),
+                                      n_recs = .N),
                                   by = .(case_no, lab_name, adm_pk, hh_pk)]
 pp$labs$hdl$hh[modify$labs$hdl, pre_value := lab_value,
                on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -727,7 +744,8 @@ pp$labs$hdl$hh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
 pp$labs$hdl$hh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3 ---
 pp$labs$hdl$hh_lev <- modify$labs$hdl[, .(pre_dt = min(lab_date),
-                                          post_dt = max(lab_date)),
+                                          post_dt = max(lab_date),
+                                          n_recs = .N),
                                       by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk)]
 pp$labs$hdl$hh_lev[modify$labs$hdl, pre_value := lab_value,
                    on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -748,7 +766,8 @@ pp$labs$hdl$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
 pp$labs$hdl$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # health home vs non-health home, by team ---
 pp$labs$hdl$hh_cmh <- modify$labs$hdl[, .(pre_dt = min(lab_date),
-                                          post_dt = max(lab_date)),
+                                          post_dt = max(lab_date),
+                                          n_recs = .N),
                                       by = .(case_no, lab_name, adm_pk, hh_pk, cmh_team)]
 pp$labs$hdl$hh_cmh[modify$labs$hdl, pre_value := lab_value,
                    on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -767,7 +786,8 @@ pp$labs$hdl$hh_cmh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
 pp$labs$hdl$hh_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3, by team ---
 pp$labs$hdl$hh_lev_cmh <- modify$labs$hdl[, .(pre_dt = min(lab_date),
-                                              post_dt = max(lab_date)),
+                                              post_dt = max(lab_date),
+                                              n_recs = .N),
                                           by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk, cmh_team)]
 pp$labs$hdl$hh_lev_cmh[modify$labs$hdl, pre_value := lab_value,
                        on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -789,7 +809,8 @@ pp$labs$hdl$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NUL
 # PRE/POST Lab Values: ldl ----------------------------------------------------
 # health home vs non-health home ---
 pp$labs$ldl$hh <- modify$labs$ldl[, .(pre_dt = min(lab_date),
-                                      post_dt = max(lab_date)),
+                                      post_dt = max(lab_date),
+                                      n_recs = .N),
                                   by = .(case_no, lab_name, adm_pk, hh_pk)]
 pp$labs$ldl$hh[modify$labs$ldl, pre_value := lab_value,
                on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -808,7 +829,8 @@ pp$labs$ldl$hh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
 pp$labs$ldl$hh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3 ---
 pp$labs$ldl$hh_lev <- modify$labs$ldl[, .(pre_dt = min(lab_date),
-                                          post_dt = max(lab_date)),
+                                          post_dt = max(lab_date),
+                                          n_recs = .N),
                                       by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk)]
 pp$labs$ldl$hh_lev[modify$labs$ldl, pre_value := lab_value,
                    on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -829,7 +851,8 @@ pp$labs$ldl$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
 pp$labs$ldl$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # health home vs non-health home, by team ---
 pp$labs$ldl$hh_cmh <- modify$labs$ldl[, .(pre_dt = min(lab_date),
-                                          post_dt = max(lab_date)),
+                                          post_dt = max(lab_date),
+                                          n_recs = .N),
                                       by = .(case_no, lab_name, adm_pk, hh_pk, cmh_team)]
 pp$labs$ldl$hh_cmh[modify$labs$ldl, pre_value := lab_value,
                    on = c(case_no = "case_no", pre_dt = "lab_date")]
@@ -848,7 +871,8 @@ pp$labs$ldl$hh_cmh[, hh_cat := ifelse(is.na(hh_pk), "CMH only", "HH")]
 pp$labs$ldl$hh_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt) := NULL]
 # non-health home vs health home L1/L2 vs health home L3, by team ---
 pp$labs$ldl$hh_lev_cmh <- modify$labs$ldl[, .(pre_dt = min(lab_date),
-                                              post_dt = max(lab_date)),
+                                              post_dt = max(lab_date),
+                                              n_recs = .N),
                                           by = .(case_no, lab_name, adm_pk, hh_pk, L3_pk, cmh_team)]
 pp$labs$ldl$hh_lev_cmh[modify$labs$ldl, pre_value := lab_value,
                        on = c(case_no = "case_no", pre_dt = "lab_date")]

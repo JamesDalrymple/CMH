@@ -87,7 +87,7 @@ aux$bp_cat <- function(pre, post) {
 #   post[post==9] <- NA
 #   pre[pre==9] <- NA
 #   comp_lab <- cut(post-pre, breaks = c(-Inf, -.1, 0.1, Inf),
-#                   labels = c("worsened", "maintained", "improved"))
+#                   labels = c("regressed", "maintained", "improved"))
 #   return(as.chr(comp_lab))
 # }
 
@@ -120,7 +120,7 @@ aux$wn_pain_cat <- function(pre, post) {
   post[post==9] <- NA
   pre[pre==9] <- NA
   comp_lab <- cut(post-pre, breaks = c(-Inf, -.1, 0.1, Inf),
-                  labels = c("worsened", "maintained", "improved"))
+                  labels = c("regressed", "maintained", "improved"))
   return(as.chr(comp_lab))
 }
 
