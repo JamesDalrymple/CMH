@@ -6,7 +6,7 @@ cmg$vars <- c("labs$gluc", "labs$ldl", "labs$a1c", "labs$trig", "wn$oh", "wn$pai
           "labs$chol", "labs$hdl")
 
 aux$cast <- function(x) {
-  eval(parse(text = sprintf(
+  invisible(eval(parse(text = sprintf(
     "cmg$cast$%1$s <- list(
   hh = dcast(pp$%1$s$hh, fill = 0, drop = FALSE, fun.aggregate = length,
              hh_cat ~ status, value.var = 'case_no'),
@@ -16,8 +16,7 @@ aux$cast <- function(x) {
                  hh_cat + cmh_team ~ status, value.var = 'case_no'),
   hh_lev_cmh = dcast(pp$%1$s$hh_lev_cmh, fill = 0, drop = FALSE,
     fun.aggregate = length, hh_cat + cmh_team ~ status, value.var = 'case_no')
-  )", x)))
-  invisible()
+  )", x))))
 }
 plyr::l_ply(cmg$vars, aux$cast)
 cmg$vars <- c(cmg$vars, "dia", "sys")
