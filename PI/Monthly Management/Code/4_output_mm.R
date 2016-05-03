@@ -422,27 +422,27 @@ p_ssm_ts <- ggplot(data = ssm_ts, aes_(x = ~ts, y = ~`pct 2+`)) +
          y = "percent of case load with 2+ SSMs")
   gt <- ggplotGrob(p_ssm_tsa)
 
-
-  tsa_try <- ssm_tsa[, length(primary_staff), by = ts][, V1]
-  tsa_len <- ssm_tsa[, length(primary_staff), by = ts]
-  tsa_N <- as.list(tsa_len[, V1])
-  tsa_N <- rapply(tsa_N, f = function(x) unit(x, "null"), how = "list")
-
-
-  require(grid)
-  # Get the column index in the gt layout corresponding to the panels.
-  panelI <- gt$layout$l[grepl("panel", gt$layout$name)]
-
-  # Replace the default panel widths with relative heights.
-  gt$widths <- grid:::unit.list(gt$widths)
-  setattr(tsa_try, "class", c("unit.list", "unit"))
-  gt$widths[panelI] <- tsa_N[c(4:6, 1:3)]
-
-  # Add extra width between panels (assuming two panels)
-  # gt$widths[panelI[1] + 1] = list(unit(1, "cm"))
-
-  # ## Draw gt
-  # grid.newpage()
-  # grid.draw(gt)
-
-# http://stackoverflow.com/questions/31572239/set-space-in-facet-wrap-like-in-facet-grid
+#
+#   tsa_try <- ssm_tsa[, length(primary_staff), by = ts][, V1]
+#   tsa_len <- ssm_tsa[, length(primary_staff), by = ts]
+#   tsa_N <- as.list(tsa_len[, V1])
+#   tsa_N <- rapply(tsa_N, f = function(x) unit(x, "null"), how = "list")
+#
+#
+#   require(grid)
+#   # Get the column index in the gt layout corresponding to the panels.
+#   panelI <- gt$layout$l[grepl("panel", gt$layout$name)]
+#
+#   # Replace the default panel widths with relative heights.
+#   gt$widths <- grid:::unit.list(gt$widths)
+#   setattr(tsa_try, "class", c("unit.list", "unit"))
+#   gt$widths[panelI] <- tsa_N[c(4:6, 1:3)]
+#
+#   # Add extra width between panels (assuming two panels)
+#   # gt$widths[panelI[1] + 1] = list(unit(1, "cm"))
+#
+#   # ## Draw gt
+#   # grid.newpage()
+#   # grid.draw(gt)
+#
+# # http://stackoverflow.com/questions/31572239/set-space-in-facet-wrap-like-in-facet-grid

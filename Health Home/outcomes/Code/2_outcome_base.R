@@ -562,8 +562,8 @@ labs[, lab_age :=
 labs[lab_age < 18, lab_error := aux$cat_error(lab_error, "lab_age < 18")]
 labs[!is.na(cmh_error), lab_error := aux$cat_error(lab_error, cmh_error)]
 labs[!is.na(hh_error), lab_error := aux$cat_error(lab_error, hh_error)]
-
-
+labs[lab_name == "LDL" & lab_value < 0,
+     lab_error := aux$cat_error(lab_error, "negative LDL level")]
 saved$labs <- copy(labs)
 labs <- labs[is.na(lab_error)]
 labs[, Cs(cmh_effdt, cmh_expdt, hh_start, hh_end, cmh_error,

@@ -51,7 +51,7 @@ pp$bmi$hh_lev[, error := NULL]
 pp$bmi$hh_lev[, status := aux$bmi_cat(pre_bmi, post_bmi)]
 pp$bmi$hh_lev[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$bmi$hh_lev[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$bmi$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$bmi$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$bmi$hh_lev[, Cs(adm_pk, hh_pk, L3_pk, pre_dt, post_dt) := NULL]
 # health home vs non-health home, by team ---
 pp$bmi$hh_cmh <- modify$bmi[, .(pre_dt  = min(vt_date),
@@ -87,7 +87,7 @@ pp$bmi$hh_lev_cmh[, error := NULL]
 pp$bmi$hh_lev_cmh[, status := aux$bmi_cat(pre_bmi, post_bmi)]
 pp$bmi$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$bmi$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$bmi$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$bmi$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$bmi$hh_lev_cmh[, Cs(adm_pk, hh_pk, L3_pk, pre_dt, post_dt) := NULL]
 
 # PRE/POST Wellness note: overall health ---------------------------------------
@@ -124,7 +124,7 @@ pp$wn$oh$hh_lev[, error := NULL]
 pp$wn$oh$hh_lev[, status := aux$wn_oh_cat(pre_oh, post_oh)]
 pp$wn$oh$hh_lev[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$wn$oh$hh_lev[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$wn$oh$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$wn$oh$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$wn$oh$hh_lev[, Cs(adm_pk, hh_pk, L3_pk, pre_dt, post_dt) := NULL]
 # health home vs non-health home, by team ---
 pp$wn$oh$hh_cmh <- modify$wn_oh[, .(pre_dt = min(wn_date),
@@ -160,7 +160,7 @@ pp$wn$oh$hh_lev_cmh[, error := NULL]
 pp$wn$oh$hh_lev_cmh[, status := aux$wn_oh_cat(pre_oh, post_oh)]
 pp$wn$oh$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$wn$oh$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$wn$oh$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$wn$oh$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$wn$oh$hh_lev_cmh[, Cs(adm_pk, hh_pk, L3_pk, pre_dt, post_dt) := NULL]
 
 # PRE/POST Wellness note: pain ------------------------------------------------
@@ -197,7 +197,7 @@ pp$wn$pain$hh_lev[, error := NULL]
 pp$wn$pain$hh_lev[, status := aux$wn_pain_cat(pre_pain, post_pain)]
 pp$wn$pain$hh_lev[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$wn$pain$hh_lev[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$wn$pain$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$wn$pain$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$wn$pain$hh_lev[, Cs(adm_pk, hh_pk, L3_pk, pre_dt, post_dt) := NULL]
 # health home vs non-health home, by team ---
 pp$wn$pain$hh_cmh <- modify$wn_pain[, .(pre_dt = min(wn_date),
@@ -233,7 +233,7 @@ pp$wn$pain$hh_lev_cmh[, error := NULL]
 pp$wn$pain$hh_lev_cmh[, status := aux$wn_pain_cat(pre_pain, post_pain)]
 pp$wn$pain$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$wn$pain$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$wn$pain$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$wn$pain$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$wn$pain$hh_lev_cmh[, Cs(adm_pk, hh_pk, L3_pk, pre_dt, post_dt) := NULL]
 
 # PRE/POST blood pressure: diastolic ------------------------------------------
@@ -280,7 +280,7 @@ pp$bp$hh_lev[, `:=`(sys_status = aux$bp_cat(pre_sys_jama, post_sys_jama),
                     dia_status = aux$bp_cat(pre_dia_jama, post_dia_jama))]
 pp$bp$hh_lev[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$bp$hh_lev[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$bp$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$bp$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$bp$hh_lev[, grep("pre|post|pk|error",
   names(pp$bp$hh_lev), value = TRUE) := NULL]
 # health home vs non-health home, by team ---
@@ -326,7 +326,7 @@ pp$bp$hh_lev_cmh[, `:=`(sys_status = aux$bp_cat(pre_sys_jama, post_sys_jama),
                         dia_status = aux$bp_cat(pre_dia_jama, post_dia_jama))]
 pp$bp$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$bp$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$bp$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$bp$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$bp$hh_lev_cmh[, grep("pre|post|pk|error",
                         names(pp$bp$hh_lev_cmh), value = TRUE) := NULL]
 
@@ -371,7 +371,7 @@ pp$labs$chol$hh_lev[, status :=
                aux$chol_change(pre_cat, post_cat)]
 pp$labs$chol$hh_lev[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$chol$hh_lev[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$chol$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$chol$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$chol$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # health home vs non-health home, by team ---
 pp$labs$chol$hh_cmh <- modify$labs$chol[, .(pre_dt = min(lab_date),
@@ -413,7 +413,7 @@ pp$labs$chol$hh_lev_cmh[, status :=
                           aux$chol_change(pre_cat, post_cat)]
 pp$labs$chol$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$chol$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$chol$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$chol$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$chol$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 
 # PRE/POST Lab Values: Glucose ------------------------------------------------
@@ -480,7 +480,7 @@ pp$labs$gluc$hh_lev[jump == 1 & abs_pre < abs_post, status := "regressed"]
 pp$labs$gluc$hh_lev[jump == 1 & abs_pre > abs_post, status := "improved"]
 pp$labs$gluc$hh_lev[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$gluc$hh_lev[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$gluc$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$gluc$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$gluc$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, jump,
                      abs_post, abs_pre) := NULL]
 # health home vs non-health home, by team ---
@@ -547,7 +547,7 @@ pp$labs$gluc$hh_lev_cmh[jump == 1 & abs_pre < abs_post, status := "regressed"]
 pp$labs$gluc$hh_lev_cmh[jump == 1 & abs_pre > abs_post, status := "improved"]
 pp$labs$gluc$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$gluc$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$gluc$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$gluc$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$gluc$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, L3_pk, pre_dt, post_dt, jump,
                          abs_post, abs_pre) := NULL]
 # PRE/POST Lab Values: triglycerides ------------------------------------------
@@ -591,7 +591,7 @@ pp$labs$trig$hh_lev[, status :=
                       aux$trig_change(pre_cat, post_cat)]
 pp$labs$trig$hh_lev[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$trig$hh_lev[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$trig$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$trig$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$trig$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # health home vs non-health home, by team ---
 pp$labs$trig$hh_cmh <- modify$labs$trig[, .(pre_dt = min(lab_date),
@@ -633,7 +633,7 @@ pp$labs$trig$hh_lev_cmh[, status :=
                           aux$trig_change(pre_cat, post_cat)]
 pp$labs$trig$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$trig$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$trig$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$trig$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$trig$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 
 # PRE/POST Lab Values: a1c --------------------------------------------
@@ -677,7 +677,7 @@ pp$labs$a1c$hh_lev[, status :=
                       aux$a1c_change(pre_cat, post_cat)]
 pp$labs$a1c$hh_lev[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$a1c$hh_lev[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$a1c$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$a1c$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$a1c$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # health home vs non-health home, by team ---
 pp$labs$a1c$hh_cmh <- modify$labs$a1c[, .(pre_dt = min(lab_date),
@@ -719,7 +719,7 @@ pp$labs$a1c$hh_lev_cmh[, status :=
                           aux$a1c_change(pre_cat, post_cat)]
 pp$labs$a1c$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$a1c$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$a1c$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$a1c$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$a1c$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # PRE/POST Lab Values: hdl ----------------------------------------------------
 # health home vs non-health home ---
@@ -762,7 +762,7 @@ pp$labs$hdl$hh_lev[, status :=
                      aux$hdl_change(pre_cat, post_cat)]
 pp$labs$hdl$hh_lev[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$hdl$hh_lev[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$hdl$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$hdl$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$hdl$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # health home vs non-health home, by team ---
 pp$labs$hdl$hh_cmh <- modify$labs$hdl[, .(pre_dt = min(lab_date),
@@ -804,7 +804,7 @@ pp$labs$hdl$hh_lev_cmh[, status :=
                          aux$hdl_change(pre_cat, post_cat)]
 pp$labs$hdl$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$hdl$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$hdl$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$hdl$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$hdl$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # PRE/POST Lab Values: ldl ----------------------------------------------------
 # health home vs non-health home ---
@@ -847,7 +847,7 @@ pp$labs$ldl$hh_lev[, status :=
                      aux$ldl_change(pre_cat, post_cat)]
 pp$labs$ldl$hh_lev[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$ldl$hh_lev[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$ldl$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$ldl$hh_lev[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$ldl$hh_lev[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 # health home vs non-health home, by team ---
 pp$labs$ldl$hh_cmh <- modify$labs$ldl[, .(pre_dt = min(lab_date),
@@ -889,7 +889,7 @@ pp$labs$ldl$hh_lev_cmh[, status :=
                          aux$ldl_change(pre_cat, post_cat)]
 pp$labs$ldl$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$ldl$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
-pp$labs$ldl$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH Nurse"]
+pp$labs$ldl$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
 pp$labs$ldl$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 
 # PRE/POST ER visits ----------------------------------------------------------

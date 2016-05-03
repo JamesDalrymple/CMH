@@ -113,16 +113,29 @@ cmg$comb <- rbindlist(list(
 cmg$castc <-
   dcast(cmg$comb, fill = 0, drop = TRUE, fun.aggregate = length,
         var + cat + hh_cat + cmh_team ~ status, value.var = "case_no")
+cmg$castc[, rate_imp := improved/psum(improved, regressed, maintained)]
+cmg$castc[, rate_maint_imp := psum(maintained, improved)/
+            psum(improved, regressed, maintained)]
+cmg$castc[, n := psum(improved, regressed, maintained)]
 
-
-
-
+cmg$hh_only <-
+  cmg$castc[like(hh_cat, "HH") & cat %in% c("hh", "hh_lev")]
+cmg$hh_only[, `pct impr` := round(rate_imp*100,1)]
+cmg$hh_only[, `pct impr+maint` := round(rate_maint_imp*100,1)]
+cmg$hh_only[, Cs(rate_imp, rate_maint_imp, cmh_team) := NULL]
+setnames(cmg$hh_only, Cs(improved, maintained, regressed),
+         Cs(impr, maint, regr))
+cmg$hh_only[rbindlist(list(saved$eligible$hh[e_status == "eligible"],
+                           saved$eligible$hh_lev[e_status == "eligible"])),
+            N_eligible := i.consumers, on = c("hh_cat" = "hh_status")]
+setorder(cmg$hh_only, var, cat, hh_cat, `pct impr`)
+setcolorder(cmg$hh_only, Cs(var, cat, hh_cat, impr, regr, maint, "pct impr",
+            "pct impr+maint", n_sample, N_eligible))
 # melt
 cmg$meltc <-
   melt(data = cmg$castc, id.vars = c("var", "cat", "hh_cat", "cmh_team"),
      measure.vars = Cs(improved, regressed, maintained),
      variable.name = "imp_status", value.name = "cases")
-
 cmg$meltc[, var := recode_string(var,
   recode_key = list(
     "Glucose" = c("Glucose", "GLU"),
@@ -136,12 +149,8 @@ cmg$meltc[, var := recode_string(var,
     "HDL" = "HDL",
     "Diastolic BP" = c("Diastolic BP", "dia"),
     "Systolic BP" = c("Systolic BP", "sys")))]
-
-# cmg$graph_key <-
-#   cmg$meltc[, unique(.SD), .SDcols = Cs(var, cat)]
 cmg$meltc[, imp_status := factor(imp_status,
   levels = Cs(improved, maintained, regressed))]
-
 cmg$graphs[['hh']] <-
 cmg$meltc[cat == "hh", ggplot(data = .SD,
   aes(x = imp_status, y = cases, fill = hh_cat, ymax = 1.2*cases))+

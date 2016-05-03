@@ -139,10 +139,10 @@ sql$fb_full_list <- list.files(path = "G:/CSTS Data Analyst Archives/FB_archives
                       full.names = TRUE)
 sql$fb_read <- grep(x = sql$fb_full_list,
 pattern = paste(
-  format(date_convert(input$end_date) - 365, "%m_%d_%y"),
+  # format(date_convert(input$end_date) - 365, "%m_%d_%y"),
   format(date_convert(input$end_date), "%m_%d_%y"),
   sep = "_to_"
-), value=TRUE)
+), value = TRUE)
 
 sql$fb_read <-
   grep(x = sql$fb_read,
