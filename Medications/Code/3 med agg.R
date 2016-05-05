@@ -98,6 +98,7 @@ agg$mm_ir$ven_comb[is.na(consumers), consumers := 0]
 agg$mm_ir$ven_comb[, pct_mm_ir := round(consumers/con_auth*100, 0)]
 agg$mm_ir$ven_comb[, gg_lab :=
   sprintf("%1$s%% (%2$s/%3$s)", pct_mm_ir, consumers, con_auth)]
+agg$mm_ir$ven_comb[is.na(num_IRs), num_IRs := 0]
 
 agg$mm_ir$con_fy <-prep$ir[, list(num_IRs = length(unique(IR_number))),
                            by = list(case_no, vendor, fy)]

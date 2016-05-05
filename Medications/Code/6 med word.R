@@ -11,7 +11,7 @@ hh_doc <- addTitle(hh_doc, value = "Medication Incidents", level = 3)
 hh_doc <- addParagraph(hh_doc,
   value = "Medication incidents are unsubstantiated incident reports (IRs) regarding medications.")
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(graph$med_inc$fy), width = 6, height = 4.5)
+  fun = function() print(graph$med_inc$fy), width = 6, height = 4.0)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
   fun = function() print(graph$med_inc$qtr), width = 6.5, height = 5.5)
 hh_doc <- addPageBreak(hh_doc)
@@ -20,9 +20,9 @@ hh_doc <- addTitle(hh_doc, value = "Missed Medication IRs", level = 3)
 hh_doc <- addParagraph(hh_doc,
   value = "A consumer can miss a medication for a variety of reasons. All missed medications discussed below are (1) unsubstantiated and (2) may not be the fault of any clinical staff (CMH and/or provider staff). A single consumer may have multiple missed medication IRs.")
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(graph$mm_ir_ven_fy), width = 7.5, height = 4.5)
+  fun = function() print(graph$mm_ir_ven_fy), width = 7.5, height = 5.5)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(graph$mm_ir_ven_qtr), width = 7.5, height = 5.5)
+  fun = function() print(graph$mm_ir_ven_qtr), width = 6.0, height = 6.5)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
   fun = function() print(graph$mm_ir_con_fy), width = 6, height = 5.5)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,

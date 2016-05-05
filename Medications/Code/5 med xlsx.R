@@ -13,6 +13,11 @@ excel$wb <- createWorkbook()
 # bold option and underline
 excel$cs <-
   CellStyle(excel$wb) + Font(excel$wb, isBold = TRUE) + Border()
+
+# raw ir detail
+excel$sheet$ir_detail <- createSheet(excel$wb, sheetName = "ir details")
+addDataFrame(x = prep$ir, sheet = excel$sheet$ir_detail, showNA = FALSE,
+  row.names = FALSE, startRow = 1, startColumn = 1, colnamesStyle = excel$cs)
 # medication incidents
 excel$sheet$med_inc <- createSheet(excel$wb, sheetName = "med incidents")
 addDataFrame(x = agg$med_inc$comb, sheet = excel$sheet$med_inc, showNA = FALSE,

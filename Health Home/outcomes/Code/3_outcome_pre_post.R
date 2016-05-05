@@ -890,10 +890,14 @@ pp$labs$ldl$hh_lev_cmh[, status :=
 pp$labs$ldl$hh_lev_cmh[is.na(hh_pk) & is.na(L3_pk), hh_cat := "CMH only"]
 pp$labs$ldl$hh_lev_cmh[is.na(hh_cat) & is.na(L3_pk), hh_cat := "HH no nurse"]
 pp$labs$ldl$hh_lev_cmh[is.na(hh_cat) & !is.na(L3_pk), hh_cat := "HH nurse"]
-pp$labs$ldl$hh_lev_cmh[, Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
+pp$labs$ldl$hh_lev_cmh[,
+  Cs(error, adm_pk, hh_pk, pre_dt, post_dt, L3_pk) := NULL]
 
 # PRE/POST ER visits ----------------------------------------------------------
 # health home vs non-health home ---
 # non-health home vs health home L1/L2 vs health home L3 ---
 # health home vs non-health home, by team ---
 # non-health home vs health home L1/L2 vs health home L3, by team ---
+
+# combine all pre post --------------------------------------------------------
+

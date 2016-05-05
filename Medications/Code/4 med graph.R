@@ -46,8 +46,9 @@ graph$mm_ir_ven_fy <- ggplot(data = agg$mm_ir$ven_comb[span_type == "fy"],
   geom_bar(stat = "identity", color = "black", fill = aux$colors[2]) +
   coord_flip() + theme_light() +
   geom_text(aes(x = vendor, y = pct_mm_ir, label = gg_lab),
-            hjust = -0.1, na.rm = TRUE) +
-  geom_text(aes(x = vendor, y  = 0, label = num_IRs), hjust = 1, na.rm = TRUE) +
+            hjust = -0.1, na.rm = TRUE, size = 3) +
+  geom_text(aes(x = vendor, y  = 0, label = num_IRs), size = 2.75,
+    fontface = "bold", hjust = 1.5, na.rm = TRUE) +
   labs(x = "provider", y = "percent consumers w/ missed medication IRs",
     title = expression(atop("Missed Med IRs: Current Fiscal Year",
                             atop(italic("IR total before bar"), ""))))
@@ -56,12 +57,17 @@ agg$mm_ir$ven_comb[, span_label := factor(span_label,
   levels = agg$mm_ir$ven_comb[, rev(sort(unique(span_label)))])]
 graph$mm_ir_ven_qtr <- ggplot(data = agg$mm_ir$ven_comb[span_type == "qtr"],
     aes(x = vendor, y = pct_mm_ir, ymax = 1.2*pct_mm_ir, fill = span_label)) +
-  geom_bar(stat = "identity", color = "black", position = position_dodge(0.5), width = 0.5) +
+  geom_bar(stat = "identity", color = "black",
+           position = position_dodge(0.85), width = 0.85) +
   coord_flip() + theme_light() +
-  geom_text(aes(x = vendor, y = pct_mm_ir, label = gg_lab),
-    hjust = -0.1, na.rm = TRUE, position = position_dodge(0.5)) +
-  geom_text(aes(x = vendor, y  = 0, label = num_IRs), hjust = 1, na.rm = TRUE,
-            position = position_dodge(0.5)) +
+  theme(legend.position = "top",
+        legend.margin = unit(c(-0.1,0.01,-0.3,0.01), "cm")
+        # plot.margin = unit(c(0,0,0,0), "cm")
+        ) +
+  geom_text(aes(x = vendor, y = pct_mm_ir, label = gg_lab), size = 2.75,
+    hjust = -0.1, na.rm = TRUE, position = position_dodge(0.85)) +
+  geom_text(aes(x = vendor, y  = 0, label = num_IRs), hjust = 1.5, na.rm = TRUE,
+            position = position_dodge(0.85), size = 2.75) +
   labs(x = "provider", y = "percent consumers w/ missed medication IRs",
        title = expression(atop("Missed Med IRs: Fiscal Quarters",
                                atop(italic("IR total before bar"), "")))) +
@@ -74,7 +80,8 @@ stopifnot(agg$mm_ir$con_fy[, length(unique(fy))] == 1)
 graph$mm_ir_con_fy <- ggplot(data = agg$mm_ir$con_fy, aes(x = vendor, y = num_IRs) )+
   geom_jitter(width = 0.5, height = 0.5, alpha = 0.5) +
   coord_flip() + theme_light() +
-  labs(title = expression(atop("Indiviual Consumers by Vendor (jittered)", atop(italic("Current Fiscal Year")))),
+  labs(title = expression(atop("Indiviual Consumers by Vendor (jittered)",
+                               atop(italic("Current Fiscal Year")))),
        x = "vendor", y = "number of Missed Med IRs")
 
 graph$mm_ir_con_qtr <- ggplot(data = agg$mm_ir$con_qtr, aes(x = vendor, y = num_IRs, color = qtr) )+
@@ -91,7 +98,7 @@ graph$med_inc$fy <-
   ggplot(data = agg$med_inc$fy,
          aes(x = classification, y = incidents, ymax = 1.1*incidents)) +
   geom_bar(stat = "identity", width = 0.5, fill = aux$colors[2], color= "black") +
-  theme_light() +
+  theme_light() + theme(axis.text.x = element_text(angle = 45, vjust = 0.5)) +
   geom_text(aes(x = classification, y = incidents,
     label = sprintf("%1$s (%2$s)", incidents, cases)), vjust = -0.5) +
   labs(x = "IR Classification", y = "number of incidents",
@@ -105,7 +112,7 @@ graph$med_inc$qtr <-
     aes(x = classification, y = incidents, ymax = 1.15*incidents, fill = span_label)) +
   geom_bar(stat = "identity", width = 0.5, color= "black",
            position = position_dodge(0.5)) +
-  theme_light() +
+  theme_light() + theme(axis.text.x = element_text(angle = 45, vjust = 0.5)) +
   geom_text(aes(x = classification, y = incidents, fill = span_label,
     label = sprintf("%1$s (%2$s)", incidents, cases)), hjust = -0.1,
     angle = 90, position = position_dodge(0.5)) +
@@ -114,7 +121,3 @@ graph$med_inc$qtr <-
     atop(italic("consumers in parentheses"))))) +
   scale_fill_manual(name = NULL,
     values = aux$colors[agg$med_inc$qtr[, seq(unique(span_label))]])
-
-
-
-

@@ -130,7 +130,7 @@ cmg$hh_only[rbindlist(list(saved$eligible$hh[e_status == "eligible"],
             N_eligible := i.consumers, on = c("hh_cat" = "hh_status")]
 setorder(cmg$hh_only, var, cat, hh_cat, `pct impr`)
 setcolorder(cmg$hh_only, Cs(var, cat, hh_cat, impr, regr, maint, "pct impr",
-            "pct impr+maint", n_sample, N_eligible))
+            "pct impr+maint", n, N_eligible))
 # melt
 cmg$meltc <-
   melt(data = cmg$castc, id.vars = c("var", "cat", "hh_cat", "cmh_team"),
@@ -150,7 +150,7 @@ cmg$meltc[, var := recode_string(var,
     "Diastolic BP" = c("Diastolic BP", "dia"),
     "Systolic BP" = c("Systolic BP", "sys")))]
 cmg$meltc[, imp_status := factor(imp_status,
-  levels = Cs(improved, maintained, regressed))]
+  levels = Cs(regressed, maintained, improved), ordered = TRUE)]
 cmg$graphs[['hh']] <-
 cmg$meltc[cat == "hh", ggplot(data = .SD,
   aes(x = imp_status, y = cases, fill = hh_cat, ymax = 1.2*cases))+
