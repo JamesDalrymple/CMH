@@ -11,9 +11,9 @@ hh_doc <- addTitle(hh_doc, value = "Medication Incidents", level = 3)
 hh_doc <- addParagraph(hh_doc,
   value = "Medication incidents are unsubstantiated incident reports (IRs) regarding medications.")
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(graph$med_inc$fy), width = 6, height = 4.0)
+  fun = function() print(graph$med_inc$fy), width = 5, height = 4.0)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(graph$med_inc$qtr), width = 6.5, height = 5.5)
+  fun = function() print(graph$med_inc$qtr), width = 5, height = 5.5)
 hh_doc <- addPageBreak(hh_doc)
 # Missed Medications ----------------------------------------------------------
 hh_doc <- addTitle(hh_doc, value = "Missed Medication IRs", level = 3)
@@ -22,7 +22,11 @@ hh_doc <- addParagraph(hh_doc,
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
   fun = function() print(graph$mm_ir_ven_fy), width = 7.5, height = 5.5)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(graph$mm_ir_ven_qtr), width = 6.0, height = 6.5)
+  fun = function() {
+    gt <- ggplot_gtable(ggplot_build(graph$mm_ir_ven_qtr))
+    gt$layout$clip[gt$layout$name == "panel"] <- "off"
+    print(grid::grid.draw(gt), width = 6.0, height = 6.5)
+  })
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
   fun = function() print(graph$mm_ir_con_fy), width = 6, height = 5.5)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
@@ -35,9 +39,9 @@ hh_doc <- addParagraph(hh_doc,
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
   fun = function() print(graph$benzo), width = 5.5, height = 4.5)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-                  fun = function() print(graph$stim), width = 5.5, height = 4)
+                  fun = function() print(graph$stim), width = 5.5, height = 3.8)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(graph$benzo_stim), width = 5.5, height = 4)
+  fun = function() print(graph$benzo_stim), width = 5.5, height = 3.8)
 writeDoc(hh_doc, file = file.path(proj_wd$results,
   paste0("outcomes run ", input$run_dt, ".docx")))
 p_msg("quarterly medication report complete")

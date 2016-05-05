@@ -56,18 +56,18 @@ graph$mm_ir_ven_fy <- ggplot(data = agg$mm_ir$ven_comb[span_type == "fy"],
 agg$mm_ir$ven_comb[, span_label := factor(span_label,
   levels = agg$mm_ir$ven_comb[, rev(sort(unique(span_label)))])]
 graph$mm_ir_ven_qtr <- ggplot(data = agg$mm_ir$ven_comb[span_type == "qtr"],
-    aes(x = vendor, y = pct_mm_ir, ymax = 1.2*pct_mm_ir, fill = span_label)) +
+    aes(x = vendor, y = pct_mm_ir, ymax = 1.15*pct_mm_ir, fill = span_label)) +
   geom_bar(stat = "identity", color = "black",
            position = position_dodge(0.85), width = 0.85) +
   coord_flip() + theme_light() +
   theme(legend.position = "top",
-        legend.margin = unit(c(-0.1,0.01,-0.3,0.01), "cm")
-        # plot.margin = unit(c(0,0,0,0), "cm")
+        legend.margin = unit(c(-0.1,0.01,-0.25,0.01), "cm"),
+        plot.margin = unit(c(0, 0, 0, 0), "cm")
         ) +
   geom_text(aes(x = vendor, y = pct_mm_ir, label = gg_lab), size = 2.75,
     hjust = -0.1, na.rm = TRUE, position = position_dodge(0.85)) +
-  geom_text(aes(x = vendor, y  = 0, label = num_IRs), hjust = 1.5, na.rm = TRUE,
-            position = position_dodge(0.85), size = 2.75) +
+  geom_text(aes(x = vendor, y  = 0, label = num_IRs), hjust = 1.25, na.rm = TRUE,
+            position = position_dodge(0.85), size = 2.75, fontface = "bold") +
   labs(x = "provider", y = "percent consumers w/ missed medication IRs",
        title = expression(atop("Missed Med IRs: Fiscal Quarters",
                                atop(italic("IR total before bar"), "")))) +
