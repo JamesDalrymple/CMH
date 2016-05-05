@@ -38,6 +38,30 @@ team_expdt as Home_Health_disc_date
 from encompass.dbo.E2_Fn_Health_Home_Consumers('%1$s', getdate()) as HH
 join Frank_data.dbo.tblCC360_sinceFY14_Med_Only CC on HH.Case_No = CC.case_no
 and CC.service_from_date between '%1$s' and '%2$s'", sql$start_dt, sql$end_dt)
+
+# health home activities
+
+# hh_nurse
+sql$query$hh_nurse <- sprintf("select distinct
+  cmh.case_no, cmh.team2 as team, cmh.team_effdt, cmh.team_expdt, cmh.dob,
+  cmh.gender, cmh.staff_eff, cmh.staff_exp,
+  case when cmh.staff_type = 'SAMHSA Staff' then 'Y' else 'N' end as hh_nurse,
+  dg.MI, dg.DD,
+  Isnull( PrimaryCareClinic.PC_CNAME, ltrim(rtrim(PrimaryCarePhysician.PC_LNAME))) as primary_care
+from encompass.dbo.tblE2_CMH_Adm_Consumers_w_OBRA as cmh
+left join encompass.dbo.E2_Fn_CMH_Consumers_Diagnoses2('Washtenaw',
+  '%1$s', '%2$s') as dg on dg.Case_No = cmh.Case_No and cmh.County = dg.county
+join PCCClient as C on cast(C.CL_CASENO as int) = cmh.case_no
+left join PCCPrimaryCareClinic PrimaryCareClinic on C.CLF_PCCID = PrimaryCareClinic.PC_RCDID and PrimaryCareClinic.PC_OKTOUSE ='Y'
+left join encompass.dbo.PCCPrimaryCarePhysician PrimaryCarePhysician on C.CLF_PCPID = PrimaryCarePhysician.PC_RCDID and PrimaryCarePhysician.PC_OKTOUSE  ='Y'
+where cmh.county = 'Washtenaw' and cmh.team2 = 'WSH - Health Home'",
+  sql$start_dt, sql$end_dt)
+
+sql$query$hh_bucket <- "select distinct
+enter_date, e2_case_no, hh_bucket
+from frank_data.dbo.tblE2_HH_bucket_from_State"
+
+
 # tiers
 # nurse tiers
 
