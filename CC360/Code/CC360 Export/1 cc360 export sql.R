@@ -57,6 +57,49 @@ left join encompass.dbo.PCCPrimaryCarePhysician PrimaryCarePhysician on C.CLF_PC
 where cmh.county = 'Washtenaw' and cmh.team2 = 'WSH - Health Home'",
   sql$start_dt, sql$end_dt)
 
+sql$query$hh_services <- sprintf("select distinct
+  HH.team_effdt, HH.team_expdt, PN.Case_No,
+	'Progress Notes' as Document,
+	PN.PR_RCDID, PN.Progress_Note_date as Doc_date,
+	PN.CPT_CODE, PN.Modifier as MOD, PN.SA_Units, PN.facetoface,
+	PN.Staff, PN.begintime, PN.endtime, PN.elapsed_time,
+	HH_NA Encounter_not_Health_Home,
+	HH_DSCCCM ComprehensiveCareManagment,
+	HH_DSCCC CareCoordination,
+	HH_DSCHP HealthPromotion,
+	HH_DSCCTC ComprehensiveTransitionalCare,
+	HH_DSCSSVC Indiv_and_FamilySupportServices,
+	HH_DSCREF Referrals_To_Community_and_Social_Supp_Services
+	from encompass.dbo.E2_Fn_Health_Home_Consumers('%1$s', '%2$s') as HH
+	join encompass.dbo.tblE2_Progress_Note PN on PN.County = 'Washtenaw' and
+HH.Case_No = PN.Case_No and
+		PN.Progress_Note_date between '%1$s' and '%2$s' and PN.Progress_Note_date
+between HH.team_effdt and COALESCE( HH.team_expdt, getdate())
+	join encompass.dbo.ENCHealthHomeWorksheet HHW on HHW.HH_SRCFILE = 'ENCPRNPF'
+and HHW.HH_SRCRCD = PN.PR_RCDID and HH_OKTOUSE = 'Y'
+	union
+	select distinct
+		HH.team_effdt, HH.team_expdt, WN.Case_No, 'Wellness Notes' as Document,
+		WN.WN_RCDID, WN.WellnessNote_date,
+		WN.CPT_CODE, WN.MOD, WN.SA_Units, WN.facetoface,
+		WN.Staff, WN.begintime, WN.endtime,
+  encompass.dbo.GetElaspedTime (Begintime, EndTime) as elapsed_time,
+	HH_NA notAddressed,
+	HH_DSCCCM ComprehensiveCareManagment,
+	HH_DSCCC CareCoordination,
+	HH_DSCHP HealthPromotion,
+	HH_DSCCTC ComprehensiveTransitionalCare,
+	HH_DSCSSVC Indiv_and_FamilySupportServices,
+	HH_DSCREF Referrals_To_Community_and_Social_Supp_Services
+	from encompass.dbo.E2_Fn_Health_Home_Consumers('%1$s', '%2$s') as HH
+	join encompass.dbo.tblE2_WellnessNote_Header as WN on WN.County = 'Washtenaw'
+  and HH.Case_No = WN.Case_No and WN.WellnessNote_date between '%1$s' and
+  '%2$s' and WN.WellnessNote_date between HH.team_effdt and
+  COALESCE(HH.team_expdt, getdate())
+join encompass.dbo.ENCHealthHomeWorksheet HHW on HHW.HH_SRCFILE = 'ENCWNHPF'
+  and HHW.HH_SRCRCD = WN.WN_RCDID and HH_OKTOUSE = 'Y'",
+  sql$start_dt, sql$end_dt)
+
 sql$query$hh_bucket <- "select distinct
 enter_date, e2_case_no, hh_bucket
 from frank_data.dbo.tblE2_HH_bucket_from_State"
