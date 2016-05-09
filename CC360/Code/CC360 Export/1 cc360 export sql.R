@@ -41,8 +41,8 @@ and CC.service_from_date between '%1$s' and '%2$s'", sql$start_dt, sql$end_dt)
 
 # health home activities
 
-# hh_nurse
-sql$query$hh_nurse <- sprintf("select distinct
+# hh_nurse, PCP, MI/DD designation, gender, HH start/stop
+sql$query$hh_detail <- sprintf("select distinct
   cmh.case_no, cmh.team2 as team, cmh.team_effdt, cmh.team_expdt, cmh.dob,
   cmh.gender, cmh.staff_eff, cmh.staff_exp,
   case when cmh.staff_type = 'SAMHSA Staff' then 'Y' else 'N' end as hh_nurse,
@@ -51,8 +51,8 @@ sql$query$hh_nurse <- sprintf("select distinct
 from encompass.dbo.tblE2_CMH_Adm_Consumers_w_OBRA as cmh
 left join encompass.dbo.E2_Fn_CMH_Consumers_Diagnoses2('Washtenaw',
   '%1$s', '%2$s') as dg on dg.Case_No = cmh.Case_No and cmh.County = dg.county
-join PCCClient as C on cast(C.CL_CASENO as int) = cmh.case_no
-left join PCCPrimaryCareClinic PrimaryCareClinic on C.CLF_PCCID = PrimaryCareClinic.PC_RCDID and PrimaryCareClinic.PC_OKTOUSE ='Y'
+join encompass.dbo.PCCClient as C on cast(C.CL_CASENO as int) = cmh.case_no
+left join encompass.dbo.PCCPrimaryCareClinic PrimaryCareClinic on C.CLF_PCCID = PrimaryCareClinic.PC_RCDID and PrimaryCareClinic.PC_OKTOUSE ='Y'
 left join encompass.dbo.PCCPrimaryCarePhysician PrimaryCarePhysician on C.CLF_PCPID = PrimaryCarePhysician.PC_RCDID and PrimaryCarePhysician.PC_OKTOUSE  ='Y'
 where cmh.county = 'Washtenaw' and cmh.team2 = 'WSH - Health Home'",
   sql$start_dt, sql$end_dt)
@@ -60,10 +60,6 @@ where cmh.county = 'Washtenaw' and cmh.team2 = 'WSH - Health Home'",
 sql$query$hh_bucket <- "select distinct
 enter_date, e2_case_no, hh_bucket
 from frank_data.dbo.tblE2_HH_bucket_from_State"
-
-
-# tiers
-# nurse tiers
 
 sql$output <- sapply(
   names(sql$query),
@@ -76,3 +72,43 @@ sql$output <- sapply(
   },
   USE.NAMES = TRUE
 )
+
+# tiers --- perhaps not pretty, but more convenient to coding wise ------------
+sql$tiers_fn <- function(end_dt) {
+  stopifnot(class(end_dt) == "Date")
+  sprintf("select distinct
+CMH.case_no, cmh.num_ERs as num_ER_last180,
+cmh.num_PH_IPs as num_PH_IPs_last180,
+cmh.num_ER_or_PH_IP as num_ER_or_PH_IP_last180, '%1$s' as end_date,
+Case when (cmh.num_ERs>= 4 OR cmh.num_PH_IPs >= 3) then 3
+when (cmh.num_ERs>0 OR cmh.num_PH_IPs >0) then 2
+when CC2.case_no IS not null then 1
+else 0 end as util_level,
+Case when (cmh.num_ERs> 0 OR cmh.num_PH_IPs >0) and cmh.Last_PHR_4_majors = 'Y' then 1
+when cmh.num_ER_or_PH_IP = 0 and cmh.Poor_or_fair = 'Y' and
+cmh.Last_PHR_smoke_Chol_HBP = 'Y' then 2
+  when (cmh.num_ERs> 0 OR cmh.num_PH_IPs >0) OR cmh.Poor_or_fair = 'Y'
+or cmh.Last_PHR_smoke_Chol_HBP = 'Y'
+OR cmh.Last_PHR_4_majors_risk = 'Y'
+then 3
+when cmh.Last_PHR_date IS not null then 4
+else 5 end as tier
+from encompass.dbo.E2_Fn_Active_Clients_Between_w_team_dates3 ('%1$s') as CMH
+left join frank_data.dbo.tblCC360_sinceFY14_w_WCHO CC2
+  on CC2.county = 'Washtenaw' and CMH.case_no = CC2.case_no and
+  CC2.service_from_date between cast('%1$s' as datetime) - 180 and '%1$s'
+left join encompass.dbo.v_WSH_Health_Home HH2 on HH2.Case_No = CMH.case_no",
+end_dt)
+}
+
+sql$mons <- date_expansion(start_date = sql$start_dt,
+                           end_date = sql$end_dt, types = "mon")
+
+sql$tier_dt <- NULL
+for (i in seq(sql$mons)) {
+  sql$tier_dt <- rbindlist(list(sql$tier_dt,
+    data.table(sqlQuery(query = sql$tiers_fn(sql$mons[i, span_end]),
+           channel = sql$channel, stringsAsFactors = FALSE))))
+}; rm(i)
+
+sql$tier_dt
