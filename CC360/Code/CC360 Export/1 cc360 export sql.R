@@ -21,8 +21,8 @@ Surgical_Procedure_Code2, Surgical_Procedure_Code2_desc,
 Surgical_Procedure_Code3, Surgical_Procedure_Code3_desc, Procedure_Modifier1,
 Procedure_Modifier2, Procedure_Modifier3, Procedure_Modifier4,
 Adjudication_Date, Extract_Number, ERN,
-HH.case_no as E2_Case_no, team_effdt as Home_Health_adm_date,
-team_expdt as Home_Health_disc_date
+HH.case_no, team_effdt as HH_adm_date,
+team_expdt as HH_disc_date
 from encompass.dbo.E2_Fn_Health_Home_Consumers('%1$s', getdate()) as HH
 join frank_data.dbo.tblCC360_sinceFY14_w_WCHO CC on HH.Case_No = CC.case_no
 and CC.service_from_date between '%1$s' and '%2$s'", sql$start_dt, sql$end_dt)
@@ -33,8 +33,8 @@ Transaction_Type, Transaction_Type2, Service_From_Date, Service_To_Date,
 Paid_Units, National_Drug_Code, Drug_Name, Days_Supply,
 Specific_Therapeutic_Drug_Class, Drug_class_Name, Billing_Provider_Name,
 Rendering_Provider_Name, Prescribing_Provider_Name, Adjudication_Date,
-Extract_Number, HH.case_no as E2_Case_no, team_effdt as Home_Health_adm_date,
-team_expdt as Home_Health_disc_date
+Extract_Number, HH.case_no, team_effdt as HH_adm_date,
+team_expdt as HH_disc_date
 from encompass.dbo.E2_Fn_Health_Home_Consumers('%1$s', getdate()) as HH
 join Frank_data.dbo.tblCC360_sinceFY14_Med_Only CC on HH.Case_No = CC.case_no
 and CC.service_from_date between '%1$s' and '%2$s'", sql$start_dt, sql$end_dt)
@@ -58,18 +58,18 @@ where cmh.county = 'Washtenaw' and cmh.team2 = 'WSH - Health Home'",
   sql$start_dt, sql$end_dt)
 
 sql$query$hh_services <- sprintf("select distinct
-  HH.team_effdt, HH.team_expdt, PN.Case_No,
-	'Progress Notes' as Document,
-	PN.PR_RCDID, PN.Progress_Note_date as Doc_date,
-	PN.CPT_CODE, PN.Modifier as MOD, PN.SA_Units, PN.facetoface,
-	PN.Staff, PN.begintime, PN.endtime, PN.elapsed_time,
-	HH_NA Encounter_not_Health_Home,
-	HH_DSCCCM ComprehensiveCareManagment,
-	HH_DSCCC CareCoordination,
-	HH_DSCHP HealthPromotion,
-	HH_DSCCTC ComprehensiveTransitionalCare,
-	HH_DSCSSVC Indiv_and_FamilySupportServices,
-	HH_DSCREF Referrals_To_Community_and_Social_Supp_Services
+  pn.case_no,
+	'Progress Notes' as document,
+	PN.progress_note_date as doc_date,
+	PN.cpt_code, PN.Modifier as mod, PN.sa_units as cpt_units, PN.facetoface as f2f,
+	PN.begintime, PN.endtime, PN.elapsed_time,
+	HH_NA as encounter_not_HH,
+	HH_DSCCCM as comprehensive_care_mgt,
+	HH_DSCCC as care_coordination,
+	HH_DSCHP health_promotion,
+	HH_DSCCTC as comprehensive_transitional_care,
+	HH_DSCSSVC indiv_and_fam_support,
+	HH_DSCREF referrals_to_community_and_social_supp_services
 	from encompass.dbo.E2_Fn_Health_Home_Consumers('%1$s', '%2$s') as HH
 	join encompass.dbo.tblE2_Progress_Note PN on PN.County = 'Washtenaw' and
 HH.Case_No = PN.Case_No and
@@ -79,18 +79,18 @@ between HH.team_effdt and COALESCE( HH.team_expdt, getdate())
 and HHW.HH_SRCRCD = PN.PR_RCDID and HH_OKTOUSE = 'Y'
 	union
 	select distinct
-		HH.team_effdt, HH.team_expdt, WN.Case_No, 'Wellness Notes' as Document,
-		WN.WN_RCDID, WN.WellnessNote_date,
-		WN.CPT_CODE, WN.MOD, WN.SA_Units, WN.facetoface,
-		WN.Staff, WN.begintime, WN.endtime,
+		WN.case_no, 'Wellness Notes' as document,
+		WN.WellnessNote_date,
+		WN.cpt_code, WN.mod, WN.sa_units as cpt_units, WN.facetoface as f2f,
+		WN.begintime, WN.endtime,
   encompass.dbo.GetElaspedTime (Begintime, EndTime) as elapsed_time,
-	HH_NA notAddressed,
-	HH_DSCCCM ComprehensiveCareManagment,
-	HH_DSCCC CareCoordination,
-	HH_DSCHP HealthPromotion,
-	HH_DSCCTC ComprehensiveTransitionalCare,
-	HH_DSCSSVC Indiv_and_FamilySupportServices,
-	HH_DSCREF Referrals_To_Community_and_Social_Supp_Services
+	HH_NA as notAddressed,
+	HH_DSCCCM comprehensive_care_mgt,
+	HH_DSCCC care_coordination,
+	HH_DSCHP health_promotion,
+	HH_DSCCTC comprehensive_transitional_care,
+	HH_DSCSSVC indiv_and_fam_support,
+	HH_DSCREF referrals_to_community_and_social_supp_services
 	from encompass.dbo.E2_Fn_Health_Home_Consumers('%1$s', '%2$s') as HH
 	join encompass.dbo.tblE2_WellnessNote_Header as WN on WN.County = 'Washtenaw'
   and HH.Case_No = WN.Case_No and WN.WellnessNote_date between '%1$s' and
@@ -101,7 +101,7 @@ join encompass.dbo.ENCHealthHomeWorksheet HHW on HHW.HH_SRCFILE = 'ENCWNHPF'
   sql$start_dt, sql$end_dt)
 
 sql$query$hh_bucket <- "select distinct
-enter_date, e2_case_no, hh_bucket
+enter_date, e2_case_no as case_no, hh_bucket
 from frank_data.dbo.tblE2_HH_bucket_from_State"
 
 sql$output <- sapply(
