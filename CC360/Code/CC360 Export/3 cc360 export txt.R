@@ -17,3 +17,14 @@ write.table(modify$cc360_main,
 write.table(modify$cc360_med,
             file = file.path(project_wd$results, "cc360_med.txt"),
             row.names = FALSE, sep = "|", na = "")
+
+
+
+if (FALSE) {
+  t(modify$hh_detail[1, ])
+  t(modify$hh_services[1, ])
+  t(modify$hh_bucket[1, ])
+  t(modify$tiers[1, ])
+  t(modify$cc360_main[1, ])
+  t(modify$cc360_med[1, ])
+}
