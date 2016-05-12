@@ -20,7 +20,12 @@ write.table(modify$cc360_med,
 
 
 
+
+
 if (FALSE) {
+  lapply(modify$tiers, unique)
+  modify$cc360_main[, unique(.SD), .SDcols = Cs(case_no, HH_adm_date, HH_disc_date)][order(case_no)][,  length(unique(case_no))]
+
   t(modify$hh_detail[1, ])
   t(modify$hh_services[1, ])
   t(modify$hh_bucket[1, ])
