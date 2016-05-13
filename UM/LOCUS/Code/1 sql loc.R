@@ -2,28 +2,6 @@ sql <- list(
   channel = odbcConnect("WSHSQLGP"),
   query = list()
   )
-# community hospitalization
-sql$query$comm_hosp <-
-  sprintf(
-    "select distinct
-    hosp.case_no, hosp.auth_eff, hosp.auth_exp, hosp.hosp_disc,
-    hosp.auth_days, hosp.dob
-    from encompass.dbo.tblE2_Hosp as hosp
-    where hosp.county = 'Washtenaw' and hosp.cpt_code not like '09%%'
-    and hosp.auth_eff between '%1$s' and '%2$s'
-    and hosp.contract_paneltype not like 'State Facility%%'",
-    input$min_start, input$max_end)
-# state hospitalization
-sql$query$state_hosp <-
-  sprintf(
-    "select distinct
-    hosp.case_no, hosp.auth_eff, hosp.auth_exp, hosp.hosp_disc,
-    hosp.auth_days, hosp.hosp, hosp.dob
-    from encompass.dbo.tblE2_Hosp as hosp
-    where hosp.county = 'Washtenaw' and hosp.cpt_code not like '09%%'
-    and hosp.auth_eff between '%1$s' and '%2$s'
-    and hosp.contract_paneltype like 'State Facility%%'",
-    input$min_start, input$max_end)
 # admissions
 sql$query$adm <-
   sprintf(
@@ -41,17 +19,16 @@ where adm.county = 'Washtenaw' and adm.provider in
   and adm.providertype = 'Direct Provider'
   and adm.provider_eff <= '%2$s' and
   (adm.provider_exp >= '%1$s' or adm.provider_exp is null)",
-    input$min_start, input$max_end)
+    input$start_dt, input$end_dt)
 # services
-sql$query$served <-
-  sprintf(
-    "select distinct
-    svc.case_no, cast(svc.service_date as date) as service_date
-    from encompass.dbo.tblE2_SAL_claims_w_SUD as svc
-    where svc.county = 'Washtenaw' and
-    svc.provider_type <> 'SUD Treatment Agency' and
-    svc.service_date between '%1$s' and '%2$s'",
-    input$min_start, input$max_end)
+sql$query$services <- sprintf("select distinct
+  svc.case_no, cast(svc.service_date as date) as service_date,
+  svc.cpt_code, units, cat
+from encompass.dbo.tblE2_SAL_claims_w_SUD as svc
+where svc.county = 'Washtenaw' and
+  svc.provider_type <> 'SUD Treatment Agency' and
+  svc.service_date between '%1$s' and '%2$s'",
+input$start_dt, input$end_dt)
 
 sql$query$locus <-
   sprintf("select distinct
@@ -67,7 +44,7 @@ left join encompass.dbo.PCFCode OveriddenDisposition on
   Locus.AHF_ODISP	= OveriddenDisposition.CO_RCDID
 where Doc.Do_date between '%1$s' and '%2$s'
   and Doc.County like 'Washtenaw' and (locus.ah_score is not null or
-  RecommendedDisposition.CO_NAME is not null)", input$min_start, input$max_end)
+  RecommendedDisposition.CO_NAME is not null)", input$start_dt, input$end_dt)
 
 
 # generate output based on sql$query list

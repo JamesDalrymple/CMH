@@ -1,6 +1,8 @@
 pkg_loader(packages = c("ggplot2", "RODBC", "ReporteRs", "xlsx",
                         "stringi", "sqldf"))
 aux <- new.env(parent  = .GlobalEnv )
+proj_data <- new.env(parent = .GlobalEnv)
+modify <- new.env(parent = .GlobalEnv)
 
 aux$count_overlap <- function(fy_start, fy_end, h_start, h_exp, h_end) {
   dt_count <- data.table(fy_start, fy_end, h_start, h_exp, h_end)

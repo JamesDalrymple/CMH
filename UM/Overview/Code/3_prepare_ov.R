@@ -1,5 +1,23 @@
+# TODO
+# 1. how many new admissions, monthly, for last year or so.
+#   A new admission is a new consumer assigned to a core CMH team.
+# 2. use override disp if exists, otherwise use calculated disp
+# 3. service array for LOCUS override 2 and below for new consumers
+#  (a) 3 months from core CMH assignment
+#  (b) 6 months from core CMH assignment
+# 4. split by fund GF/medicaid
+
 # check data for potential integrity issues
 prepare <- new.env(parent = .GlobalEnv)
+
+# locus -----------------------------------------------------------------------
+locus <- copy(sql$output$locus)
+setf(locus, j = Cs(init_disp, ovr_disp), stringi::stri_trim)
+
+locus[, init_disp := wccmh::locus_word2num(init_disp)]
+locus[, ovr_disp := wccmh::locus_word2num(ovr_disp)]
+locus[, comb_disp := ifelse(is.na(ovr_disp), init_disp, ovr_disp)]
+locus[, locus_date := as.Date(locus_date)]
 
 # community hospitalization ---------------------------------------------------
 comm_hosp <- copy(sql$output$comm_hosp)
