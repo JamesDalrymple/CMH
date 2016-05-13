@@ -26,14 +26,12 @@ input <- list(
   start_dt = "10/1/2014", end_dt = "4/30/2016",
   report_date = format(Sys.Date(), "%m_%d_%y"),
   months = c("October", "November", "December"),
+  result_subfolder = "May 2016",
   fy = "2016")
 # load packages, source files -------------------------------------------------
 source(file.path(project_wd$code, "0 aux loc.R"))
 source(file.path(project_wd$code, "1 sql loc.R"))
 source(file.path(project_wd$code, "2 modify loc.R"))
-source(file.path(project_wd$code, "3 graph loc.R"))
-source(file.path(project_wd$code, "4 export loc.R"))
-
-# source(file.path(project_wd$code, "4a_modify_comm_hosp.R"))
-# source(file.path(project_wd$code, "7_graphs_ov.R"))
-# source(file.path(project_wd$code, "8_export_xlsx.R"))
+source(file.path(project_wd$code, "3 prep loc.R"))
+# source(file.path(project_wd$code, "4 graph loc.R"))
+# source(file.path(project_wd$code, "5 export loc.R"))

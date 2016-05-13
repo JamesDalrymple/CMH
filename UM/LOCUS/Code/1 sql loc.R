@@ -8,7 +8,7 @@ sql$query$adm <-
 "select distinct
   adm.case_no, adm.provider_eff as team_eff, adm.provider_exp as team_exp,
   adm.provider as team, adm.assigned_staff as staff, adm.staff_eff,
-  adm.staff_exp
+  adm.staff_exp, adm.adm_effdt, adm.adm_expdt
 from encompass.dbo.tblE2_Adm_Consumers as adm
 where adm.county = 'Washtenaw' and adm.provider in
   ('WSH - ACT', 'WSH - ATO' , 'WSH - Children''s Services',

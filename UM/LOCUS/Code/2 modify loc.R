@@ -3,7 +3,6 @@ modify <- new.env(parent = .GlobalEnv)
 # locus -----------------------------------------------------------------------
 locus <- copy(sql$output$locus)
 setf(locus, j = Cs(init_disp, ovr_disp), stringi::stri_trim)
-
 locus[, init_disp := wccmh::locus_word2num(init_disp)]
 locus[, ovr_disp := wccmh::locus_word2num(ovr_disp)]
 locus[, comb_disp := ifelse(is.na(ovr_disp), init_disp, ovr_disp)]
@@ -11,10 +10,8 @@ locus[, locus_date := as.Date(locus_date)]
 
 # admissions ------------------------------------------------------------------
 adm <- copy(sql$output$adm)
-modify$date_cols <- c("team_eff", "staff_eff", "staff_exp")
-for (j in modify$date_cols) {
-  set(adm, j = j, value = as.Date((adm[[j]])))
-}
+setf(adm, j = Cs(team_eff, team_exp, staff_eff, staff_exp,
+                 adm_effdt, adm_expdt), as.Date)
 adm[, team := cmh_recode(team)]
 # these 22 records are mistakenly mixed up on start/end dates
 adm[staff_eff > staff_exp & staff %in%
@@ -55,8 +52,13 @@ if (nrow(modify$check) > 0) {
 if (length(intersect(names(adm), "check")) == 1) {
   adm[, check := NULL]
 }
+adm[, Cs(staff_eff, staff_exp, staff) := NULL]
+adm <- unique(adm)
+adm[, adm_grp := seq(.GRP), by = list(case_no, adm_effdt)]
+
+
+
 # services --------------------------------------------------------------------
 services <- copy(sql$output$services)
-services[1]
-# served[, service_date := as.Date(service_date)]
+setf(services, j = "service_date", as.Date)
 # no need to check served at this time 2/3/16
