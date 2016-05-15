@@ -54,7 +54,7 @@ if (length(intersect(names(adm), "check")) == 1) {
 }
 adm[, Cs(staff_eff, staff_exp, staff) := NULL]
 adm <- unique(adm)
-adm[, adm_grp := seq(.GRP), by = list(case_no, adm_effdt)]
+adm[, adm_grp := seq(.N), by = list(case_no, adm_effdt)]
 adm[is.na(adm_expdt), adm_expdt := Sys.Date() + 999]
 # services --------------------------------------------------------------------
 services <- copy(sql$output$services)
