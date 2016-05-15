@@ -4,9 +4,9 @@ scrub() # clear RAM and hidden environments
 # which computer results in correct base working directory
 cmh_wd <-
   data.table(expand.grid(stringsAsFactors = FALSE,
-                                     dir_names = c("Dropbox", "GitHub"),
-                                     comp_names = c("WSHSQLGP", "DESKTOP-45K7RRN", "JAMES-2"),
-                                     base = "filler"))
+    dir_names = c("Dropbox", "GitHub"),
+    comp_names = c("WSHSQLGP", "DESKTOP-45K7RRN", "JAMES-2"),
+    base = "filler"))
 setkey(cmh_wd, dir_names, comp_names)[
   J("Dropbox", "WSHSQLGP"), base := "C:/Users/dalrymplej/Dropbox"]
 setkey(cmh_wd, dir_names, comp_names)[
@@ -25,8 +25,8 @@ rm(cmh_wd)
 input <- list(
   start_dt = "10/1/2014", end_dt = "4/30/2016",
   report_date = format(Sys.Date(), "%m_%d_%y"),
-  months = c("October", "November", "December"),
   result_subfolder = "May 2016",
+  locus_range = 30,
   fy = "2016")
 # load packages, source files -------------------------------------------------
 source(file.path(project_wd$code, "0 aux loc.R"))
