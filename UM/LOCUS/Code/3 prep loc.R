@@ -64,7 +64,7 @@ if ( nrow(prep$loc_low_lev[is.na(um_desc)]) > 0 ) stop("um_desc unassigned")
 # CMH monthly admissions, discharges, total admitted ---------------------------
 # WITHOUT people closed <= 30 days
 prep$adm_new <- copy(adm[, unique(.SD),
-                         .SDcols = Cs(case_no, team_eff, team_exp, team)])
+                         .SDcols = Cs(case_no, team_eff, team_exp, program)])
 prep$adm_new[!is.na(team_exp),
              day_diff := as.numeric(team_exp - team_eff + 1)]
 prep$adm_new[is.na(team_exp), day_diff :=

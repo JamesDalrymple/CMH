@@ -1,43 +1,58 @@
 agg <- new.env(parent = .GlobalEnv)
 
-agg$locus_levels <-
+agg$locus_levels$all <-
   locus[, list(cases = length(unique(case_no))), keyby = list(comb_disp)]
+agg$locus_levels$prog <-
+  locus[, list(cases = length(unique(case_no))),
+        keyby = list(comb_disp, program)]
 
-
-agg$loc_3mon <-
+agg$loc_3mon$all <-
   prep$loc_low_lev[between(service_date, adm_effdt, three_mon_end),
                    list(consumers = length(unique(case_no)),
                         total_units = sum(units),
                         service_count = length(cpt_code)), by = um_desc]
-write.csv(agg$loc_3mon,
-          file = file.path(project_wd$results,
-          "monthly over 30 days admissions.csv"), row.names = FALSE)
-
-agg$loc_6mon <-
+agg$loc_6mon$all <-
   prep$loc_low_lev[between(service_date, adm_effdt, six_mon_end),
                    list(consumers = length(unique(case_no)),
                         total_units = sum(units),
                         service_count = length(cpt_code)), by = um_desc]
-write.csv(agg$loc_6mon,
-          file = file.path(project_wd$results,
-          "monthly over 30 days admissions.csv"), row.names = FALSE)
+agg$loc_3mon$prog <-
+  prep$loc_low_lev[between(service_date, adm_effdt, three_mon_end),
+                   list(consumers = length(unique(case_no)),
+                        total_units = sum(units),
+                        service_count = length(cpt_code)),
+                   by = list(um_desc, program)]
+agg$loc_6mon$prog <-
+  prep$loc_low_lev[between(service_date, adm_effdt, six_mon_end),
+                   list(consumers = length(unique(case_no)),
+                        total_units = sum(units),
+                        service_count = length(cpt_code)),
+                   by = list(um_desc, program)]
 
-agg$loc_3mon[, um_desc := factor(um_desc,
-  levels = agg$loc_3mon[order(total_units), um_desc])]
-agg$loc_6mon[, um_desc := factor(um_desc,
-  levels = agg$loc_6mon[order(total_units), um_desc])]
+agg$loc_3mon$all[, um_desc := factor(um_desc,
+  levels = agg$loc_3mon$all[order(total_units), um_desc])]
+agg$loc_6mon$all[, um_desc := factor(um_desc,
+  levels = agg$loc_6mon$all[order(total_units), um_desc])]
+agg$loc_3mon$prog[, um_desc := factor(um_desc,
+  levels = agg$loc_3mon$all[order(total_units), um_desc])]
+agg$loc_6mon$prog[, um_desc := factor(um_desc,
+  levels = agg$loc_6mon$all[order(total_units), um_desc])]
 
-agg$adm_status <-
+agg$adm_status$all <-
   prep$adm_new[, list(adm = sum(adm, na.rm = TRUE),
                       disc = sum(disc, na.rm = TRUE),
                       active = length(unique(case_no))),
                by = list(span_label)]
-write.csv(agg$adm_status, file = file.path(project_wd$results,
-          "monthly over 30 days admissions.csv"), row.names = FALSE)
+agg$adm_status$prog <-
+  prep$adm_new[, list(adm = sum(adm, na.rm = TRUE),
+                      disc = sum(disc, na.rm = TRUE),
+                      active = length(unique(case_no))),
+               by = list(span_label, program)]
 
 # number of new consumer admissions for CMH core collectively
-agg$new_adm <-
+agg$new_adm$all <-
   prep$adm[, list(num_adm = length(unique(case_no))),
            by = list(span_label)]
-write.csv(agg$new_adm, file = file.path(project_wd$results,
-          "new core cmh admissions.csv"), row.names = FALSE)
+agg$new_adm$prog <-
+  prep$adm[, list(num_adm = length(unique(case_no))),
+           by = list(span_label, program)]
