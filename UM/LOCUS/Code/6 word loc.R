@@ -19,7 +19,9 @@ doc <- addPlot(doc, vector.graphic = TRUE,
   fun = function() print(graph$adm_status$dd), width = 5.5, height = 6.0)
 doc <- addPlot(doc, vector.graphic = TRUE,
   fun = function() print(graph$adm_status$yf), width = 5.5, height = 6.0)
+doc <- addParagraph(doc, "\nTable for Admission Status for Entire Agency")
 doc <- addFlexTable(doc, FlexTable(agg$adm_status$all))
+doc <- addParagraph(doc, "\nTable for Admission Status by Program")
 doc <- addFlexTable(doc, FlexTable(agg$adm_status$prog))
 doc <- addPageBreak(doc)
 # Locus 3+6 month -------------------------------------------------------------
@@ -31,22 +33,22 @@ doc <- addPlot(doc, vector.graphic = TRUE,
 doc <- addPlot(doc, vector.graphic = TRUE,
   fun = function() print(graph$loc_3mon$mi), width = 5.5, height = 6.0)
 doc <- addPlot(doc, vector.graphic = TRUE,
-  fun = function() print(graph$loc_3mon$dd), width = 5.5, height = 6.0)
-doc <- addPlot(doc, vector.graphic = TRUE,
-  fun = function() print(graph$loc_3mon$access), width = 5.5, height = 6.0)
+  fun = function() print(graph$loc_3mon$access), width = 4.25, height = 6.0)
+doc <- addParagraph(doc, "\nTable for three month service array for new consumers with a LOCUS less than Level 3 for entire agency")
 doc <- addFlexTable(doc, FlexTable(agg$loc_3mon$all))
+doc <- addParagraph(doc, "\nTable for three month service array for new consumers wiuth a LOCUS less than Level 3 by program")
 doc <- addFlexTable(doc, FlexTable(agg$loc_3mon$prog))
 doc <- addPageBreak(doc)
 # 6 months LOCUS
 doc <- addPlot(doc, vector.graphic = TRUE,
-               fun = function() print(graph$loc_6mon$all), width = 5.5, height = 6.0)
+               fun = function() print(graph$loc_6mon$all), width = 5.25, height = 6.5)
 doc <- addPlot(doc, vector.graphic = TRUE,
-               fun = function() print(graph$loc_6mon$mi), width = 5.5, height = 6.0)
+               fun = function() print(graph$loc_6mon$mi), width = 5.5, height = 6.5)
 doc <- addPlot(doc, vector.graphic = TRUE,
-               fun = function() print(graph$loc_6mon$dd), width = 5.5, height = 6.0)
-doc <- addPlot(doc, vector.graphic = TRUE,
-               fun = function() print(graph$loc_6mon$access), width = 5.5, height = 6.0)
+               fun = function() print(graph$loc_6mon$access), width = 4.25, height = 6.5)
+doc <- addParagraph(doc, "\nTable for six month service array for new consumers wiuth a LOCUS less than Level 3 for Entire Agency")
 doc <- addFlexTable(doc, FlexTable(agg$loc_6mon$all))
+doc <- addParagraph(doc, "\nTable for six month service array for new consumers wiuth a LOCUS less than Level 3 by program")
 doc <- addFlexTable(doc, FlexTable(agg$loc_6mon$prog))
 doc <- addPageBreak(doc)
 # new core CMH admissions -----------------------------------------------------
@@ -62,7 +64,9 @@ doc <- addPlot(doc, vector.graphic = TRUE,
   fun = function() print(graph$new_adm$yf), width = 5.5, height = 6.0)
 doc <- addPlot(doc, vector.graphic = TRUE,
   fun = function() print(graph$new_adm$access), width = 5.5, height = 6.0)
+doc <- addParagraph(doc, "\nTable for New Admissions for Entire Agency")
 doc <- addFlexTable(doc, FlexTable(agg$new_adm$all))
+doc <- addParagraph(doc, "\nTable for New Admissions by Program")
 doc <- addFlexTable(doc, FlexTable(agg$new_adm$prog))
 # save document ---------------------------------------------------------------
 writeDoc(doc, file = file.path(project_wd$results,

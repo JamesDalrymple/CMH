@@ -74,7 +74,7 @@ graph$loc_3mon$all <-
   theme_light() + coord_flip()+
   labs(title = bquote(atop(.("WCCMH: Services First Six Months"),
     atop(italic(.("New Core CMH Consumers Locus 2 and Below")), ""))),
-    y = "total number of units",
+    y = "# units",
     x = "UM Code Description")
 graph$loc_3mon$mi <-
   ggplot(data = agg$loc_3mon$prog[program == "MI"], aes(x = um_desc, y = total_units))+
@@ -83,7 +83,7 @@ graph$loc_3mon$mi <-
   theme_light() + coord_flip()+
   labs(title = bquote(atop(.("MI Program: Services First Six Months"),
                            atop(italic(.("New Core CMH Consumers Locus 2 and Below")), ""))),
-       y = "total number of units",
+       y = "# units",
        x = "UM Code Description")
 graph$loc_3mon$dd <-
   ggplot(data = agg$loc_3mon$prog[program == "DD"], aes(x = um_desc, y = total_units))+
@@ -92,7 +92,7 @@ graph$loc_3mon$dd <-
   theme_light() + coord_flip()+
   labs(title = bquote(atop(.("DD Program: Services First Six Months"),
                            atop(italic(.("New Core CMH Consumers Locus 2 and Below")), ""))),
-       y = "total number of units",
+       y = "# units",
        x = "UM Code Description")
 graph$loc_3mon$access <-
   ggplot(data = agg$loc_3mon$prog[program == "Access"], aes(x = um_desc, y = total_units))+
@@ -101,7 +101,7 @@ graph$loc_3mon$access <-
   theme_light() + coord_flip()+
   labs(title = bquote(atop(.("Y&F Program: Services First Six Months"),
                            atop(italic(.("New Core CMH Consumers Locus 2 and Below")), ""))),
-       y = "total number of units",
+       y = "# units",
        x = "UM Code Description")
 # locus - 6 months
 graph$loc_6mon$all <-
@@ -111,7 +111,7 @@ graph$loc_6mon$all <-
   theme_light() + coord_flip()+
   labs(title = bquote(atop(.("WCCMH: Services First Six Months"),
     atop(italic(.("New Core CMH Consumers Locus 2 and Below")), ""))),
-       y = "total number of units",
+       y = "# units",
        x = "UM Code Description")
 graph$loc_6mon$mi <-
   ggplot(data = agg$loc_6mon$prog[program == "MI"],
@@ -121,7 +121,7 @@ graph$loc_6mon$mi <-
   theme_light() + coord_flip()+
   labs(title = bquote(atop(.("MI Program: Services First Six Months"),
                            atop(italic(.("New Core CMH Consumers Locus 2 and Below")), ""))),
-       y = "total number of units",
+       y = "# units",
        x = "UM Code Description")
 graph$loc_6mon$dd <-
   ggplot(data = agg$loc_6mon$prog[program == "DD"],
@@ -131,7 +131,7 @@ graph$loc_6mon$dd <-
   theme_light() + coord_flip()+
   labs(title = bquote(atop(.("DD Program: Services First Six Months"),
                            atop(italic(.("New Core CMH Consumers Locus 2 and Below")), ""))),
-       y = "total number of units",
+       y = "# units",
        x = "UM Code Description")
 graph$loc_6mon$access <-
   ggplot(data = agg$loc_6mon$prog[program == "Access"],
@@ -141,7 +141,7 @@ graph$loc_6mon$access <-
   theme_light() + coord_flip()+
   labs(title = bquote(atop(.("Access Program: Services First Six Months"),
                            atop(italic(.("New Core CMH Consumers Locus 2 and Below")), ""))),
-       y = "total number of units",
+       y = "# units",
        x = "UM Code Description")
 # New Admissions --------------------------------------------------------------
 agg$new_adm$all
