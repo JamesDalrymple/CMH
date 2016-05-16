@@ -12,8 +12,15 @@ doc <- addPageBreak(doc)
 doc <- addTitle(doc,
   value = "Admissions, Discharges, & Active Consumers", level = 3)
 doc <- addPlot(doc, vector.graphic = TRUE,
-  fun = function() print(graph$adm_status), width = 5.5, height = 6.0)
-doc <- addFlexTable(doc, FlexTable(agg$adm_status))
+  fun = function() print(graph$adm_status$all), width = 5.5, height = 6.0)
+doc <- addPlot(doc, vector.graphic = TRUE,
+  fun = function() print(graph$adm_status$mi), width = 5.5, height = 6.0)
+doc <- addPlot(doc, vector.graphic = TRUE,
+  fun = function() print(graph$adm_status$dd), width = 5.5, height = 6.0)
+doc <- addPlot(doc, vector.graphic = TRUE,
+  fun = function() print(graph$adm_status$yf), width = 5.5, height = 6.0)
+doc <- addFlexTable(doc, FlexTable(agg$adm_status$all))
+doc <- addFlexTable(doc, FlexTable(agg$adm_status$prog))
 doc <- addPageBreak(doc)
 # Locus 3+6 month -------------------------------------------------------------
 doc <- addTitle(doc,
