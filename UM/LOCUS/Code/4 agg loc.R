@@ -38,6 +38,7 @@ agg$loc_3mon$prog[, um_desc := factor(um_desc,
 agg$loc_6mon$prog[, um_desc := factor(um_desc,
   levels = agg$loc_6mon$all[order(total_units), um_desc])]
 
+# admission status ------------------------------------------------------------
 agg$adm_status$all <-
   prep$adm_new[, list(adm = sum(adm, na.rm = TRUE),
                       disc = sum(disc, na.rm = TRUE),
@@ -48,6 +49,11 @@ agg$adm_status$prog <-
                       disc = sum(disc, na.rm = TRUE),
                       active = length(unique(case_no))),
                by = list(span_label, program)]
+agg$adm_status$all[, span_label := factor(span_label,
+  levels = agg$adm_status$all[, unique(span_label)])]
+agg$adm_status$prog[, span_label := factor(span_label,
+  levels = agg$adm_status$all[, unique(span_label)])]
+
 
 # number of new consumer admissions for CMH core collectively
 agg$new_adm$all <-
@@ -56,3 +62,8 @@ agg$new_adm$all <-
 agg$new_adm$prog <-
   prep$adm[, list(num_adm = length(unique(case_no))),
            by = list(span_label, program)]
+agg$new_adm$all[, span_label := factor(span_label,
+  levels = agg$new_adm$all[, span_label])]
+agg$new_adm$prog[, span_label := factor(span_label,
+  levels = agg$new_adm$all[, span_label])]
+
