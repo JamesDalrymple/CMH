@@ -56,7 +56,11 @@ adm[, Cs(staff_eff, staff_exp, staff) := NULL]
 adm <- unique(adm)
 adm[, adm_grp := seq(.N), by = list(case_no, adm_effdt)]
 adm[is.na(adm_expdt), adm_expdt := Sys.Date() + 999]
+adm[, program := recode_team_prog(team)]
+adm[, length(unique(case_no)), by = list(program, team)]
+
 # services --------------------------------------------------------------------
 services <- copy(sql$output$services)
 setf(services, j = "service_date", as.Date)
+setf(services, j = "cpt_code", stringi::stri_trim)
 # no need to check served at this time 2/3/16

@@ -1,6 +1,6 @@
 aux <- new.env(parent = .GlobalEnv)
 
-pkg_loader(c("xlsx", "gridExtra", "RODBC", "ReporteRs", "RColorBrewer"))
+pkg_loader(c("xlsx", "gridExtra", "RODBC", "ReporteRs", "RColorBrewer", "ggplot2"))
 
 
 aux$span_dt <- date_expansion(start = input$start_dt, end = input$end_dt,

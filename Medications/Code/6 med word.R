@@ -13,7 +13,7 @@ hh_doc <- addParagraph(hh_doc,
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
   fun = function() print(graph$med_inc$fy), width = 5, height = 4.0)
 hh_doc <- addPlot(hh_doc, vector.graphic = TRUE,
-  fun = function() print(graph$med_inc$qtr), width = 5, height = 5.5)
+  fun = function() print(graph$med_inc$qtr), width = 5.5, height = 5.5)
 hh_doc <- addPageBreak(hh_doc)
 # Missed Medications ----------------------------------------------------------
 hh_doc <- addTitle(hh_doc, value = "Missed Medication IRs", level = 3)

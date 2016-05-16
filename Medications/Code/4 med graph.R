@@ -114,10 +114,9 @@ graph$med_inc$qtr <-
            position = position_dodge(0.5)) +
   theme_light() + theme(axis.text.x = element_text(angle = 45, vjust = 0.5)) +
   geom_text(aes(x = classification, y = incidents, fill = span_label,
-    label = sprintf("%1$s (%2$s)", incidents, cases)), hjust = -0.1,
+    label = incidents), hjust = -0.1,
     angle = 90, position = position_dodge(0.5)) +
   labs(x = "IR Classification", y = "number of incidents",
-    title = expression(atop("Medication Incidents Current Fiscal Quarters",
-    atop(italic("consumers in parentheses"))))) +
+    title = "Medication Incidents Current Fiscal Quarters") +
   scale_fill_manual(name = NULL,
     values = aux$colors[agg$med_inc$qtr[, seq(unique(span_label))]])

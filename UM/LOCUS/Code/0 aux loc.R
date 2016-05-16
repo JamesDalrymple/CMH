@@ -7,8 +7,9 @@ project_wd$results <- file.path(project_wd$results, input$result_subfolder)
 
 
 aux$um_desc <- read.xlsx(file.path(project_wd$github,
-                                   "CMH/UM/UM_Desc_MDCH_2015.xlsx"), 1)
+  "CMH/UM/UM_Desc_MDCH_2015.xlsx"), 1, stringsAsFactors = FALSE)
 aux$um_desc <- data.table(aux$um_desc)
+setf(aux$um_desc, j = names(aux$um_desc), stringi::stri_trim)
 
 setnames(aux$um_desc, old = names(aux$um_desc),
          new = tolower(gsub(pattern = "[.]", replace = "_",
