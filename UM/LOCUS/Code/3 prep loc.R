@@ -58,7 +58,10 @@ prep$loc_low_lev[aux$um_desc,
 prep$loc_low_lev <- prep$loc_low_lev[service_date >= adm_effdt]
 prep$loc_low_lev[, three_mon_end := adm_effdt + 92]
 prep$loc_low_lev[, six_mon_end := adm_effdt + 183]
+prep$loc_low_lev[, svc_fy := my_fy(service_date)]
+prep$loc_low_lev <- prep$loc_low_lev[program == "MI"]
 
+prep$loc_low_lev[is.na(um_desc), um_desc := cpt_code]
 if ( nrow(prep$loc_low_lev[is.na(um_desc)]) > 0 ) stop("um_desc unassigned")
 
 # CMH monthly admissions, discharges, total admitted ---------------------------

@@ -10,33 +10,38 @@ agg$loc_3mon$all <-
   prep$loc_low_lev[between(service_date, adm_effdt, three_mon_end),
                    list(consumers = length(unique(case_no)),
                         total_units = sum(units),
-                        service_count = length(cpt_code)), by = um_desc]
+                        service_count = length(cpt_code)),
+                   by = list(um_desc, svc_fy)]
 agg$loc_6mon$all <-
   prep$loc_low_lev[between(service_date, adm_effdt, six_mon_end),
                    list(consumers = length(unique(case_no)),
                         total_units = sum(units),
-                        service_count = length(cpt_code)), by = um_desc]
+                        service_count = length(cpt_code)),
+                   by = list(um_desc, svc_fy)]
 agg$loc_3mon$prog <-
   prep$loc_low_lev[between(service_date, adm_effdt, three_mon_end),
                    list(consumers = length(unique(case_no)),
                         total_units = sum(units),
                         service_count = length(cpt_code)),
-                   by = list(um_desc, program)]
+                   by = list(um_desc, svc_fy, program)]
 agg$loc_6mon$prog <-
   prep$loc_low_lev[between(service_date, adm_effdt, six_mon_end),
                    list(consumers = length(unique(case_no)),
                         total_units = sum(units),
                         service_count = length(cpt_code)),
-                   by = list(um_desc, program)]
+                   by = list(um_desc, svc_fy, program)]
+# levels to use for factoring
+agg$loc_levels <-
+  prep$loc_low_lev[between(service_date, adm_effdt, three_mon_end),
+                   list(consumers = length(unique(case_no)),
+                        total_units = sum(units),
+                        service_count = length(cpt_code)),
+                   by = list(um_desc)][order(total_units), unique(um_desc)]
 
-agg$loc_3mon$all[, um_desc := factor(um_desc,
-  levels = agg$loc_3mon$all[order(total_units), um_desc])]
-agg$loc_6mon$all[, um_desc := factor(um_desc,
-  levels = agg$loc_6mon$all[order(total_units), um_desc])]
-agg$loc_3mon$prog[, um_desc := factor(um_desc,
-  levels = agg$loc_3mon$all[order(total_units), um_desc])]
-agg$loc_6mon$prog[, um_desc := factor(um_desc,
-  levels = agg$loc_6mon$all[order(total_units), um_desc])]
+agg$loc_3mon$all[, um_desc := factor(um_desc, levels = agg$loc_levels)]
+agg$loc_6mon$all[, um_desc := factor(um_desc, levels = agg$loc_levels)]
+agg$loc_3mon$prog[, um_desc := factor(um_desc, levels = agg$loc_levels)]
+agg$loc_6mon$prog[, um_desc := factor(um_desc, levels = agg$loc_levels)]
 
 # admission status ------------------------------------------------------------
 agg$adm_status$all <-

@@ -23,7 +23,7 @@ project_wd$fb_archives <- "G:/CSTS Data Analyst Archives/FB_archives/rds"
 rm(cmh_wd)
 # user input ------------------------------------------------------------------
 input <- list(
-  start_dt = "10/1/2014", end_dt = "4/30/2016",
+  start_dt = "10/1/2013", end_dt = "4/30/2016",
   report_date = format(Sys.Date(), "%m_%d_%y"),
   result_subfolder = "May 2016",
   locus_range = 30,
