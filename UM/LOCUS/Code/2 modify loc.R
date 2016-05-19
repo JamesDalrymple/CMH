@@ -54,9 +54,16 @@ if (length(intersect(names(adm), "check")) == 1) {
 }
 adm[, Cs(staff_eff, staff_exp, staff) := NULL]
 adm <- unique(adm)
-adm[, adm_grp := seq(.N), by = list(case_no, adm_effdt)]
+
 adm[is.na(adm_expdt), adm_expdt := Sys.Date() + 999]
 adm[, program := recode_team_prog(team)]
+adm[cmh_priority_dt, priority := i.priority , on = "team"]
+
+priority_overlap(data = adm, priority_col = "priority",
+                group_cols = Cs(case_no, program, adm_effdt, adm_expdt),
+                start_col = "team_eff", end_col = "team_exp")
+adm[, adm_grp := seq(.N), by = list(case_no, adm_effdt)]
+
 adm[, length(unique(case_no)), by = list(program, team)]
 
 # services --------------------------------------------------------------------
