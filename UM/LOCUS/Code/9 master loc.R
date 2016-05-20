@@ -25,7 +25,7 @@ rm(cmh_wd)
 input <- list(
   start_dt = "10/1/2013", end_dt = "4/30/2016",
   report_date = format(Sys.Date(), "%m_%d_%y"),
-  result_subfolder = "May 2016",
+  result_subfolder = "May 2016 v3",
   locus_range = 30,
   fy = "2016")
 # load packages, source files -------------------------------------------------

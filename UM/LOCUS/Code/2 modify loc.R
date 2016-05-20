@@ -13,6 +13,11 @@ adm <- copy(sql$output$adm)
 setf(adm, j = Cs(team_eff, team_exp, staff_eff, staff_exp,
                  adm_effdt, adm_expdt), as.Date)
 adm[, team := cmh_recode(team)]
+
+# testing...
+# adm[team %in% c("MI", "ACT")][team_eff <= as.Date('2016-02-29') & (
+#   team_exp >= as.Date('2016-02-01') | is.na(team_exp))][, length(unique(case_no))]
+
 # these 22 records are mistakenly mixed up on start/end dates
 adm[staff_eff > staff_exp & staff %in%
       c("Donnelly, Kevin", "Mitchell, Holly", "Gavin, Ellen", "LeBlanc, Belinda",
@@ -57,11 +62,10 @@ adm <- unique(adm)
 
 adm[is.na(adm_expdt), adm_expdt := Sys.Date() + 999]
 
-adm[cmh_priority_dt, priority := i.priority , on = "team"]
-
-adm <- priority_overlap(data = adm, priority_col = "priority",
-                group_cols = Cs(case_no, adm_effdt, adm_expdt),
-                start_col = "team_eff", end_col = "team_exp")
+# adm[cmh_priority_dt, priority := i.priority , on = "team"]
+# adm <- priority_overlap(data = adm, priority_col = "priority",
+#                 group_cols = Cs(case_no, adm_effdt, adm_expdt),
+#                 start_col = "team_eff", end_col = "team_exp")
 adm[, program := recode_team_prog(team)]
 adm[, adm_grp := seq(.N), by = list(case_no, adm_effdt)]
 

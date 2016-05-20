@@ -86,7 +86,6 @@ for ( i in seq(graph$loc_combn)) {
 }
 graph$counter <- NULL
 
-
 names(graph$loc) <-
   unlist(lapply(graph$loc_combn,
     FUN = function(x) paste(c("WCCMH3", "WCCMH6", "MI3", "MI6"), x)))

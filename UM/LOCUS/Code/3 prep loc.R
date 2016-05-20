@@ -11,7 +11,7 @@ prep$adm <- foverlaps(x=aux$mon_dt, y=prep$adm,
           by.x = Cs(span_start, span_end),
           by.y = Cs(team_eff, team_eff2))
 prep$adm <- prep$adm[adm_grp == 1]
-
+setkey(prep$adm, NULL)
 # locus prep ---
 # locus[, locus_date2 := locus_date]
 # setkey(locus, case_no, locus_date, locus_date2)
@@ -29,6 +29,7 @@ locus <- foverlaps(
   by.x = Cs(case_no, pre_l_dt, post_l_dt),
   by.y = Cs(case_no, adm_effdt, adm_expdt),
   nomatch = NA)
+setkey(adm, NULL)
 # locus[is.na(adm_effdt)]
 locus_no_adm <- copy(locus[is.na(adm_effdt)])
 locus <- locus[!is.na(adm_effdt)]
@@ -80,5 +81,6 @@ setkey(prep$adm_new, team_eff, team_exp)
 prep$adm_new <- foverlaps(aux$mon_dt, prep$adm_new,
           by.x = Cs(span_start, span_end),
           by.y = Cs(team_eff, team_exp))
+setkey(prep$adm_new, NULL)
 prep$adm_new[between(team_eff, span_start, span_end), adm := 1]
 prep$adm_new[between(team_exp, span_start, span_end), disc := 1]
