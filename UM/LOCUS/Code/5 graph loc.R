@@ -3,13 +3,15 @@ graph <- new.env(parent = .GlobalEnv)
 # adm/disc/active w/ consumers admitted over 30 days --------------------------
 # all #
 graph$adm_status$all <- ggplot(data = agg$adm_status$all,
-       aes(x = span_label, y = active)) +
+       aes(x = span_label, y = active, ymax = 1.1*active)) +
   geom_bar(stat = "identity", size = 0.1, color = "black", fill = "lightblue",
            width = 1)+
   geom_text(size = 3, stat = "identity", aes(x = span_label, y = 0,
     label = paste0("+", adm, "/", "-", disc) ), hjust = -.1)+
   theme_light() + coord_flip()+
   theme()+theme(plot.title = element_text(size = 9))+
+  geom_text(size = 3, stat = "identity", aes(x = span_label, y = active,
+                                             label = active), hjust = -0.1)+
   labs(title = "WCCMH: +Admissions, -Disc, Active consumers",
        y = "CMH core consumers active at least 30 days",
        x = NULL)
@@ -24,6 +26,34 @@ graph$adm_status$mi <- ggplot(data = agg$adm_status$prog[program == "MI"],
     label = active), hjust = -0.1)+
   theme_light() + coord_flip()+theme(plot.title = element_text(size = 9))+
   labs(title = "MI Program: +Admissions, -Disc, Active consumers",
+       y = "core consumers active at least 30 days",
+       x = NULL)
+
+# YF program
+graph$adm_status$yf <- ggplot(data = agg$adm_status$prog[program == "Y&F"],
+                              aes(x = span_label, y = active, ymax = 1.1*active)) +
+  geom_bar(stat = "identity", size = 0.1, color = "black", fill = "lightblue",
+           width = 1)+
+  geom_text(size = 3, stat = "identity", aes(x = span_label, y = 0,
+                                             label = paste0("+", adm, "/", "-", disc) ), hjust = -.1)+
+  geom_text(size = 3, stat = "identity", aes(x = span_label, y = active,
+                                             label = active), hjust = -0.1)+
+  theme_light() + coord_flip()+theme(plot.title = element_text(size = 9))+
+  labs(title = "Y&F Program: +Admissions, -Disc, Active consumers",
+       y = "core consumers active at least 30 days",
+       x = NULL)
+
+# DD program
+graph$adm_status$dd <- ggplot(data = agg$adm_status$prog[program == "DD"],
+                              aes(x = span_label, y = active, ymax = 1.1*active)) +
+  geom_bar(stat = "identity", size = 0.1, color = "black", fill = "lightblue",
+           width = 1)+
+  geom_text(size = 3, stat = "identity", aes(x = span_label, y = 0,
+                                             label = paste0("+", adm, "/", "-", disc) ), hjust = -.1)+
+  geom_text(size = 3, stat = "identity", aes(x = span_label, y = active,
+                                             label = active), hjust = -0.1)+
+  theme_light() + coord_flip()+theme(plot.title = element_text(size = 9))+
+  labs(title = "DD Program: +Admissions, -Disc, Active consumers",
        y = "core consumers active at least 30 days",
        x = NULL)
 
@@ -136,6 +166,10 @@ ggsave(filename = file.path(project_wd$results, "adm status WCCMH.png"),
        plot = graph$adm_status$all, width = 5.5, height = 6.25)
 ggsave(filename = file.path(project_wd$results, "adm status mi.png"),
        plot = graph$adm_status$mi, width = 5.5, height = 6.25)
+ggsave(filename = file.path(project_wd$results, "adm status dd.png"),
+       plot = graph$adm_status$dd, width = 5.5, height = 6.25)
+ggsave(filename = file.path(project_wd$results, "adm status yf.png"),
+       plot = graph$adm_status$yf, width = 5.5, height = 6.25)
 
 for (i in seq_along(graph$loc)) {
   ggsave(filename = file.path(project_wd$results,

@@ -11,9 +11,7 @@ pp$adm1 <- foverlaps(aux$time_dt,
                      pp$adm1,
                      by.x = Cs(span_start, span_end),
                      by.y = Cs(team_eff, team_exp))
-pp$adm1[, list(cases = length(unique(case_no)),
-               approach = "prim_team duplicates"),
-        by = list(program, span_label, span_type)]
+
 # number 2: using primary team and a min/max approach
 pp$adm2 <- copy(adm[prim == "Y"])
 setkey(pp$adm2, team_eff, team_exp)

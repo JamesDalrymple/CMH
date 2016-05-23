@@ -1,5 +1,12 @@
 pkg_loader(packages = c("ggplot2", "RODBC", "ReporteRs", "xlsx",
                         "stringi", "sqldf"))
+
+# project_wd$results <- file.path(project_wd$results, input$result_subfolder)
+# if (!dir.exists(project_wd$results)) {
+#   dir.create(project_wd$results)
+# }
+
+
 aux <- new.env(parent  = .GlobalEnv )
 
 aux$mon_dt <- date_expansion(input$start_dt, input$end_dt, type = "mon")

@@ -28,6 +28,7 @@ input <- list(
   result_subfolder = "May 2016 v3",
   locus_range = 30,
   fy = "2016")
+
 # load packages, source files -------------------------------------------------
 source(file.path(project_wd$code, "0 aux loc.R"))
 source(file.path(project_wd$code, "1 sql loc.R"))

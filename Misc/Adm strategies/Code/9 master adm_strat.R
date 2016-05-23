@@ -19,13 +19,11 @@ project_wd$code <- file.path(project_wd$github, project_wd$project, "Code")
 project_wd$results <- file.path(project_wd$dropbox,
                                 "Dropbox/Mike's Projects/Adm strategies/Results")
 project_wd$data <- file.path(project_wd$github, project_wd$project, "Data")
-project_wd$fb_archives <- "G:/CSTS Data Analyst Archives/FB_archives/rds"
 rm(cmh_wd)
 # user input ------------------------------------------------------------------
 input <- list(
-  start_dt = "10/1/2013", end_dt = "4/30/2016",
+  start_dt = "10/1/2010", end_dt = "4/30/2016",
   report_date = format(Sys.Date(), "%m_%d_%y"),
-  locus_range = 30,
   fy = "2016")
 # load packages, source files -------------------------------------------------
 source(file.path(project_wd$code, "0 aux adm_strat.R"))
@@ -33,5 +31,5 @@ source(file.path(project_wd$code, "1 sql adm_strat.R"))
 source(file.path(project_wd$code, "2 modify adm_strat.R"))
 source(file.path(project_wd$code, "3 pp adm_strat.R"))
 source(file.path(project_wd$code, "4 agg adm_strat.R"))
-# source(file.path(project_wd$code, "5 graph loc.R"))
-# source(file.path(project_wd$code, "6 xlsx loc.R"))
+# source(file.path(project_wd$code, "5 graph adm_strat.R"))
+# source(file.path(project_wd$code, "6 xlsx adm_strat.R"))
