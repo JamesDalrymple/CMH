@@ -8,8 +8,16 @@ adm[, team := cmh_recode(team)]
 # these 22 records are mistakenly mixed up on start/end dates
 adm[staff_eff > staff_exp & staff %in%
       c("Donnelly, Kevin", "Mitchell, Holly", "Gavin, Ellen", "LeBlanc, Belinda",
-        "Shaffer (Kniceley), Ashley") & staff_eff < date_convert("10/1/14"),
+        "Shaffer (Kniceley), Ashley") & staff_eff <= date_convert("10/1/14"),
     c("staff_eff", "staff_exp") := list(staff_exp, staff_eff)]
+adm[staff_eff == as.Date("2012-04-09") & staff_exp == "2012-04-08" &
+    case_no == 76413, Cs(staff_eff, staff_exp) :=
+    list(rep(as.Date("2012-04-09"),2))]
+adm[case_no == 95395 & staff_eff == as.Date("2011-08-19") &
+    staff_exp == as.Date("2011-08-18"), Cs(staff_eff, staff_exp) :=
+      list(rep(as.Date("2011-08-18"),2))]
+
+
 adm[staff_eff > staff_exp, check := "staff_eff after staff_exp"]
 adm[is.na(team), team := "NA inside team"]
 adm[team_eff > team_exp, check := "team_eff after team_exp"]

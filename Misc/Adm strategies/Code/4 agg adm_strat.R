@@ -1,5 +1,6 @@
+agg <- new.env(parent = .GlobalEnv)
 
-adm_comb <-
+agg$adm_comb <-
 rbindlist(list(
   pp$adm1[, list(cases = length(unique(case_no)),
                  approach = "prim_team duplicates"),
@@ -18,5 +19,12 @@ rbindlist(list(
           by = list(program, span_label, span_type)]
 ))
 
-adm_comb[span_label == "Oct 2014" & program == "MI"]
-adm_comb[span_label == "2014" & program == "MI"]
+
+
+
+agg$adm_cast <-dcast(
+  agg$adm_comb, program + span_label + span_type ~ approach,
+  value.var = "cases")
+setorder(agg$adm_cast, span_type, program, span_label)
+write.csv(agg$adm_cast, file = file.path(project_wd$results,
+  "adm agg by options.csv"), row.names = FALSE)
