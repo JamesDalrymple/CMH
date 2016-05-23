@@ -30,9 +30,13 @@ doc <- addTitle(doc,
   value = "Services for New CMH Core Consumers", level = 3)
 # 3 months LOCUS
 doc <- addPlot(doc, vector.graphic = TRUE,
-  fun = function() print(graph$loc_3mon$all), width = 5.5, height = 6.0)
+  fun = function() print(graph$loc$`MI3 2016`), width = 5.5, height = 6.0)
 doc <- addPlot(doc, vector.graphic = TRUE,
-  fun = function() print(graph$loc_3mon$mi), width = 5.5, height = 6.0)
+               fun = function() print(graph$loc$`MI3 2015`), width = 5.5, height = 6.0)
+doc <- addPlot(doc, vector.graphic = TRUE,
+  fun = function() print(graph$loc$`WCCMH3 2016`), width = 5.5, height = 6.0)
+doc <- addPlot(doc, vector.graphic = TRUE,
+               fun = function() print(graph$loc$`WCCMH3 2015`), width = 5.5, height = 6.0)
 # doc <- addPlot(doc, vector.graphic = TRUE,
 #   fun = function() print(graph$loc_3mon$access), width = 4.25, height = 6.0)
 doc <- addParagraph(doc, "\nTable for three month service array for new consumers with a LOCUS 2 or less for entire agency")
@@ -42,9 +46,13 @@ doc <- addFlexTable(doc, FlexTable(agg$loc_3mon$prog[program %in% c("MI")]))
 doc <- addPageBreak(doc)
 # 6 months LOCUS
 doc <- addPlot(doc, vector.graphic = TRUE,
-  fun = function() print(graph$loc_6mon$all), width = 5.25, height = 6.5)
+  fun = function() print(graph$loc$`MI6 2016`), width = 5.25, height = 6.5)
 doc <- addPlot(doc, vector.graphic = TRUE,
-  fun = function() print(graph$loc_6mon$mi), width = 5.5, height = 6.5)
+               fun = function() print(graph$loc$`MI6 2015`), width = 5.25, height = 6.5)
+doc <- addPlot(doc, vector.graphic = TRUE,
+  fun = function() print(graph$loc$`WCCMH6 2016`), width = 5.5, height = 6.5)
+doc <- addPlot(doc, vector.graphic = TRUE,
+               fun = function() print(graph$loc$`WCCMH6 2015`), width = 5.5, height = 6.5)
 # doc <- addPlot(doc, vector.graphic = TRUE,
 #  fun = function() print(graph$loc_6mon$access), width = 4.25, height = 6.5)
 doc <- addParagraph(doc, "\nTable for six month service array for new consumers wiuth a LOCUS 2 or less for Entire Agency")
