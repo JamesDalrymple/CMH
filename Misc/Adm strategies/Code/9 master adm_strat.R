@@ -17,7 +17,7 @@ project_wd$dropbox <- cmh_wd[J("Dropbox", "WSHSQLGP"), base]
 project_wd$project <- "CMH/Misc/Adm strategies"
 project_wd$code <- file.path(project_wd$github, project_wd$project, "Code")
 project_wd$results <- file.path(project_wd$dropbox,
-                                "Dropbox/Mike's Projects/Adm strategies/Results")
+                                "Mike's Projects/Adm strategies/Results")
 project_wd$data <- file.path(project_wd$github, project_wd$project, "Data")
 rm(cmh_wd)
 # user input ------------------------------------------------------------------

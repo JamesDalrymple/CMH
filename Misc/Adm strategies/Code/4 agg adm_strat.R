@@ -22,7 +22,7 @@ rbindlist(list(
 
 
 
-agg$adm_cast <-dcast(
+agg$adm_cast <- dcast(
   agg$adm_comb, program + span_label + span_type ~ approach,
   value.var = "cases")
 setorder(agg$adm_cast, span_type, program, span_label)
