@@ -14,13 +14,28 @@ write.table(modify$tiers,
 write.table(modify$cc360_main,
             file = file.path(project_wd$results, "cc360_main.txt"),
             row.names = FALSE, sep = "|", na = "")
-write.table(modify$cc360_med,
-            file = file.path(project_wd$results, "cc360_med.txt"),
+# sas
+
+short_cols <- paste0("col_", seq(names(modify$cc360_main)))
+cc360_main_short <- copy(modify$cc360_main)
+setnames(cc360_main_short, names(cc360_main_short), short_cols)
+
+write.xport(cc360_main_short,
+  file = file.path(project_wd$results, "cc360_main.dat"))
+# read.xport(file = file.path(project_wd$results, "cc360_main.dat"))
+# toSAS(modify$cc360_main[1:2])
+pkg_loader("foreign")
+write.foreign(df=modify$cc360_main,
+              datafile="cc360_main_tmp.csv",
+              codefile="cc360_main.sas", package="SAS")
+
+
+write.table(modify$cc360_main,
+            file = file.path(project_wd$results, "cc360_main.csv"),
+            row.names = FALSE, sep = ",", na = "")
+write.table(modify$cc360_main,
+            file = file.path(project_wd$results, "cc360_main.txt"),
             row.names = FALSE, sep = "|", na = "")
-
-
-
-
 
 if (FALSE) {
   lapply(modify$tiers, unique)

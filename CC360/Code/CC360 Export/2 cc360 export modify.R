@@ -9,6 +9,9 @@ modify$tiers <- copy(sql$tier_dt)
 # miscellaneous ---
 modify$adv_date <- Sys.Date() + 999
 
+# cc360_main
+modify$cc360_main[, Consumer_Unique_ID := NULL]
+
 # hh_detail -------------------------------------------------------------------
 setf(modify$hh_detail , j = Cs(staff_eff, staff_exp), as.Date)
 modify$hh_detail[hh_nurse == "N", Cs(staff_eff, staff_exp) :=
