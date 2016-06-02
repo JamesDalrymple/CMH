@@ -13,18 +13,12 @@ for(i in seq_along(input$names)) { # i = 1
   services <- copy(sql$output$services)
   cmh_adm <- copy(sql$output$cmh_adm)
   # dates ---------------------------------------------------------------------
-  date_cols <- c("hire_dt", "user_add_date")
-  for (j in date_cols)
-    set(staff_hr, j=j, value = as.Date(staff_hr[[j]]))
-  staff_hr[, last_login_dt := as.POSIXct(last_login_dt)]
-  staff_hr[, last_login_dt := as.Date(last_login_dt)]
+  setf(staff_hr, Cs(last_login_dt), as.POSIXct)
+  setf(staff_hr, Cs(hire_dt, user_add_date, last_login_dt), as.Date)
   date_cols <- c("doc_date")
-  for (j in date_cols)
-    set(services, j=j, value = as.Date(services[[j]], format="%Y-%m-%d"))
+  setf(services, j = date_cols, as.Date)
   date_cols <- c("team_effdt", "team_expdt", "cmh_effdt", "cmh_expdt")
-  for (j in date_cols)
-    set(cmh_adm, j=j, value = as.Date(cmh_adm[[j]], format="%Y-%m-%d"))
-  rm(date_cols, j)
+  setf(cmh_adm, j = date_cols, as.Date)
   modify$date_range <- paste(modify$start_date, "through", modify$end_date)
   modify$start_date <- date_convert(modify$start_date)
   modify$end_date <- date_convert(modify$end_date)
@@ -60,6 +54,7 @@ for(i in seq_along(input$names)) { # i = 1
   staff_hr[, user_end := pmax(as.Date(last_login_dt),
                               as.Date(termination_dt), na.rm = TRUE)]
   # remove people who only were active one day
+  setf(staff_hr, j = Cs(user_start, user_end), as.Date)
   staff_hr <- staff_hr[!(user_start == user_end)]
   modify$staff_emp <-
     staff_hr[, unique(.SD), .SDcols = c("staff", "user_start", "user_end")]

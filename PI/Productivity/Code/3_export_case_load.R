@@ -1,4 +1,4 @@
-# save results --------------------------------------------------------------
+# save results ----------------------------------------------------------------
 ### create information about the file to share with end-users ###
 aboutFile <- data.table(
   rbind(

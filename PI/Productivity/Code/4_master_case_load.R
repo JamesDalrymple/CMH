@@ -13,9 +13,9 @@ base_wd <- switch(Sys.info()["nodename"],
 # inputs ----------------------------------------------------------------------
 input <- list(
   fy = "2016",
-  names = c("Jul FY15", "Aug FY15", "Sep FY15"),
-  start_dates = c("7/1/2015", "8/1/2015", "9/1/2015"),
-  end_dates = c("7/31/2015", "8/31/2015", "9/30/2015"),
+  names = c("Jan FY16", "Feb FY16", "Mar FY16"),
+  start_dates = c("1/1/2016", "2/1/2016", "3/1/2016"),
+  end_dates = c("1/31/2016", "2/29/2016", "3/31/2016"),
   github_wd = "C:/Users/dalrymplej/Documents/GitHub/CMH/PI/Productivity",
   dropbox_wd = file.path(base_wd, "Dropbox/PI Projects/Case Load"))
 input$datawd <- file.path(base_wd, input$dropbox_wd, "Data")

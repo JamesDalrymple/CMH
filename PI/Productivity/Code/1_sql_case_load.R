@@ -78,7 +78,7 @@ sql$query$services <- # in a list format b/c R has a limit for sprintf
 	doc.case_no, cast(doc.DO_DATE as date) as doc_date,
 	doc.begintime as begin_time, doc.endtime as end_time,
 	doc.staff as author, doc.supervisor, bps.in_facetof as f2f,
-	doc.do_title as doc_type
+	doc.do_title as doc_type, doc.staff_type
 from encompass.dbo.ENCInitialIntake as bps
 join encompass.dbo.tblE2_document doc on bps.in_RCDID = doc.DO_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
@@ -87,7 +87,7 @@ where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "select distinct
 	doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
 	doc.endtime as end_time, doc.staff as author, doc.supervisor,
-	erm_note.ER_FACETOF as f2f, doc.do_title as doc_type
+	erm_note.ER_FACETOF as f2f, doc.do_title as doc_type, doc.staff_type
 from encompass.dbo.ENCEmergencyNote as erm_note
 join encompass.dbo.tblE2_document doc on erm_note.ER_RCDID = doc.DO_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
@@ -96,7 +96,7 @@ where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "select distinct
 doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
 doc.endtime as end_time, doc.staff as author, doc.supervisor,
-'Y' as f2f, doc.do_title as doc_type
+'Y' as f2f, doc.do_title as doc_type, doc.staff_type
 from encompass.dbo.PCCSISAssessment as sis
 join encompass.dbo.tblE2_document doc on sis.SI_RCDID = doc.DO_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
@@ -105,7 +105,7 @@ where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "select distinct
 	doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
 	doc.endtime as end_time, doc.staff as author, doc.supervisor,
-	phr.ID_FACETOF as f2f, doc.do_title as doc_type
+	phr.ID_FACETOF as f2f, doc.do_title as doc_type, doc.staff_type
 from encompass.dbo.ENCInjectionDispenseNote as phr
 join encompass.dbo.tblE2_document doc on phr.ID_RCDID = doc.DO_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
@@ -114,7 +114,7 @@ where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "select distinct
   doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
   doc.endtime as end_time, doc.staff as author, doc.supervisor,
-  phr.PH_FACETOF as f2f, doc.do_title as doc_type
+  phr.PH_FACETOF as f2f, doc.do_title as doc_type, doc.staff_type
 from encompass.dbo.ENCPersonalHealthReview as phr
 join encompass.dbo.tblE2_document doc on phr.PH_RCDID = doc.DO_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
@@ -123,7 +123,7 @@ where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "select distinct
 	doc.case_no, doc.do_date as doc_date, doc.begintime as begin_time,
 	doc.endtime as end_time, doc.staff as author, doc.supervisor,
-	prescreen.PS_FACETOF as f2f, doc.do_title as doc_type
+	prescreen.PS_FACETOF as f2f, doc.do_title as doc_type, doc.staff_type
 from encompass.dbo.ENCPreScreening as prescreen
 join encompass.dbo.tblE2_document doc on prescreen.PS_RCDID = doc.DO_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
@@ -132,7 +132,7 @@ where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 "select distinct
 	doc.case_no, cast(doc.do_date as date) as doc_date,	doc.begintime as begin_time,
 doc.endtime as end_time, doc.staff as author, doc.supervisor,
-pe.IP_FACETOF as f2f, doc.DO_TITLE as doc_type
+pe.IP_FACETOF as f2f, doc.DO_TITLE as doc_type, doc.staff_type
 from encompass.dbo.ENCInitialPsychiatricEvaluation as pe
 join encompass.dbo.tblE2_document doc on PE.IP_RCDID = doc.DO_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
@@ -142,7 +142,7 @@ where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 	doc.Case_No, cast(doc.DO_DATE as date) as doc_date,
 	doc.begintime as begin_time, doc.endtime as end_time,
 	doc.staff as author, doc.supervisor,
-	mr.MR_FACETOF as f2f, doc.do_title as doc_type
+	mr.MR_FACETOF as f2f, doc.do_title as doc_type, doc.staff_type
 from encompass.dbo.ENCMedicationReviewNote as mr
 join encompass.dbo.tblE2_document as doc on mr.MR_RCDID = doc.DO_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
@@ -156,7 +156,7 @@ case SC_CONTYPE
   when 'P' then 'N'
   when 'W' then 'Y'
   else SC_CONTYPE end as f2f,
-doc.do_title as doc_type
+doc.do_title as doc_type, doc.staff_type
 from encompass.dbo.ENCScreeningCall as SCall
 join encompass.dbo.tblE2_document as doc on SCall.SC_RCDID = doc.DO_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
@@ -167,7 +167,7 @@ where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 	doc.case_no, cast(doc.DO_DATE as date) as doc_date,
 doc.begintime as begin_time, doc.endtime as end_time,
 doc.staff as author, doc.supervisor, 'Y' as f2f,
-doc.do_title as doc_type
+doc.do_title as doc_type, doc.staff_type
 from encompass.dbo.ENCSpecializedAssessment as spec
 join encompass.dbo.tblE2_document doc on spec.sp_RCDID  = doc.DO_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
@@ -177,7 +177,7 @@ where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 	doc.case_no, cast(doc.DO_DATE as date) as doc_date,
 doc.begintime as begin_time, doc.endtime as end_time,
 doc.staff as author, doc.supervisor,
-wn.WN_FACETOF as f2f, doc.do_title as doc_type
+wn.WN_FACETOF as f2f, doc.do_title as doc_type, doc.staff_type
 from encompass.dbo.ENCWellnessNoteHeader as WN
 join encompass.dbo.tblE2_document doc on WN.WN_RCDID = doc.DO_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
@@ -187,7 +187,7 @@ where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'",
 	doc.case_no, cast(doc.DO_DATE as date) as doc_date,
 doc.begintime as begin_time, doc.endtime as end_time,
 doc.staff as author, doc.supervisor,
-PN.PR_FACETOF as f2f, doc.do_title as doc_type
+PN.PR_FACETOF as f2f, doc.do_title as doc_type, doc.staff_type
 from encompass.dbo.ENCProgressNote as PN
 join encompass.dbo.tblE2_document as doc on doc.DO_RCDID = PR_RCDID
 where doc.DO_DATE between '%1$s' and '%2$s' and doc.county = '%3$s'")
@@ -205,6 +205,7 @@ sql$query$services <-
     return(result)
   })
 sql$query$services <- paste(sql$query$services, collapse =" ")
+
 # admissions ---
 sql$query$cmh_adm <-
   sprintf("select distinct
