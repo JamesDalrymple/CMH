@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.31)  1 MAY 2016 23:05
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.31)  2 JUN 2016 15:32
 entering extended mode
 **7_knitr_mm.tex
 (7_knitr_mm.tex
@@ -410,419 +410,419 @@ File: figure/ACT_hist-1.pdf Graphic file (type pdf)
 Package pdftex.def Info: figure/ACT_hist-1.pdf used on input line 125.
 (pdftex.def)             Requested size: 500.484pt x 155.32729pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 145.
+(Font)              <7> on input line 146.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 145.
+(Font)              <5> on input line 146.
 
-Underfull \hbox (badness 10000) in paragraph at lines 145--145
+Underfull \hbox (badness 10000) in paragraph at lines 146--146
 []|\T1/cmr/bx/n/10 current
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 145--145
+Underfull \hbox (badness 10000) in paragraph at lines 146--146
 []|\T1/cmr/bx/n/10 expired
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 129--147
+Overfull \hbox (15.0pt too wide) in paragraph at lines 129--148
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 164--164
+Underfull \hbox (badness 10000) in paragraph at lines 166--166
 []|\T1/cmr/bx/n/10 Full
  []
 
 
-Overfull \hbox (2.64076pt too wide) in paragraph at lines 164--164
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 166--166
 []|\T1/cmr/bx/n/10 Interim
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 164--164
+Underfull \hbox (badness 10000) in paragraph at lines 166--166
 []|\T1/cmr/bx/n/10 Preliminary
  []
 
 
-Underfull \hbox (badness 1796) in paragraph at lines 164--164
+Underfull \hbox (badness 1796) in paragraph at lines 166--166
 []|\T1/cmr/bx/n/10 Single Ser-vice
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 164--164
+Underfull \hbox (badness 10000) in paragraph at lines 166--166
 []|\T1/cmr/bx/n/10 Grand
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 148--166
+Overfull \hbox (15.0pt too wide) in paragraph at lines 149--168
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 179--179
+Underfull \hbox (badness 10000) in paragraph at lines 183--183
 []|\T1/cmr/m/n/10 Cunningham,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 179--179
-[]|\T1/cmr/m/n/10 Srivastava,
- []
-
-
-Overfull \hbox (15.0pt too wide) in paragraph at lines 167--181
+Overfull \hbox (15.0pt too wide) in paragraph at lines 169--185
 []$[]$ 
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 185.
+Package xcolor Warning: Incompatible color definition on input line 189.
 
 <figure/ACT_p_unsign-1.pdf, id=2, 397.485pt x 162.6075pt>
 File: figure/ACT_p_unsign-1.pdf Graphic file (type pdf)
 
 <use figure/ACT_p_unsign-1.pdf>
-Package pdftex.def Info: figure/ACT_p_unsign-1.pdf used on input line 186.
+Package pdftex.def Info: figure/ACT_p_unsign-1.pdf used on input line 190.
 (pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
  [1{C:/Users/dalrymplej/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
 
  <./figure/ACT_hist-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 217.
+Package xcolor Warning: Incompatible color definition on input line 221.
 
 <figure/child_hist-1.pdf, id=17, 542.025pt x 162.6075pt>
 File: figure/child_hist-1.pdf Graphic file (type pdf)
 
 <use figure/child_hist-1.pdf>
-Package pdftex.def Info: figure/child_hist-1.pdf used on input line 218.
+Package pdftex.def Info: figure/child_hist-1.pdf used on input line 222.
 (pdftex.def)             Requested size: 500.484pt x 150.15154pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 239--239
+Underfull \hbox (badness 10000) in paragraph at lines 244--244
 []|\T1/cmr/bx/n/10 current
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 239--239
+Underfull \hbox (badness 10000) in paragraph at lines 244--244
 []|\T1/cmr/bx/n/10 expired
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 223--241
+Overfull \hbox (15.0pt too wide) in paragraph at lines 227--246
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 258--258
+Underfull \hbox (badness 10000) in paragraph at lines 264--264
 []|\T1/cmr/bx/n/10 Full
  []
 
 
-Overfull \hbox (2.64076pt too wide) in paragraph at lines 258--258
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 264--264
 []|\T1/cmr/bx/n/10 Interim
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 258--258
+Underfull \hbox (badness 10000) in paragraph at lines 264--264
 []|\T1/cmr/bx/n/10 Preliminary
  []
 
 
-Underfull \hbox (badness 1796) in paragraph at lines 258--258
+Underfull \hbox (badness 1796) in paragraph at lines 264--264
 []|\T1/cmr/bx/n/10 Single Ser-vice
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 258--258
+Underfull \hbox (badness 10000) in paragraph at lines 264--264
 []|\T1/cmr/bx/n/10 Grand
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 242--260
+Overfull \hbox (15.0pt too wide) in paragraph at lines 247--266
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 287--287
+Underfull \hbox (badness 10000) in paragraph at lines 296--296
 []|\T1/cmr/bx/n/10 Brookens-Harvey,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 287--287
-[]|\T1/cmr/bx/n/10 Dronamraju,
- []
-
-
-Overfull \hbox (15.0pt too wide) in paragraph at lines 261--289
+Overfull \hbox (15.0pt too wide) in paragraph at lines 267--298
 []$[]$ 
  []
 
 [2 <./figure/ACT_p_unsign-1.pdf> <./figure/child_hist-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 293.
+Package xcolor Warning: Incompatible color definition on input line 302.
 
 <figure/child_p_unsign-1.pdf, id=31, 397.485pt x 162.6075pt>
 File: figure/child_p_unsign-1.pdf Graphic file (type pdf)
 
 <use figure/child_p_unsign-1.pdf>
-Package pdftex.def Info: figure/child_p_unsign-1.pdf used on input line 294.
+Package pdftex.def Info: figure/child_p_unsign-1.pdf used on input line 303.
 (pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
  [3 <./figure/child_p_unsign-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 325.
+Package xcolor Warning: Incompatible color definition on input line 334.
 
 <figure/hb_hist-1.pdf, id=40, 542.025pt x 162.6075pt>
 File: figure/hb_hist-1.pdf Graphic file (type pdf)
 
 <use figure/hb_hist-1.pdf>
-Package pdftex.def Info: figure/hb_hist-1.pdf used on input line 326.
+Package pdftex.def Info: figure/hb_hist-1.pdf used on input line 335.
 (pdftex.def)             Requested size: 500.484pt x 150.15154pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 346--346
+Underfull \hbox (badness 10000) in paragraph at lines 356--356
 []|\T1/cmr/bx/n/10 current
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 346--346
+Underfull \hbox (badness 10000) in paragraph at lines 356--356
 []|\T1/cmr/bx/n/10 expired
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 330--348
+Overfull \hbox (15.0pt too wide) in paragraph at lines 339--358
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 365--365
+Underfull \hbox (badness 10000) in paragraph at lines 376--376
 []|\T1/cmr/bx/n/10 Full
  []
 
 
-Overfull \hbox (2.64076pt too wide) in paragraph at lines 365--365
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 376--376
 []|\T1/cmr/bx/n/10 Interim
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 365--365
+Underfull \hbox (badness 10000) in paragraph at lines 376--376
 []|\T1/cmr/bx/n/10 Preliminary
  []
 
 
-Underfull \hbox (badness 1796) in paragraph at lines 365--365
+Underfull \hbox (badness 1796) in paragraph at lines 376--376
 []|\T1/cmr/bx/n/10 Single Ser-vice
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 365--365
+Underfull \hbox (badness 10000) in paragraph at lines 376--376
 []|\T1/cmr/bx/n/10 Grand
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 349--367
+Overfull \hbox (15.0pt too wide) in paragraph at lines 359--378
 []$[]$ 
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 368--380
+Underfull \hbox (badness 10000) in paragraph at lines 390--390
+[]|\T1/cmr/bx/n/10 Brookens-
+ []
+
+
+Underfull \hbox (badness 7851) in paragraph at lines 390--390
+\T1/cmr/bx/n/10 Harvey, Bar-
+ []
+
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 379--392
 []$[]$ 
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 384.
+Package xcolor Warning: Incompatible color definition on input line 396.
 
 <figure/hb_p_unsign-1.pdf, id=41, 397.485pt x 162.6075pt>
 File: figure/hb_p_unsign-1.pdf Graphic file (type pdf)
 
 <use figure/hb_p_unsign-1.pdf>
-Package pdftex.def Info: figure/hb_p_unsign-1.pdf used on input line 385.
+Package pdftex.def Info: figure/hb_p_unsign-1.pdf used on input line 397.
 (pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
- [4 <./figure/hb_hist-1.pdf> <./figure/hb_p_unsign-1.pdf>]
+ [4 <./figure/hb_hist-1.pdf>] [5 <./figure/hb_p_unsign-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 409.
+Package xcolor Warning: Incompatible color definition on input line 421.
 
-<figure/dd_hist-1.pdf, id=55, 542.025pt x 162.6075pt>
+<figure/dd_hist-1.pdf, id=58, 542.025pt x 162.6075pt>
 File: figure/dd_hist-1.pdf Graphic file (type pdf)
 
 <use figure/dd_hist-1.pdf>
-Package pdftex.def Info: figure/dd_hist-1.pdf used on input line 410.
+Package pdftex.def Info: figure/dd_hist-1.pdf used on input line 422.
 (pdftex.def)             Requested size: 500.484pt x 150.15154pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 430--430
+Underfull \hbox (badness 10000) in paragraph at lines 443--443
 []|\T1/cmr/bx/n/10 current
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 430--430
+Underfull \hbox (badness 10000) in paragraph at lines 443--443
 []|\T1/cmr/bx/n/10 expired
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 414--432
+Overfull \hbox (15.0pt too wide) in paragraph at lines 426--445
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 449--449
+Underfull \hbox (badness 10000) in paragraph at lines 463--463
 []|\T1/cmr/bx/n/10 Full
  []
 
 
-Overfull \hbox (2.64076pt too wide) in paragraph at lines 449--449
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 463--463
 []|\T1/cmr/bx/n/10 Interim
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 449--449
+Underfull \hbox (badness 10000) in paragraph at lines 463--463
 []|\T1/cmr/bx/n/10 Preliminary
  []
 
 
-Underfull \hbox (badness 1796) in paragraph at lines 449--449
+Underfull \hbox (badness 1796) in paragraph at lines 463--463
 []|\T1/cmr/bx/n/10 Single Ser-vice
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 449--449
+Underfull \hbox (badness 10000) in paragraph at lines 463--463
 []|\T1/cmr/bx/n/10 Grand
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 433--451
+Overfull \hbox (15.0pt too wide) in paragraph at lines 446--465
 []$[]$ 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 480--480
+Underfull \hbox (badness 10000) in paragraph at lines 498--498
 []|\T1/cmr/bx/n/10 Diephuis,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 480--480
+Underfull \hbox (badness 10000) in paragraph at lines 498--498
 []|\T1/cmr/bx/n/10 Dronamraju,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 480--480
+Underfull \hbox (badness 10000) in paragraph at lines 498--498
 []|\T1/cmr/bx/n/10 Mohring,
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 452--482
+Overfull \hbox (15.0pt too wide) in paragraph at lines 466--500
 []$[]$ 
  []
 
-[5 <./figure/dd_hist-1.pdf>]
+[6 <./figure/dd_hist-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 486.
+Package xcolor Warning: Incompatible color definition on input line 504.
 
-<figure/dd_p_unsign-1.pdf, id=64, 397.485pt x 162.6075pt>
+<figure/dd_p_unsign-1.pdf, id=67, 397.485pt x 162.6075pt>
 File: figure/dd_p_unsign-1.pdf Graphic file (type pdf)
 
 <use figure/dd_p_unsign-1.pdf>
-Package pdftex.def Info: figure/dd_p_unsign-1.pdf used on input line 487.
+Package pdftex.def Info: figure/dd_p_unsign-1.pdf used on input line 505.
 (pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
 
 
-Package xcolor Warning: Incompatible color definition on input line 518.
+Package xcolor Warning: Incompatible color definition on input line 536.
 
-<figure/mi_hist-1.pdf, id=65, 542.025pt x 162.6075pt>
+<figure/mi_hist-1.pdf, id=68, 542.025pt x 162.6075pt>
 File: figure/mi_hist-1.pdf Graphic file (type pdf)
 
 <use figure/mi_hist-1.pdf>
-Package pdftex.def Info: figure/mi_hist-1.pdf used on input line 519.
+Package pdftex.def Info: figure/mi_hist-1.pdf used on input line 537.
 (pdftex.def)             Requested size: 500.484pt x 150.15154pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 540--540
+ [7]
+Underfull \hbox (badness 10000) in paragraph at lines 559--559
 []|\T1/cmr/bx/n/10 current
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 540--540
+Underfull \hbox (badness 10000) in paragraph at lines 559--559
 []|\T1/cmr/bx/n/10 expired
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 524--542
+Overfull \hbox (15.0pt too wide) in paragraph at lines 542--561
 []$[]$ 
  []
 
-[6]
-Underfull \hbox (badness 10000) in paragraph at lines 559--559
+
+Underfull \hbox (badness 10000) in paragraph at lines 579--579
 []|\T1/cmr/bx/n/10 Full
  []
 
 
-Overfull \hbox (2.64076pt too wide) in paragraph at lines 559--559
+Overfull \hbox (2.64076pt too wide) in paragraph at lines 579--579
 []|\T1/cmr/bx/n/10 Interim
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 559--559
+Underfull \hbox (badness 10000) in paragraph at lines 579--579
 []|\T1/cmr/bx/n/10 Preliminary
  []
 
 
-Underfull \hbox (badness 1796) in paragraph at lines 559--559
+Underfull \hbox (badness 1796) in paragraph at lines 579--579
 []|\T1/cmr/bx/n/10 Single Ser-vice
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 559--559
+Underfull \hbox (badness 10000) in paragraph at lines 579--579
 []|\T1/cmr/bx/n/10 Grand
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 543--561
+Overfull \hbox (15.0pt too wide) in paragraph at lines 562--581
 []$[]$ 
  []
 
-[7 <./figure/dd_p_unsign-1.pdf> <./figure/mi_hist-1.pdf>]
+[8 <./figure/dd_p_unsign-1.pdf> <./figure/mi_hist-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 603.
+Package xcolor Warning: Incompatible color definition on input line 631.
 
-<figure/mi_p_unsign-1.pdf, id=83, 397.485pt x 162.6075pt>
+<figure/mi_p_unsign-1.pdf, id=86, 397.485pt x 162.6075pt>
 File: figure/mi_p_unsign-1.pdf Graphic file (type pdf)
 
 <use figure/mi_p_unsign-1.pdf>
-Package pdftex.def Info: figure/mi_p_unsign-1.pdf used on input line 604.
+Package pdftex.def Info: figure/mi_p_unsign-1.pdf used on input line 632.
 (pdftex.def)             Requested size: 397.48402pt x 162.61206pt.
- [8] [9 <./figure/mi_p_unsign-1.pdf>] [10]
-[11] [12] [13] [14]
-Underfull \hbox (badness 10000) in paragraph at lines 871--875
+ [9] [10 <./figure/mi_p_unsign-1.pdf>] [11]
+[12] [13] [14] [15]
+Underfull \hbox (badness 10000) in paragraph at lines 895--899
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 876--876
+Underfull \hbox (badness 10000) in paragraph at lines 900--900
 []|\T1/cmr/bx/n/9 case
  []
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 876.
+(Font)              <9> on input line 900.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 876.
+(Font)              <6> on input line 900.
 
-Underfull \hbox (badness 10000) in paragraph at lines 876--876
+Underfull \hbox (badness 10000) in paragraph at lines 900--900
 []|\T1/cmr/bx/n/9 days $\OML/cmm/m/it/9 >$
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 876--876
+Underfull \hbox (badness 10000) in paragraph at lines 900--900
 []|\T1/cmr/bx/n/9 case
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 876--876
+Underfull \hbox (badness 10000) in paragraph at lines 900--900
 []|\T1/cmr/bx/n/9 days $\OML/cmm/m/it/9 >$
  []
 
-[15]
-Overfull \hbox (4.73987pt too wide) in paragraph at lines 998--998
+[16]
+Overfull \hbox (4.73987pt too wide) in paragraph at lines 1027--1027
 []|\T1/cmr/bx/n/9 Grand 
  []
 
 ! Missing } inserted.
 <inserted text> 
                 }
-l.998 ...  & \textbf{ 3400 } &  & {\textbf{1486} &
-                                                   {\textbf{823} & {\textbf{...
+l.1027 ... & \textbf{ 3416 } &  & {\textbf{1495} &
+                                                   {\textbf{852} & {\textbf{...
 I've put in what seems to be necessary to fix
 the current column of the current alignment.
 Try to go on, since this might almost work.
@@ -830,8 +830,8 @@ Try to go on, since this might almost work.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.998 ...0 } &  & {\textbf{1486} & {\textbf{823} &
-                                                   {\textbf{516} & {\textbf{...
+l.1027 ... } &  & {\textbf{1495} & {\textbf{852} &
+                                                   {\textbf{508} & {\textbf{...
 I've put in what seems to be necessary to fix
 the current column of the current alignment.
 Try to go on, since this might almost work.
@@ -839,8 +839,8 @@ Try to go on, since this might almost work.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.998 ...f{1486} & {\textbf{823} & {\textbf{516} &
-                                                   {\textbf{160} \\
+l.1027 ...{1495} & {\textbf{852} & {\textbf{508} &
+                                                   {\textbf{150} \\
 I've put in what seems to be necessary to fix
 the current column of the current alignment.
 Try to go on, since this might almost work.
@@ -848,25 +848,25 @@ Try to go on, since this might almost work.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.999    \end
-             {longtable}
+l.1028    \end
+              {longtable}
 I've put in what seems to be necessary to fix
 the current column of the current alignment.
 Try to go on, since this might almost work.
 
-[16] [17]
+[17] [18]
 
-Package xcolor Warning: Incompatible color definition on input line 1006.
+Package xcolor Warning: Incompatible color definition on input line 1035.
 
-<figure/ssm_ts-1.pdf, id=123, 397.485pt x 271.0125pt>
+<figure/ssm_ts-1.pdf, id=126, 397.485pt x 271.0125pt>
 File: figure/ssm_ts-1.pdf Graphic file (type pdf)
 
 <use figure/ssm_ts-1.pdf>
-Package pdftex.def Info: figure/ssm_ts-1.pdf used on input line 1007.
+Package pdftex.def Info: figure/ssm_ts-1.pdf used on input line 1036.
 (pdftex.def)             Requested size: 397.48402pt x 271.0201pt.
  
 AED: lastpage setting LastPage
-[18 <./figure/ssm_ts-1.pdf>] (7_knitr_mm.aux)
+[19 <./figure/ssm_ts-1.pdf>] (7_knitr_mm.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
@@ -889,9 +889,9 @@ C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600
 \ecsl1000.pk> <C:\Users\dalrymplej\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jkn
 appen\ec\dpi600\ecrm1000.pk><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/publ
 ic/amsfonts/cm/cmmi9.pfb>
-Output written on 7_knitr_mm.pdf (18 pages, 217940 bytes).
+Output written on 7_knitr_mm.pdf (19 pages, 222402 bytes).
 PDF statistics:
- 503 PDF objects out of 1000 (max. 8388607)
+ 511 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
