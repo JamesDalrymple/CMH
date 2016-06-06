@@ -14,8 +14,8 @@ base <- list(pce107 = "D:/James/CC360", # computer name "WSHSQLGP"
 
 ## user input
 user_input <- list(
-  analysis_mon = "Feb 2016",
-  save_loc = "4_12_2016 Jan16"
+  analysis_mon = "Apr 2016",
+  save_loc = "6_6_2016 Apr16"
 )
 
 # setup for working directories - data and results
@@ -548,7 +548,7 @@ end_time1 - start_time1
 
 ### orginator_plan_id is not carried over b/c there doesnt seem to be a point and it poses a merge problem (not unique where it needs to be) ###
 fixed_IP <- data.table(case_no = integer(), primdx=character(), from_date = as.Date(as.character()),
-                       through_date = as.Date(as.character()), CMH_paid = integer(), 
+                       through_date = as.Date(as.character()), CMH_paid = integer(),
                        # originator_plan_id = integer(),
                        # Originator_Plan_Name = character(),
                        RB_type = factor(levels = c("BH", "PH"), ordered=TRUE))
@@ -604,7 +604,7 @@ fixed_ER <- data.table(case_no = integer(), primdx=character(), from_date = as.D
 
 for_start <- Sys.time()
 for( i in 1:nrow(dt_ER)) {
-  tmp_row <- dt_ER[i, list(case_no = case_no, primdx = diag1_desc, 
+  tmp_row <- dt_ER[i, list(case_no = case_no, primdx = diag1_desc,
                            from_date = from_date, through_date = through_date,
                            CMH_paid = CMH_paid,
                            RB_type = RB_type)]
@@ -828,7 +828,7 @@ p_er <- ggplot(data=mon_er, aes(x=time, y=num_er, fill=enroll, ymax=4))+
              position=position_dodge(0.6), size=7, shape=16, show.legend=FALSE) +
   geom_point(data=er_outliers, aes(x=time, y=4, ymax=4), color="white",
              position=position_dodge(0.6), size=6, shape=16, show.legend=FALSE) +
-  geom_text(data=er_outliers, aes(x=time, y=4, label=four_plus, fill=enroll, ymax=4), 
+  geom_text(data=er_outliers, aes(x=time, y=4, label=four_plus, fill=enroll, ymax=4),
             position = position_dodge(0.6), size=3, fontface="bold")+
 
   geom_text(data=er_sample_size, aes(x=time, y=-0.1, label=num_cases, fill=enroll, ymax=4),
