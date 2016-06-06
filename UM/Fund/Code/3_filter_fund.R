@@ -1,6 +1,17 @@
 file_filter <- fread(file.path(project_wd$github,
   project_wd$project, "Data/KB_5_2_16.csv"))
 
-services <- merge(file_filter, services, by = c("case_no"))
+# this person has zero funding bucket services
+# 10364
+# services[case_no == 10364]
+
+project_wd$results <- paste(project_wd$results, "Arrests")
+
+services <- merge(file_filter, services, all.x = TRUE, by = c("case_no"))
+services[is.na(fund), fund := "GF"]
+
+
 yf_services <- merge(file_filter, yf_services, by = c("case_no"))
-mi_services <- merge(file_filter, mi_services, by = c("case_no"))
+mi_services <- merge(file_filter[KB_team == "MI Adult" | KB_team == "WCCMHA"],
+                     mi_services, all.x = TRUE, by = c("case_no"))
+mi_services[is.na(fund), fund := "GF"]

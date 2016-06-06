@@ -512,7 +512,7 @@ yf_services <- services[team %in% c("Child", "Child HB")]
 #   no_TCM_save[, names(which(mapply(checkEmpty, no_TCM_save)=="empty")) := NULL]
 #   ## remove empty columns from mi_services
 #   mi_services[, names(which(mapply(checkEmpty, mi_services)=="empty")) := NULL]
-rm(admit, case_load, cost, court, demo, diagnoses, fb_data, insure, last_team,
+rm(admit, case_load, cost, court, demo, diagnoses, last_team,
    locus, state_hosp, TCM_by_con, levels, file_list)
 #### save results ####
 ### create information about the file to share with end-users ###
