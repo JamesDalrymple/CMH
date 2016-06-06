@@ -7,9 +7,13 @@ sql$query$adm <- "select distinct
   adm.primary_provide_or_not, adm.client_name
   -- adm.assigned_staff, adm.staff_type, adm.primary_staff_or_not, adm.supervisor,
 from encompass.dbo.tblE2_CMH_Adm_Consumers_w_OBRA as adm
-where adm.county = 'Washtenaw' and adm.team_expdt is null and adm.cmh_expdt is null"
+where adm.county = 'Washtenaw' and adm.team_expdt is null
+  and adm.cmh_expdt is null and team2 in ('WSH - ACT', 'WSH - DD Adult',
+  'WSH - MI - Adult', 'WSH - Children''s Services', 'WSH - PATH/PORT',
+  'WSH - Children''s Services - Home Based',
+  'Washtenaw County Community Mental Health', 'WSH - Access/Engagement')"
 
-sql$query$staff <- "select staff.case_no, staff.assigned_staff,
+sql$query$staff <- "select distinct staff.case_no, staff.assigned_staff,
   staff.primary_staff_or_not, staff.supervisor, staff.staff_type,
   staff.staff_eff, staff.staff_exp
 from encompass.dbo.tblE2_CMH_Adm_Consumers_w_OBRA as staff
