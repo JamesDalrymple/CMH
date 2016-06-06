@@ -74,3 +74,5 @@ services <- copy(sql$output$services)
 setf(services, j = "service_date", as.Date)
 setf(services, j = "cpt_code", stringi::stri_trim)
 # no need to check served at this time 2/3/16
+setf(services, j = "units", as.numeric)
+services[cpt_code %in% Cs(T1017, T1016), units := units/4]

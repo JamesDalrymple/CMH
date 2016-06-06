@@ -55,9 +55,9 @@ doc <- addPlot(doc, vector.graphic = TRUE,
                fun = function() print(graph$loc$`WCCMH6 2015`), width = 5.5, height = 6.5)
 # doc <- addPlot(doc, vector.graphic = TRUE,
 #  fun = function() print(graph$loc_6mon$access), width = 4.25, height = 6.5)
-doc <- addParagraph(doc, "\nTable for six month service array for new consumers wiuth a LOCUS 2 or less for Entire Agency")
+doc <- addParagraph(doc, "\nTable for six month service array for new consumers with a LOCUS 2 or less for Entire Agency")
 doc <- addFlexTable(doc, FlexTable(agg$loc_6mon$all))
-doc <- addParagraph(doc, "\nTable for six month service array for new consumers wiuth a LOCUS 2 or less by program")
+doc <- addParagraph(doc, "\nTable for six month service array for new consumers with a LOCUS 2 or less by program")
 doc <- addFlexTable(doc, FlexTable(agg$loc_6mon$prog[program %in% c("MI")]))
 doc <- addPageBreak(doc)
 # new core CMH admissions -----------------------------------------------------

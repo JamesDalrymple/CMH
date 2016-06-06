@@ -129,8 +129,8 @@ graph$new_adm$all <- ggplot(data = agg$new_adm$all,
   geom_text(aes(x = span_label, y = num_adm, label = num_adm), hjust = -.1)+
   labs(title = bquote(atop(.("WCCMH: New Core CMH Admissions"),
                            atop(italic(.("Program transfers do not count")), ""))),
-       y = "Locus Levels",
-       x = "number of new core CMH Admissions")
+       y = "number of new core CMH Admissions",
+       x = NULL)
 graph$new_adm$mi <- ggplot(data = agg$new_adm$prog[program == "MI"],
   aes(x = span_label, y = num_adm, ymax = 1.1*num_adm))+
   geom_bar(stat = "identity", size = 0.1, color = "black", fill = "lightblue",
@@ -139,8 +139,8 @@ graph$new_adm$mi <- ggplot(data = agg$new_adm$prog[program == "MI"],
   geom_text(aes(x = span_label, y = num_adm, label = num_adm), hjust = -.1)+
   labs(title = bquote(atop(.("MI Program: New Core CMH Admissions"),
     atop(italic(.("Program transfers do not count")), ""))),
-    y = "Locus Levels",
-    x = "number of new core CMH Admissions")
+    y = "number of new core CMH Admissions",
+    x = NULL)
 graph$new_adm$dd <- ggplot(data = agg$new_adm$prog[program == "DD"],
    aes(x = span_label, y = num_adm, ymax = 1.1*num_adm))+
   geom_bar(stat = "identity", size = 0.1, color = "black", fill = "lightblue",
@@ -149,8 +149,8 @@ graph$new_adm$dd <- ggplot(data = agg$new_adm$prog[program == "DD"],
   geom_text(aes(x = span_label, y = num_adm, label = num_adm), hjust = -.1)+
   labs(title = bquote(atop(.("DD Program: New Core CMH Admissions"),
     atop(italic(.("Program transfers do not count")), ""))),
-    y = "Locus Levels",
-    x = "number of new core CMH Admissions")
+    y = "number of new core CMH admissions",
+    x = NULL)
 graph$new_adm$yf <- ggplot(data = agg$new_adm$prog[program == "Y&F"],
    aes(x = span_label, y = num_adm, ymax = 1.1*num_adm))+
   geom_bar(stat = "identity", size = 0.1, color = "black", fill = "lightblue",
@@ -159,8 +159,8 @@ graph$new_adm$yf <- ggplot(data = agg$new_adm$prog[program == "Y&F"],
   geom_text(aes(x = span_label, y = num_adm, label = num_adm), hjust = -.1)+
   labs(title = bquote(atop(.("Y&F Program: New Core CMH Admissions"),
     atop(italic(.("Program transfers do not count")), ""))),
-    y = "Locus Levels",
-    x = "number of new core CMH Admissions")
+    y = "number of new core CMH Admissions",
+    x = NULL)
 
 ggsave(filename = file.path(project_wd$results, "adm status WCCMH.png"),
        plot = graph$adm_status$all, width = 5.5, height = 6.25)
