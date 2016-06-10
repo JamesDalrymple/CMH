@@ -14,3 +14,6 @@ vignettes/*.html
 vignettes/*.pdf
 FB storage/.Rproj.user/ECE72FA4/persistent-state
 *.RData
+*.RData
+*.Rhistory
+UM/Fund/.Rhistory
