@@ -15,3 +15,15 @@ yf_services <- merge(file_filter, yf_services, by = c("case_no"))
 mi_services <- merge(file_filter[KB_team == "MI Adult" | KB_team == "WCCMHA"],
                      mi_services, all.x = TRUE, by = c("case_no"))
 mi_services[is.na(fund), fund := "GF"]
+
+
+
+
+setdiff(
+  admit[like(team, "Child")][is.na(team_expdt), length(unique(case_no))],
+  services[program == "Y&F" & is.na(cmh_expdt), unique(case_no)]
+)
+
+admit[case_no == 259060]
+fb_data[case_no == 259060]
+services[case_no == 259060]

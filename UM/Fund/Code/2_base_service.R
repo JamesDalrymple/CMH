@@ -3,59 +3,28 @@
 
 modify <- new.env(parent = .GlobalEnv)
 
-#### Load Data ####
-# code table #
 
-### load, save, compress data ###
-modify$new_fb_names <- c("case_no", "cpt", "unit_type", "from_date", "thru_date",
-                  "units", "cost")
-modify$old_fb_names <- c("CASE #", "PRI PROCEDURE CODE", "UNIT TYPE", "FROM DATE",
-                         "THRU DATE", "UNITS", "ALLOWED AMOUNT")
-setnames(fb_data, old = modify$old_fb_names, new = modify$new_fb_names)
-fb_data <- fb_data[, .SD, .SDcols = modify$new_fb_names]
-fb_data[, case_no := as.numeric(case_no)]
+# state hospital - current consumers  -----------------------------------------
+state_hosp <- copy(sql$output$state_hosp)
 
-# admit
-admit <- sql$output[['admit']]
-setnames(admit, old = "primary_provide_or_not", new = "prim_provider")
-# insure - sheet1
-insure <- sql$output[['insure']]
-setnames(insure,
-  old = c("medicaid_related", "medicare_A", "medicare_B", "medicare_A_B",
-    "medicare_D"),
-  new = c("medicaid", "a", "b", "a_b", "d"))
-
-# insurance detail
-ins_detail <- sql$output[['pvt_insure']]
-# case load
-case_load <- sql$output[['case_load']]
-# court order repetition & PRR
-court <- sql$output[['court']]
-
-# current state hospital consumers
-state_hosp <- sql$output[['state_hosp']]
-
-# demo
-demo <- sql$output[['demo']]
+# demo ------------------------------------------------------------------------
+demo <- copy(sql$output$demo)
 setnames(demo, names(demo), tolower(names(demo)))
 demo[, primarycarephysician :=
   gsub(x=primarycarephysician, pattern="\n ", fixed=TRUE, replace="")]
-# diagnoses ... download as xls file and keep first tab only
-diagnoses <- sql$output[['diagnoses']]
-# locus - run in E.1, download as Excel file
-locus <- sql$output[['locus']]
+demo <- unique(demo)
+
+# diagnoses -------------------------------------------------------------------
+diagnoses <- copy(sql$output$diagnoses)
+# locus -----------------------------------------------------------------------
+locus <- copy(sql$output$locus)
 setnames(locus,
          old = c("recommended_disposition", "overidden_disposition",
                  "cmh_adm_date"),
          new = c("recommend", "override", "adm_date"))
-#### manipulate data ####
-### demographics data - contains primary care doctor ###
-demo <- unique(demo)
 
-### court data ###
-# remove dups if exist (probably un-needed)
-# court <- unique(court)
-
+# court data -  court order repetition & PRR ----------------------------------
+court <- copy(sql$output$court)
 court[, cs_order_date := as.Date(cs_order_date)]
 levels <- court[, rev(unique(ordertype))]
 court[, ordertype := factor(ordertype, levels = levels)]
@@ -69,7 +38,13 @@ court <- court[max_order_dt == cs_order_date]
 court[, c("group", "index", "max_order_dt") := NULL]
 court[, ordertype := as.character(ordertype)]
 
-### insure ###
+# insure ----------------------------------------------------------------------
+insure <- copy(sql$output$insure)
+setnames(insure,
+         old = c("medicaid_related", "medicare_A", "medicare_B", "medicare_A_B",
+                 "medicare_D"),
+         new = c("medicaid", "a", "b", "a_b", "d"))
+
 # make medicare column
 insure[is.na(a) & is.na(b) & is.na(a_b) &
        is.na(d), medicare := "N"]
@@ -89,15 +64,11 @@ modify$cofr_cases <-
   unique(insure[grep(x = primary_ins, pattern = "COFR"), case_no],
          insure[grep(x = secondary_ins, pattern = "COFR"), case_no],
          insure[grep(x = other_ins, pattern = "COFR"), case_no])
-# insure[case_no %in% modify$cofr_cases,
-# .SD, .SDc = c("case_no", "primary_ins")]
-
-## Medicare HMO ##
-# set medicare="Y" if consumer has HMO Medicare
+# Medicare HMO - set medicare="Y" if consumer has HMO Medicare ---
 insure[grep(x = primary_ins, pattern = "medicare", ignore.case = TRUE),
-       medicare := "Y"]
+  medicare := "Y"]
 insure[grep(x = secondary_ins, pattern = "medicare",
-            ignore.case = TRUE), medicare := "Y"]
+  ignore.case = TRUE), medicare := "Y"]
 invisible(insure[grep(x = other_ins, pattern = "medicare",
                       ignore.case = TRUE), medicare := "Y"])
 # remove medicare HMO from private insurance
@@ -107,48 +78,30 @@ insure[grep(x = secondary_ins, pattern = "medicare",
             ignore.case = TRUE), secondary_ins := NA]
 invisible(insure[grep(x = other_ins, pattern = "medicare", ignore.case =
                         TRUE), other_ins := NA])
-
-## make primary insurance column ##
+# make primary insurance column ---
 insure[!is.na(primary_ins) | !is.na(secondary_ins) |
        !is.na(other_ins), private_insurance := "Y"]
 insure[is.na(primary_ins) & is.na(secondary_ins) & is.na(other_ins),
        private_insurance := "N"]
 # remove duplicates
 insure <- unique(insure)
-### make fund columns ###
-# add MI Child to Medicaid
+# make fund columns ---
 setkey(insure, medicaid)[J(c("Medicaid", "MI Child")), fund := "Medicaid"]
-# spend-down
 setkey(insure, medicaid)[J(c("S/D/N", "S/D/Y")), fund := "spend-down"]
 invisible(setkey(insure, NULL))
 insure[fund == "spend-down" &
          waiver == "HAB Waiver", fund := "HAB spend-down"]
-
-# per Kelly B on 9/25/2015
+# HAB Waiver to Medicaid per Kelly B on 9/25/2015
 insure[is.na(fund) & waiver == "HAB Waiver", fund := "Medicaid"]
-# insure[, table(waiver, medicaid)] #### checking ...
-# HMP
 insure[medicaid == "HMP", fund := "HMP"]
-
-# insure[waiver == "HAB Waiver" & is.na(fund)]
-# insure[is.na(fund) &
-#          (medicare == "Y" | private_insurance == "Y")][waiver=="HAB Waiver"]
-
-# grouping Medicare and private ins. together
 insure[is.na(fund) &
          (medicare == "Y" | private_insurance == "Y"),
        fund := "Medicare/TPP"]
-# GF consumers because they have no insurance (as far as we know)
 insure[is.na(fund), fund := "GF"]
-#### unique(insure[, c("waiver", "medicaid", "fund"), with=FALSE]) # all possibilities
-
-# remove medicaid columns
-# insure[, c("medicaid", "waiver") := NULL]
-# get rid of case_no NAs
 insure <- insure[!is.na(case_no)]
 
-### ins_detail ###
-# ins_detail <- unique(ins_detail)
+# ins_detail ------------------------------------------------------------------
+ins_detail <- copy(sql$output$pvt_insure)
 ins_detail <-
   setkey(ins_detail, insurance_name)[!J(modify$not_ins)]
 ins_detail <-
@@ -163,66 +116,43 @@ setkey(insure, case_no)[J(add_private_ins[,
   unique(case_no)]), private_insurance := "Y"]
 rm(add_private_ins, ins_detail)
 
-### admissions ###
+# admissions ------------------------------------------------------------------
+admit <- copy(sql$output$admit)
 # convert dates
 date_cols = c("team_effdt", "team_expdt", "cmh_effdt", "cmh_expdt")
-for (j in date_cols)
-  set(admit, j = j, value = as.Date(admit[[j]]))
-rm(date_cols, j)
+setf(admit, j = date_cols, value = as.Date)
+rm(date_cols)
 # keep only the teams in teamCMH
 admit[, team := cmh_recode(team)]
 admit[, team := cmh_teams_f(team)]
 admit <- admit[!is.na(team)]
 # remove duplicates
 admit <- unique(admit)
+admit[cmh_priority_dt, priority := i.priority, on = "team"]
 
-## last team per consumer ##
-admit[is.na(team_expdt), team_expdt := Sys.Date() + 9999]
-admit <-
-  merge(admit, admit[, list(team_expdt = max(team_expdt)), by = .(case_no)],
-        all.y = TRUE, by = c("case_no", "team_expdt"))
-admit <- admit[order(case_no, team_expdt)]
+admit <- overlap_combine(data = admit, group_cols = Cs(case_no, cmh_effdt, cmh_expdt, priority),
+  start_col = "team_effdt", end_col = "team_expdt")
+admit[, max_priority := max(priority), by = .(case_no, cmh_effdt)]
+admit <- admit[priority == max_priority]
+admit[, Cs(priority, max_priority) := NULL]
 
-last_team <- admit[, list(case_no = unique(case_no)), by = team]
-if (last_team[, length(case_no)] != admit[, length(unique(case_no))]) {
-  stop("error in last_team, duplicates found, please fix!")
+if (nrow(admit[duplicated(case_no)]) > 0 ) {
+  stop("admission duplicates found, please fix!")
 }
-
-# not best approach - mark all cases never marked primary as primary... works for now
-cases_not_prim <- setdiff(admit[prim_provider == "N", unique(case_no)],
-                          admit[prim_provider == "Y", unique(case_no)])
-admit[case_no %in% cases_not_prim, prim_provider := "Y"]
-rm(cases_not_prim)
-
-# keep most recent team only (closed consumers are kept this way)
-admit <- admit[prim_provider == "Y"]
-
-## find the lowest priority team for each consumer ##
-# keep only the team with the lowest priority
-admit <- cmh_priority_dt[admit, on = "team"]
-
-# find lowest priority per consumer
-admit[, minPriority := min(priority), by = list(case_no)]
-
-# keep the lowest priority per consumer (for simplicity)
-admit <- admit[minPriority == priority]
-# remove priority columns
-admit[, c("priority", "minPriority") := NULL]
-# max cmh - have open cases override all closed cases
-admit[, max_cmh_expdt := max(cmh_expdt), by = list(case_no)]
-if (nrow(admit[is.na(cmh_expdt) &
-               !is.na(max_cmh_expdt)]) > 0) {
-  stop("duplicate admission errors, fix now")
-}
-admit <-
-  admit[cmh_expdt == max_cmh_expdt |
-          (is.na(cmh_expdt) & is.na(max_cmh_expdt))]
-# using only 1 (most recent) team for consumer for simplicity
-admit[, c("team_effdt", "team_expdt", "prim_provider", "max_cmh_expdt") := NULL]
-# remove duplicates
+admit[, Cs(start_date, end_date, end_col) := NULL]
 admit <- unique(admit)
-### funding bucket ###
-# aggregating data to condense multiple rows that have the same consumer, CPT code, and date into one row
+
+# Funding bucket --------------------------------------------------------------
+modify$new_fb_names <-
+  c("case_no", "cpt", "unit_type", "from_date", "thru_date", "units", "cost")
+modify$old_fb_names <-
+  c("CASE #", "PRI PROCEDURE CODE", "UNIT TYPE", "FROM DATE", "THRU DATE",
+    "UNITS", "ALLOWED AMOUNT")
+setnames(fb_data, old = modify$old_fb_names, new = modify$new_fb_names)
+fb_data <- fb_data[, .SD, .SDcols = modify$new_fb_names]
+fb_data[, case_no := as.numeric(case_no)]
+
+# combine/sum units, costs
 fb_data <- fb_data[, list(cost = sum(cost, na.rm = TRUE),
                           units = sum(units, na.rm = TRUE)),
                    by = list(case_no, cpt, unit_type, from_date)]
@@ -231,22 +161,11 @@ fb_data <- fb_data[, list(cost = sum(cost, na.rm = TRUE),
 fb_data[, from_date := as.Date(from_date)]
 fb_data <- fb_data[between(from_date, date_convert(input$start_date),
                    date_convert(input$end_date))]
+
 ## establish fund based on file input ##
-fb_data <- mmerge(l = list(fb_data, insure, admit), all.x = TRUE, by="case_no")
+fb_data <- mmerge(l = list(fb_data, admit), all = TRUE, by="case_no")
+fb_data <- mmerge(l = list(fb_data, insure), all.x = TRUE, by="case_no")
 setkey(fb_data, NULL)
-# fb_data <- insure[fb_data, on = "case_no"]
-# merge(insure[, .SD,
-# .SDcols = c("case_no", "age", "primary_ins", "secondary_ins",
-#             "other_ins", "medicare", "private_insurance", "fund")],
-#                fb_data, all.y = TRUE, by = "case_no")
-# invisible(setkey(fb_data, NULL))
-# fb_data <- fb_data[!is.na(case_no)]
-
-# sql - add admission to to funding bucket
-# fb_data <- merge(fb_data, admit, all.x = TRUE, by = "case_no")
-
-## ideally, this should give us zero rows/ zero consumers
-# fb_data[is.na(medicare) & is.na(cmh_expdt) & !is.na(cmh_effdt)]
 
 # missing team to be labeled as Non-CMH
 fb_data[is.na(team), team := "Non-CMH"]
@@ -290,6 +209,7 @@ rm(um_code_desc)
 fb_data[is.na(UM_desc), UM_desc := "missing UM Desc"]
 
 ### case load dataset ###
+case_load <- copy(sql$output$case_load)
 # NA case numbers removed
 case_load <- case_load[!is.na(case_no)]
 
@@ -340,8 +260,12 @@ diagnoses <- unique(diagnoses)
 
 #### aggregate data ####
 # services by consumers
+setf(fb_data, j = "unit_type", stri_trim, side = "both")
+fb_data[UM_desc == "Wraparound Services" &
+          unit_type == "Day" & cpt == "H2022",
+        UM_desc := "Wraparound Svc Day"]
 service_same_day <-
-  fb_data[!(unit_type %in% c("Day", "Encounter")),
+  fb_data[unit_type %nin% c("Day", "Encounter"),
           list(records = length(from_date)),
           by = c("case_no", "UM_desc")]
 service_range_day <- fb_data[unit_type %in% c("Day", "Encounter"),
@@ -458,7 +382,7 @@ services[case_no %in%
 
 # remove duplicates
 services[, cost :=
-  sum(cost, na.rm = FALSE), by = "case_no"] # add costs per person
+  sum(cost, na.rm = TRUE), by = "case_no"] # add costs per person
 services <- unique(services)
 
 # re-order by cost - highest to lowest
@@ -500,20 +424,6 @@ mi_services[supervisor == "Hoener, Katie" |
 ### Y & F ###
 yf_services <- services[team %in% c("Child", "Child HB")]
 
-#   # filter out either MI TCM or DD TCM (must be at least one of the two used)
-#   no_TCM_save <- copy(mi_services)
-#   if(length(grep(x=colnames(no_TCM_save), pattern="TCM_DD", value=TRUE))>0) {
-#     setnames(no_TCM_save, "TCM_DD", "TCM | DD")
-#     no_TCM_save = no_TCM_save[is.na(TCM) & is.na(TCM_DD)]
-#   } else {
-#     no_TCM_save = no_TCM_save[is.na(TCM)]
-#   }
-#   ## remove empty columns from no_TCM_save
-#   no_TCM_save[, names(which(mapply(checkEmpty, no_TCM_save)=="empty")) := NULL]
-#   ## remove empty columns from mi_services
-#   mi_services[, names(which(mapply(checkEmpty, mi_services)=="empty")) := NULL]
-rm(admit, case_load, cost, court, demo, diagnoses, last_team,
-   locus, state_hosp, TCM_by_con, levels, file_list)
 #### save results ####
 ### create information about the file to share with end-users ###
 aboutFile <- data.table(

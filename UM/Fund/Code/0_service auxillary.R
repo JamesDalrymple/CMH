@@ -1,5 +1,5 @@
 ### fund only auxillary ###
-pkg_loader(packages = c("gdata", "data.table", "zoo", "xlsx", "RODBC"))
+pkg_loader(packages = c("gdata", "data.table", "zoo", "xlsx", "RODBC", "stringi"))
 
 ## date parameters - for ease of reading ##
 input$start_date <- format(date_convert(input$end_date) - 365, "%m/%d/%Y")

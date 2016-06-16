@@ -1,6 +1,8 @@
 # filtering by fund
 all_funds <- services[, unique(fund)]
 
+write.csv(services[program == "Y&F"], file = file.path(project_wd$results, "y&f_services.csv"))
+
 #### create fund xlsx files ####
 for(i in seq_along(all_funds)) {
   keep_funds <- all_funds[i]

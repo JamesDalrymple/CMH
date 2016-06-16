@@ -1,6 +1,7 @@
 # funding bucket -- must download manually -- ranged point in  time data
 sql <- new.env(parent=.GlobalEnv)
-sql$channel <- odbcConnect("WSHSQLGP")
+# sql$channel <- odbcConnect("WSHSQLGP")
+sql$channel <- odbcConnect("WSHSQL002")
 
 # current state hospital consumers
 sql$query$state_hosp <-
@@ -73,15 +74,10 @@ AC.county = CMH.county and AC.case_no = CMH.case_no
 where AC.County = 'Washtenaw' and CMH.primary_staff = AC.assigned_staff"
 
 # admit, E2 2181 sheet1
-sql$query$admit <- sprintf("select distinct
-	case_no, team, team_effdt, team_expdt, cmh_effdt, cmh_expdt,
-  primary_provide_or_not
-from encompass.dbo.tblE2_CMH_Adm_Consumers_w_OBRA
-where county = 'Washtenaw' and CMH_effdt<= '%2$s'
-and (CMH_expdt is null or CMH_expdt >= '%1$s')",
-  date_convert(input$start_date),
-  date_convert(input$end_date))
-# sqlQuery(channel = sql$channel, sql$q_court)
+sql$query$admit <- "select distinct
+case_no, team2 as team, team_effdt, team_expdt, cmh_effdt, cmh_expdt
+                           from encompass.dbo.tblE2_CMH_Adm_Consumers_w_OBRA
+                           where county = 'Washtenaw' and team_expdt is null"
 
 # court -- 2061 sheet1, court order repetition & PRR -- point in time data
 sql$query$court <- "select distinct
@@ -106,6 +102,7 @@ left join encompass.dbo.PCCPrimaryCarePhysician PrimaryCarePhysician on
   C.CLF_PCPID = PrimaryCarePhysician.PC_RCDID and
   PrimaryCarePhysician.PC_OKTOUSE  ='Y'
 where CMH.County = 'Washtenaw'"
+
 # diagnoses -- diagnoses 2157 -- point in time data
 sql$query$diagnoses <- "select distinct
 	CMH.case_no, CMH.diag1, CMH.diag1_desc, CMH.diag2, CMH.diag2_desc

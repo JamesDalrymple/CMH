@@ -16,9 +16,8 @@ sqldf("select
       group by case_no", drv = "SQLite")
 
 
-unique(
 data.table(
-sqldf("select
+sqldf("select distinct
   first.case_no, first.first_hh_dt,
   strftime('%m-%Y', first.first_hh_dt) AS month,
   tier.util_level, tier.tier, tier.num_ER_last180,
@@ -42,7 +41,7 @@ sqldf("select
   left join hh_bucket as bkt on
     first.case_no = bkt.case_no
     ", drv = "SQLite")
-))
+)
 
 
 modify$hh_detail[, list(first_hh_date = min(team_effdt)), by = case_no]
