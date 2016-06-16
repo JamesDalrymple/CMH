@@ -1,13 +1,13 @@
 # History files
 .Rhistory
 .Rapp.history
+.gitignore
+.Rbuildignore
+*.Rproj*
+
 
 # Example code in package build process
 *-Ex.R
-
-# RStudio files
-*.Rproj.user/
-FB storage/.Rproj.user/*
 
 # produced vignettes
 vignettes/*.html
@@ -16,4 +16,4 @@ FB storage/.Rproj.user/ECE72FA4/persistent-state
 *.RData
 *.RData
 *.Rhistory
-UM/Fund/.Rhistory
+
