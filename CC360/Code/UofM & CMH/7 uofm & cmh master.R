@@ -13,7 +13,8 @@ data.table::setkey(cmh_wd, dir_names, comp_names)[
   J("GitHub", "WSHSQLGP"), base := "C:/Users/dalrymplej/Documents/GitHub"]
 project_wd <- list(
   github = cmh_wd[J("GitHub", "WSHSQLGP"), base],
-  results = "W:/E2_Health_Home_Raw_data/UofM Med Match")
+  results = file.path(cmh_wd[J("Dropbox", "WSHSQLGP"), base],
+                      "Mike's Projects/CC360/uofm & cmh"))
 
 # project_wd$dropbox <- cmh_wd[J("Dropbox", "WSHSQLGP"), base]
 project_wd$code <- file.path(project_wd$github, "CMH/CC360/Code/UofM & CMH")
@@ -23,7 +24,8 @@ rm(cmh_wd)
 # user input ------------------------------------------------------------------
 input <- list(
   start_dt = '10/1/2014',
-  end_dt = '9/30/2015'
+  end_dt = '9/30/2015',
+  run_date = Sys.Date()
 )
 # load packages, source files -------------------------------------------------
 

@@ -4,29 +4,29 @@ agg$result <- list()
 # Q1: number of people in common ----------------------------------------------
 # main only
 agg$result$q1$main <- modify$cc360_main[uofm == TRUE, length(unique(case_no))]
-# med only
-agg$result$q1$med <-
-  modify$cc360_med[uofm == TRUE, length(unique(case_no))]
-# main and med
-agg$main_med_consumers <-
-  union(modify$cc360_main[uofm == TRUE, unique(case_no)],
-        modify$cc360_med[uofm == TRUE, unique(case_no)])
-agg$result$q1$main_med <- length(agg$main_med_consumers)
+agg$main_um_cases <- modify$cc360_main[uofm == TRUE, unique(case_no)]
+# # med only
+# agg$result$q1$med <-
+#   modify$cc360_med[uofm == TRUE, length(unique(case_no))]
+# # main and med
+# agg$main_med_consumers <-
+#   union(modify$cc360_main[uofm == TRUE, unique(case_no)],
+#         modify$cc360_med[uofm == TRUE, unique(case_no)])
+# agg$result$q1$main_med <- length(agg$main_med_consumers)
 
 agg$result$q1$dt <-
   melt(
-    data.table(main = agg$result$q1$main,
-               prescription = agg$result$q1$med,
-               "main & prescriptions" = agg$result$q1$main_med),
+    data.table(main = agg$result$q1$main),
     id = NULL, variable.name = "dataset",
-    measure.vars = Cs(main, prescription, "main & prescriptions"),
+    measure.vars = Cs(main),
     value.name = "num_cases")
 
 # Q2: top 2 primary diagnoses based on CMH/E2 data ----------------------------
-agg$dx_freq <- modify$diagnoses[case_no %in% agg$main_med_consumers,
+agg$dx_freq <- modify$dx_past[case_no %in% agg$main_um_cases,
   list(num_cases = length(unique(case_no)),
-       pct_cases = length(unique(case_no))/agg$result$q1$main_med*100),
+       pct_cases = length(unique(case_no))/agg$result$q1$main*100),
   by = list(icd9_code, icd9_desc)]
+setorder(agg$dx_freq, -pct_cases)
 agg$result$q2$dt <- agg$dx_freq[order(-pct_cases)][1:10]
 
 agg$result$q2$dt[, icd9_desc := factor(icd9_desc,
@@ -68,15 +68,14 @@ agg$result$q4$place <-
            length(unique(case_no))), by = Place_of_Service]
 # Q5 number of visits outside of 'UofM + CMH' by 'UofM + CMH' consumers
 # total
-agg$result$q5$total_dt <- modify$cc360_main[case_no %in% agg$main_med_consumers,
+agg$result$q5$total_dt <- modify$cc360_main[case_no %in% agg$main_um_cases,
   list(total_visits = length(group),
        total_cases = length(unique(case_no)),
        avg_visits = length(unique(group))/length(unique(case_no))),
   by = uofm]
-
 # grouped by place of service
 agg$result$q5$place_dt <-
-  modify$cc360_main[case_no %in% agg$main_med_consumers,
+  modify$cc360_main[case_no %in% agg$main_um_cases,
                     list(total_visits = length(group),
                          total_cases = length(unique(case_no)),
                          avg_visits = length(unique(group))/length(unique(case_no))),
