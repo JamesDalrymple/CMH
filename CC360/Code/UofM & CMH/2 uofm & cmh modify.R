@@ -14,6 +14,9 @@ modify$cc360_main[is.na(Place_of_Service), Place_of_Service := Facility_Type]
 modify$cc360_main[, group := .GRP,
   by = list(case_no, Procedure_Code, Revenue_Code,
   Place_of_Service, Billing_Provider_Name,Service_From_Date, Service_To_Date)]
+# remove our CMH services
+modify$cc360_main <-
+  modify$cc360_main[Billing_Provider_Name != "COUNTY OF WASHTENAW"]
 
 # diagnoses -------------------------------------------------------------------
 modify$dx_past <- copy(sql$output$dx_past)
